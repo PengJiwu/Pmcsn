@@ -64,6 +64,7 @@ public class Rvgs{
         System.out.println("Rvgs constructor requires non-null argument");
       }
       rngs = givenRngs;
+
     }
     /* Barry Lawson 8 Nov 2007 */
     
@@ -158,7 +159,8 @@ public class Rvgs{
  * NOTE: use m > 0.0
  * =========================================================
  */
-    {
+
+	{
 	return (-m * Math.log(1.0 - rngs.random()));
     }
 
@@ -245,4 +247,16 @@ public class Rvgs{
 	return (normal(0.0, 1.0) / Math.sqrt(chiSquare(n) / n));
     }
 
+
+
+	public double streamExponential(double m, int stream)
+/* =========================================================
+ * Returns an exponentially distributed positive real number.
+ * NOTE: use m > 0.0
+ * =========================================================
+ */
+	{
+		rngs.selectStream(stream);
+		return (-m * Math.log(1.0 - rngs.random()));
+	}
 }

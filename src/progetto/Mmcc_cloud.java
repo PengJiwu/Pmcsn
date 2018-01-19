@@ -1,26 +1,15 @@
-package ssq;
-
-/* -------------------------------------------------------------------------
- * This program is a next-event simulation of a single-server FIFO service
- * node using Exponentially distributed interarrival times and Uniformly
- * distributed service times (i.e., a M/U/1 queue).  The service node is
- * assumed to be initially idle, no arrivals are permitted after the
- * terminal time STOP, and the service node is then purged by processing any
- * remaining jobs in the service node.
- *
- * Name              : Ssq3.java  (Single Server Queue, version 3)
- * Authors           : Steve Park & Dave Geyer
- * Translated by     : Jun Wang
- * Language          : Java
- * Latest Revision   : 6-16-06
- * -------------------------------------------------------------------------
- */
+package progetto;
 
 import rng.Rngs;
+import rng.Rvgs;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 
-public class Ssq3 {
+
+public class Mmcc_cloud {
+
 
     static double START = 0.0;              /* initial time                   */
     static double STOP  = 20000.0;          /* terminal (close the door) time */
@@ -28,51 +17,88 @@ public class Ssq3 {
 
 //    static double sarrival = START;              /* Why did I do this?       */
 
-    public static void main(String[] args) {
+    static double LAMBDA = 6;
+    static double MU = 0.45;
+
+    public static void main(String[] args) throws InterruptedException {
 
         long index  = 0;                  /* used to count departed jobs         */
-        long number = 0;                  /* number in the node                  */
+        long busyServer = 0;                  /* server che so pieni                  */
 
-        Ssq3 s = new Ssq3();
+        Mmcc_cloud s = new Mmcc_cloud();
 
         Rngs r = new Rngs();
         r.plantSeeds(123456789);
+        Rvgs rvgs = new Rvgs(r);
+        Timer t = new Timer();
 
-        Ssq3T t      = new Ssq3T();
+        List jobList = new ArrayList<Job>();
+
         t.current    = START;           /* set the clock                         */
-        t.arrival    = s.getArrival(t.arrival, r); /* schedule the first arrival            */
+//        t.arrival    = s.getArrival(t.arrival, r); /* schedule the first arrival            */
         t.completion = INFINITY;        /* the first event can't be a completion */
 
-        Ssq3Area area = new Ssq3Area();
+        t.arrival = t.current;
+//        Job firstJob = new Job(t.current, rvgs , LAMBDA, MU);
+//        t.arrival = firstJob.getArrival();
+//        jobList.add(firstJob);
+//        busyServer++;
+        Job nextJob = null;
+
+        MmccArea area = new MmccArea();
         area.initAreaParas();
 
-        while ((t.arrival < STOP) || (number > 0)) {
+        while ((t.arrival < STOP) || (busyServer > 0)) {
             t.next          = Math.min(t.arrival, t.completion);  /* next event time   */
-            if (number > 0)  {                               /* update integrals  */
-                area.node    += (t.next - t.current) * number;
-                area.queue   += (t.next - t.current) * (number - 1);
+            if (busyServer > 0)  {                               /* update integrals  */
+                area.node    += (t.next - t.current) * busyServer;
                 area.service += (t.next - t.current);
+
             }
             t.current       = t.next;                    /* advance the clock */
 
             if (t.current == t.arrival)  {               /* process an arrival */
-                number++;
-                t.arrival     = s.getArrival(t.arrival,r);
+                busyServer++;
+
+                Job newJob = new Job(t.current, rvgs, LAMBDA,  MU,1);
+                jobList.add(newJob);
+
+                t.arrival     = newJob.getArrival();
                 if (t.arrival > STOP)  {
                     t.last      = t.current;
                     t.arrival   = INFINITY;
                 }
-                if (number == 1)
-                    t.completion = t.current + s.getService(r);
+
+                nextJob = Mmcc_cloud.getMinCompletion(jobList);
+                t.completion = nextJob.getCompletion();
             }
-            else {                                        /* process a completion */
+            else {/* process a completion */
                 index++;
-                number--;
-                if (number > 0)
-                    t.completion = t.current + s.getService(r);
+                busyServer--;
+                jobList.remove(nextJob);
+                if (busyServer > 0) {
+                    nextJob = Mmcc_cloud.getMinCompletion(jobList);
+                    t.completion = nextJob.getCompletion();// t.completion = MINIMO DI TUTTI I tfine
+                }
                 else
+                {
+
                     t.completion = INFINITY;
+                    nextJob = null;
+                }
             }
+
+//            System.out.println("RESOCONTO CICLO: ");
+//            System.out.println("T.CURRENT " + t.current);
+//            System.out.println("T.COMPLETION " + t.completion);
+//            System.out.println("T.ARRIVAL " +t.arrival);
+//            for(Object ob : jobList)
+//            {
+//                ((Job)ob).printAll();
+//            }
+//            System.out.println("__________________");
+//
+//            Thread.sleep(1000);
         }
 
         DecimalFormat f = new DecimalFormat("###0.00");
@@ -87,6 +113,23 @@ public class Ssq3 {
         System.out.println("   utilization ............. =   " + f.format(area.service / t.current));
     }
 
+    private static Job getMinCompletion(List jobList)
+    {
+        double minCompletion = 1000*STOP;
+        Job nextJob = null;
+        for(Object j : jobList)
+        {
+            Job job = (Job)j;
+            if(job.getCompletion() < minCompletion) {
+                minCompletion = job.getCompletion();
+                nextJob = job;
+            }
+
+        }
+
+        return nextJob;
+
+    }
 
     double exponential(double m, Rngs r) {
 /* ---------------------------------------------------
@@ -96,21 +139,13 @@ public class Ssq3 {
         return (-m * Math.log(1.0 - r.random()));
     }
 
-    double uniform(double a, double b, Rngs r) {
-/* ------------------------------------------------
- * generate an Uniform random variate, use a < b
- * ------------------------------------------------
- */
-        return (a + (b - a) * r.random());
-    }
-
     double getArrival(double arrival, Rngs r) {
 /* ---------------------------------------------
  * generate the next arrival time, with rate 1/2
  * ---------------------------------------------
  */
         r. selectStream(0);
-        arrival += exponential(6.0, r);
+        arrival += exponential(2.0, r);
         return (arrival);
     }
 
@@ -121,7 +156,13 @@ public class Ssq3 {
  * --------------------------------------------
  */
         r. selectStream(1);
-        return (exponential(0.45, r));
+        return 0.0;
+        //TODO EXPO;
+//        return (uniform(1.0, 2.0, r));
     }
+
+
+
+
 
 }

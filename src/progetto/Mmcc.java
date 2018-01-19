@@ -1,11 +1,11 @@
 package progetto;
 
 import rng.Rngs;
-import ssq.Ssq3;
-import ssq.Ssq3Area;
-import ssq.Ssq3T;
+import rng.Rvgs;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class Mmcc {
@@ -17,71 +17,215 @@ public class Mmcc {
 
 //    static double sarrival = START;              /* Why did I do this?       */
 
-    static double LAMBDA = 6;
-    static double MU = 0.45;
+    static double LAMBDA1 = 6;
+    static double MU1clet = 0.45;
+    static double LAMBDA2 = 6.25;
+    static double MU2clet = 0.27;
+    static int N = 7;
+    static int S = 3;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
 
-        long index  = 0;                  /* used to count departed jobs         */
-        long busyServer = 0;                  /* server che so pieni                  */
+
+        long totalN1 = 0;
+        long totalN2 = 0;
+
+        long indexN1 = 0;/* used to count departed jobs         */
+        long indexN2 = 0;
 
         Mmcc s = new Mmcc();
 
         Rngs r = new Rngs();
         r.plantSeeds(123456789);
-
+        Rvgs rvgs = new Rvgs(r);
         Timer t = new Timer();
+
+        List jobList = new ArrayList<Job>();
+
+        int n1 = 0,n2 = 0;
+
         t.current    = START;           /* set the clock                         */
-        t.arrival    = s.getArrival(t.arrival, r); /* schedule the first arrival            */
         t.completion = INFINITY;        /* the first event can't be a completion */
+        t.arrival = t.current;
+        Job nextCompletionJob = null;
+        Job nextArrivalJob = null;
+        MmccArea area1 = new MmccArea();
+        MmccArea area2 = new MmccArea();
+        MmccArea areaTot = new MmccArea();
+        area1.initAreaParas();
+        area2.initAreaParas();
+        areaTot.initAreaParas();
 
-        MmccArea area = new MmccArea();
-        area.initAreaParas();
-
-        while ((t.arrival < STOP) || (busyServer > 0)) {
+        while ((t.arrival < STOP) || (n1+n2 > 0)) {
             t.next          = Math.min(t.arrival, t.completion);  /* next event time   */
-            if (busyServer > 0)  {                               /* update integrals  */
-                area.node    += (t.next - t.current) * busyServer;
-                area.service += (t.next - t.current);
 
+            if (n1 > 0)  {                               /* update integrals  */
+                area1.node    += (t.next - t.current) * n1;
+                area1.service += (t.next - t.current);
             }
+
+            if (n2 > 0)  {                               /* update integrals  */
+                area2.node    += (t.next - t.current) * n2;
+                area2.service += (t.next - t.current);
+            }
+
+            if (n1 + n2 > 0)  {                               /* update integrals  */
+                areaTot.node    += (t.next - t.current) * (n1+n2);
+                areaTot.service += (t.next - t.current);
+            }
+
+
             t.current       = t.next;                    /* advance the clock */
 
             if (t.current == t.arrival)  {               /* process an arrival */
-                busyServer++;
-                t.arrival     = s.getArrival(t.arrival,r);
+                if(nextArrivalJob != null)
+                if(nextArrivalJob.getClasse() == 1) {
+                    //Arriva job di classe 1
+
+                    if(n1==N) {
+
+                        Mmcc.sendToTheCloud(nextArrivalJob);  //TODO
+                        jobList.remove(nextArrivalJob);
+                    }
+
+                    else
+                        if(n1+n2<S)
+                            n1++;
+                        else
+                            if(n2>0)
+                            {
+                                Job jobToSend = Mmcc.selectOneC2Job(jobList);
+                                /*Caso limite in cui ad essere eliminato è il job successivo ad essere completato*/
+                                if(jobList.indexOf(jobToSend) == 0)
+                                    t.completion = nextCompletionJob.getCompletion();
+                                jobList.remove(jobToSend);
+                                Mmcc.sendToTheCloud(jobToSend);
+                                n1++;
+                                n2--;
+                            }
+                            else
+                                n1++;
+                }else
+                {
+                    //Arriva job di classe 2
+                    if(n1+n2 >= S) {
+                        Mmcc.sendToTheCloud(nextArrivalJob);
+                        jobList.remove(nextArrivalJob);
+                    }
+                    else
+                        n2++;
+                }
+
+
+
+                /*
+                 fare controlli su nextArrivalJob
+
+                 */
+
+                Job newJob;
+                if(rvgs.uniform(0,1)> LAMBDA1/(LAMBDA1+LAMBDA2)) {
+                    /*Il prossimo arrivo sarà job di classe 2 */
+                    newJob = new Job(t.current, rvgs, LAMBDA2, MU2clet,2);
+                    totalN2++;
+                }
+                else {
+                    /*Il prossimo arrivo sarà job di classe 1*/
+                    newJob = new Job(t.current, rvgs, LAMBDA1, MU1clet,1);
+                    totalN1++ ;
+                }
+                jobList.add(newJob);
+
+                t.arrival     = newJob.getArrival();
+                nextArrivalJob = newJob;
                 if (t.arrival > STOP)  {
                     t.last      = t.current;
                     t.arrival   = INFINITY;
                 }
-                //GENERA STRUTTURA NUOVO JOB (t arrivo , t compl, t fine = arrivo + compl)
 
-                if (busyServer >= 0)
-                    t.completion = t.current + s.getService(r); // t.completion = MINIMO DI TUTTI I tfine
+                nextCompletionJob = Mmcc.getMinCompletion(jobList);
+                t.completion = nextCompletionJob.getCompletion();
             }
             else {/* process a completion */
-                index++;
-                busyServer--;
-                if (busyServer > 0)
-                    //ESCLUDI QUEL JOB
-                    t.completion = t.current + s.getService(r); // t.completion = MINIMO DI TUTTI I tfine
+                if(nextCompletionJob.getClasse() == 1) {
+                    n1--;
+                    indexN1++;
+                }
+                else {
+                    n2--;
+                    indexN2++;
+                }
+                System.out.println("è uscito: " + nextCompletionJob.getCompletion() + "\n") ;
+                jobList.remove(nextCompletionJob);
+                if (n1 + n2>0) {
+                    nextCompletionJob = Mmcc.getMinCompletion(jobList);
+                    t.completion = nextCompletionJob.getCompletion();// t.completion = MINIMO DI TUTTI I tfine
+                }
                 else
+                {
+
                     t.completion = INFINITY;
+                    nextCompletionJob = null;
+                }
             }
+//
+//            System.out.println("RESOCONTO CICLO: ");
+//            System.out.println("n1: " + n1 + " n2: " + n2);
+//            System.out.println("T.CURRENT          " + t.current);
+//            System.out.println("T.COMPLETION       " + t.completion);
+//            System.out.println("T.ARRIVAL          " +t.arrival);
+//            for(Object ob : jobList)
+//            {
+//                ((Job)ob).printAll();
+//            }
+//            System.out.println("__________________");
+//
+//            Thread.sleep(1000);
         }
 
         DecimalFormat f = new DecimalFormat("###0.00");
 
-        System.out.println("\nfor " + index + " jobs");
-        System.out.println("   average interarrival time =   " + f.format(t.last / index));
-        System.out.println("   average wait ............ =   " + f.format(area.node / index));
-        System.out.println("   average delay ........... =   " + f.format(area.queue / index));
-        System.out.println("   average service time .... =   " + f.format(area.service / index));
-        System.out.println("   average # in the node ... =   " + f.format(area.node / t.current));
-        System.out.println("   average # in the queue .. =   " + f.format(area.queue / t.current));
-        System.out.println("   utilization ............. =   " + f.format(area.service / t.current));
+        System.out.println("\n job totali:  " + totalN1 + " & " + indexN2);
+        System.out.println("job class 1 completati " + indexN1);
+        System.out.println("job class 2 completati " + indexN2);
+        System.out.println("   average interarrival time  class 1=   " + f.format(t.last / indexN1 ));
+        System.out.println("   average interarrival time  class 2=   " + f.format(t.last / indexN2 ));
+        System.out.println("   average interarrival time  tot=       " + f.format(t.last / (indexN1 + indexN2) ));
+
+        System.out.println("   average wait class1............ =   " + f.format(area1.node / indexN1));
+        System.out.println("   average wait class2............ =   " + f.format(area2.node / indexN2));
+        System.out.println("   average wait tot............ =      " + f.format(areaTot.node / (indexN1 + indexN2)));
+
+        System.out.println("   average service time class 1 .... =   " + f.format(area1.service / indexN1));
+        System.out.println("   average service time class 2.... =    " + f.format(area2.service / indexN2));
+        System.out.println("   average service time tot.... =        " + f.format(areaTot.service / (indexN1 + indexN2)));
+
+        System.out.println("   average # in the node ... =   " + f.format(area1.node / t.current));
+        System.out.println("   average # in the node ... =   " + f.format(area2.node / t.current));
+        System.out.println("   average # in the node ... =   " + f.format(areaTot.node / t.current));
+
+        System.out.println("   utilization ............. =   " + f.format(area1.service / t.current));
+        System.out.println("   utilization ............. =   " + f.format(area2.service / t.current));
+        System.out.println("   utilization ............. =   " + f.format(areaTot.service / t.current));
     }
 
+    private static Job getMinCompletion(List jobList)
+    {
+        double minCompletion = 1000*STOP;
+        Job nextJob = null;
+        for(Object j : jobList)
+        {
+            Job job = (Job)j;
+            if(job.getCompletion() < minCompletion) {
+                minCompletion = job.getCompletion();
+                nextJob = job;
+            }
+
+        }
+
+        return nextJob;
+
+    }
 
     double exponential(double m, Rngs r) {
 /* ---------------------------------------------------
@@ -113,8 +257,36 @@ public class Mmcc {
 //        return (uniform(1.0, 2.0, r));
     }
 
+    private static void sendToTheCloud(Job job)
+    {
+        System.out.println("Job al cloud: ");
+        job.printAll();
 
 
+    }
+
+    /**
+     * Seleziona un C2 Job secondo una metrica <- prende quello con completion più grande
+     * @param jobList
+     * @return
+     */
+    private static Job selectOneC2Job(List jobList)
+    {
+
+        double maxCompletion = 0;
+        Job jobToSend = null;
+        for(Object j : jobList)
+        {
+            Job job = (Job)j;
+            if(job.getCompletion() > maxCompletion) {
+                maxCompletion = job.getCompletion();
+                jobToSend = job;
+            }
+
+        }
+        return jobToSend;
+
+    }
 
 
 }
