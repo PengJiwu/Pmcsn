@@ -21,14 +21,14 @@ public class Simulation {
 
 
     static double START = 0.0;              /* initial time                   */
-    static double STOP = 20000.0;          /* terminal (close the door) time */
+    static double STOP = 20000;          /* terminal (close the door) time */
     static double INFINITY = 100.0 * STOP;  /* must be much larger than STOP  */
     static double LAMBDA1 = 6;
     static double MU1clet = 0.45;
     static double LAMBDA2 = 6.25;
     static double MU2clet = 0.27;
-    static int N = 7;
-    static int S = 3;
+    static int N = 20;
+    static int S = 20;
 
     MmccArea area1;
     MmccArea area2;
@@ -57,12 +57,7 @@ public class Simulation {
 
     public Simulation()
     {
-        area1 = new MmccArea();
-        area2 = new MmccArea();
-        areaTot = new MmccArea();
-        area1.initAreaParas();
-        area2.initAreaParas();
-        areaTot.initAreaParas();
+
 
 
         r = new Rngs();
@@ -82,80 +77,67 @@ public class Simulation {
 
     private void run()
     {
-
         boolean stopArrivals = false;
-        Event newEvent;
 
+        createNewArrivalEvent();
         while (clock.getCurrent()<STOP || !eventList.isEmpty()) {
 
-            // GENERAZIONE NUOVO ARRIVO
             if (clock.getCurrent() > STOP) {
                 clock.setLast(clock.getCurrent());
                 stopArrivals = true;
             }
 
-            if(!stopArrivals) {
-                newEvent = createNewArrivalEvent();
-            }
+//
+//            System.out.println("*********************************************************************************************************************");
+//            System.out.println("CTIME: " + clock.getCurrent());
+////            eventList.printList();
+//
+//            try {
+//                Thread.sleep(1000);
+//            } catch (InterruptedException e1) {
+//                e1.printStackTrace();
+//            }
 
+            clock.setPrevious(clock.getCurrent());
             Event e = eventList.popEvent();
             clock.setCurrent(e.getTimeOfEvent());
-
-
 
             if(e instanceof CloudletArrivalEvent)
             {
                 cloudlet.processArrival((CloudletArrivalEvent)e);
-            }
+                cloudlet.updateStatistics();
 
+
+                if(!stopArrivals) {
+                    createNewArrivalEvent();
+                }
+
+
+            }
+            else
             if(e instanceof CloudletCompletionEvent){
 
+                cloudlet.processCompletion((CloudletCompletionEvent)e);
+                cloudlet.updateStatistics();
             }
-
+            else
             if(e instanceof CloudCompletionEvent)
             {
 
             }
 
+            else
             if(e instanceof CloudArrivalEvent)
             {
-
             }
-//
-            System.out.println("******************************************************************************************");
-            System.out.println("CURRENT: " + clock.getCurrent());
-            eventList.printList();
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e1) {
-                e1.printStackTrace();
-            }
-            System.out.println("******************************************************************************************");
 
 
 
         }
-
-        /*
-        //1) Genera arrivo
-
-        //While(c'è un evento)
-
-            pop evento dalla event list
-            gestisci evento
-            NB gestisci evento probabile che genera nuovi eventi (un arrivo genera un evento di completamento, un arrivo può generare un arrivo in cloud)
-            aggiorna eventlist
-            stima dei parametri per classe/per coda/ globali/ ecc
-
-            scorri il Clock
-
-
-
-
-        */
+        cloudlet.printStatistics();
     }
 
-    private Event createNewArrivalEvent() {
+    private void createNewArrivalEvent() {
         Job newJob;
         if (rvgs.uniform(0, 1) > LAMBDA1 / (LAMBDA1 + LAMBDA2)) {
                     /*Il prossimo arrivo sarà job di classe 2 */
@@ -169,7 +151,5 @@ public class Simulation {
 
         Event newEvent = new CloudletArrivalEvent(newJob, newJob.getArrival());
         eventList.pushEvent(newEvent);
-
-        return  newEvent;
     }
 }

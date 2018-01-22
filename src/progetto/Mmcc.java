@@ -12,7 +12,7 @@ public class Mmcc {
 
 
     static double START = 0.0;              /* initial time                   */
-    static double STOP = 20000.0;          /* terminal (close the door) time */
+    static double STOP = 100.0;          /* terminal (close the door) time */
     static double INFINITY = 100.0 * STOP;  /* must be much larger than STOP  */
 
 //    static double sarrival = START;              /* Why did I do this?       */
@@ -23,7 +23,6 @@ public class Mmcc {
     static double MU2clet = 0.27;
     static int N = 20;
     static int S = 20;
-
     public static void main(String[] args) throws InterruptedException {
 
 
@@ -114,6 +113,7 @@ public class Mmcc {
 
 
 
+
                 /*
                  fare controlli su nextArrivalJob
 
@@ -141,6 +141,7 @@ public class Mmcc {
                 nextCompletionJob = Mmcc.getMinCompletion(jobList);
                 t.completion = nextCompletionJob.getCompletion();
             } else {/* process a completion */
+                nextCompletionJob.printAll();
                 if (nextCompletionJob.getClasse() == 1) {
                     n1--;
                     indexN1++;
@@ -159,16 +160,12 @@ public class Mmcc {
             }
 //
 //            System.out.println("RESOCONTO CICLO: ");
-//            System.out.println("n1: " + n1 + " n2: " + n2);
-//            System.out.println("T.CURRENT          " + t.current);
-//            System.out.println("T.COMPLETION       " + t.completion);
-//            System.out.println("T.ARRIVAL          " +t.arrival);
 //            for(Object ob : jobList)
 //            {
 //                ((Job)ob).printAll();
 //            }
 //            System.out.println("__________________");
-//
+
 //            Thread.sleep(1000);
         }
 

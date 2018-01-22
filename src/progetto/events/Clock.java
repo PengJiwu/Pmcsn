@@ -6,10 +6,11 @@ public class Clock {
 
     private double current;                 /* current time                        */
     private double next;                    /* next (most imminent) event time     */
-    private double last;                    /* last arrival time                   */
+    private double last;
+    private double previous;
 
     static double START = 0.0;              /* initial time                   */
-    static double STOP = 20000.0;          /* terminal (close the door) time */
+    static double STOP = 100.0;          /* terminal (close the door) time */
     static double INFINITY = 100.0 * STOP;
 
     static Clock me = null;
@@ -30,6 +31,7 @@ public class Clock {
         current = START;
         next = INFINITY;
         last = INFINITY;
+        previous = INFINITY;
 
     }
 
@@ -58,4 +60,11 @@ public class Clock {
         this.last = last;
     }
 
+    public double getPrevious() {
+        return previous;
+    }
+
+    public void setPrevious(double previous) {
+        this.previous = previous;
+    }
 }

@@ -60,45 +60,47 @@ public class EventList {
     public void removeOneC2CompletionEvent()
     {
 
-
-        System.out.println("STO QUA");
+        int i = 0;
         ListIterator li = eventList.listIterator(eventList.size());
+
+        Event event = null;
 
         while(li.hasPrevious())
         {
+            i++;
+
             Event e = (Event) li.previous();
 
             if(e instanceof CloudletCompletionEvent)
 
                 if(e.getJob().getClasse() == 2)
                 {
-
-                    eventList.remove(e);
-                    Job job = e.getJob();
-                    job.setArrival(clock.getCurrent());
-                    job.setCompletion(INFINITY);
-                    job.setService_time(INFINITY);
-                    Event newEvent = new CloudArrivalEvent(job,clock.getCurrent());
-                    this.pushEvent(newEvent);
-
-
+                    event = e;
+                    break;
                 }
 
-
-
-
         }
+      //  System.out.println("HO CICLATO " + i + " VOLTE NELLA REMOVEONEC2COMPLETIONEVENT");
+      //  System.out.println("la lista in totale era lunga " + eventList.size());
 
+        eventList.remove(event);
+        Job job = event.getJob();
+        job.setArrival(clock.getCurrent());
+//        job.setCompletion(INFINITY);
+//        job.setService_time(INFINITY);
+        Event newEvent = new CloudArrivalEvent(job,clock.getCurrent());
+        this.pushEvent(newEvent);
 
-            this.printList();
     }
 
     public void printList()
     {
+
         for(Object o : eventList) {
             System.out.println("JOB: ");
             ((Event) o).getJob().printAll();
             System.out.println(((Event) o).getTimeOfEvent());
+
 
             if(o instanceof CloudletArrivalEvent)
             {
