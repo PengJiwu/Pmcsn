@@ -12,7 +12,7 @@ package rng;/* -----------------------------------------------------------------
  * values dependent on the value of x.  The following convention is used
  * to initialize the default stream:
  *    if x > 0 then x is the state
- *    if x < 0 then the state is obtained from the system clock
+ *    if x < 0 then the state is obtained from the system Clock
  *    if x = 0 then the state is to be supplied interactively.
  *
  * The generator used in this library is a so-called 'Lehmer random number
@@ -135,7 +135,7 @@ public class Rngs {
  * Use this function to set the state of the current random number
  * generator stream according to the following conventions:
  *    if x > 0 then x is the state (unless too large)
- *    if x < 0 then the state is obtained from the system clock
+ *    if x < 0 then the state is obtained from the system Clock
  *    if x = 0 then the state is to be supplied interactively
  * ---------------------------------------------------------------
  */

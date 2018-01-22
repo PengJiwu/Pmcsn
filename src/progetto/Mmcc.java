@@ -44,7 +44,7 @@ public class Mmcc {
 
         int n1 = 0, n2 = 0;
 
-        t.current = START;           /* set the clock                         */
+        t.current = START;           /* set the Clock                         */
         t.completion = INFINITY;        /* the first event can't be a completion */
         t.arrival = t.current;
         Job nextCompletionJob = null;
@@ -75,7 +75,7 @@ public class Mmcc {
             }
 
 
-            t.current = t.next;                    /* advance the clock */
+            t.current = t.next;                    /* advance the Clock */
 
             if (t.current == t.arrival) {               /* process an arrival */
                 if (nextArrivalJob != null)

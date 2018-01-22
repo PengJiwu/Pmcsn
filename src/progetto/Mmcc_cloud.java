@@ -34,7 +34,7 @@ public class Mmcc_cloud {
 
         List jobList = new ArrayList<Job>();
 
-        t.current    = START;           /* set the clock                         */
+        t.current    = START;           /* set the Clock                         */
 //        t.arrival    = s.getArrival(t.arrival, r); /* schedule the first arrival            */
         t.completion = INFINITY;        /* the first event can't be a completion */
 
@@ -55,7 +55,7 @@ public class Mmcc_cloud {
                 area.service += (t.next - t.current);
 
             }
-            t.current       = t.next;                    /* advance the clock */
+            t.current       = t.next;                    /* advance the Clock */
 
             if (t.current == t.arrival)  {               /* process an arrival */
                 busyServer++;
