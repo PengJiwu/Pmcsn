@@ -621,7 +621,7 @@ public class Rvms{
 	 * NOTE: use a > 0.0 and x >= 0.0
 	 *
 	 * The algorithm used to evaluate the incomplete gamma function is based on
-	 * Algorithm AS 32, J. Applied Statistics, 1970, by G. P. Bhattacharjee.
+	 * Algorithm AS 32, J. Applied progetto.events.Statistics, 1970, by G. P. Bhattacharjee.
 	 * See also equations 6.5.29 and 6.5.31 in the Handbook of Mathematical
 	 * Functions, Abramowitz and Stegum (editors).  The absolute error is less 
 	 * than 1e-10 for all non-negative values of x.

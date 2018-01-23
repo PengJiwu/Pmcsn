@@ -12,4 +12,5 @@ public class MmccArea {
         queue = 0.0;
         service = 0.0;
     }
+
 }

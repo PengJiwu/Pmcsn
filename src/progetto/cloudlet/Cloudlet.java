@@ -130,6 +130,12 @@ public class Cloudlet {
         }
 
 
+    }
+
+    public void newupdateStatistics(){
+
+        Statistics stat = Statistics.getMe();
+        stat.updateCloudletStatistics(n1,n2,totalN1,totalN2,completedN1,completedN2);
 
 
     }
@@ -140,16 +146,16 @@ public class Cloudlet {
         //save original arrival and set the new one (Shouldn't be the same?)
         job.setFirstarrival(job.getArrival());
         job.setArrival(clock.getCurrent()); // not sure if useful
-        System.out.println("old service time is: " + job.getService_time());
+       // System.out.println("old service time is: " + job.getService_time());
 
       //  job.printAll();
 
         if (job.getClasse()==1) {
             job.setService_time(r.streamExponential(1 / MU1cloud, 2));
-            System.out.println("Job di classe 1 al cloud");
+       //     System.out.println("Job di classe 1 al cloud");
         }
         else {
-            System.out.println("Job di classe 2 al cloud");
+       //     System.out.println("Job di classe 2 al cloud");
             job.setService_time(r.streamExponential(1 / MU2cloud, 3));
         }
 
@@ -160,8 +166,8 @@ public class Cloudlet {
         job.setService_time(job.getService_time() + job.getSetup_time());
 
 
-        System.out.println("new service time is: " +job.getService_time());
-        System.out.println("***********************************************************************************************");
+       // System.out.println("new service time is: " +job.getService_time());
+       // System.out.println("***********************************************************************************************");
 
         Event e = new CloudArrivalEvent(job,clock.getCurrent());
         eventList.pushEvent(e);
@@ -182,22 +188,22 @@ public class Cloudlet {
         System.out.println("   average interarrival time  class 1=   " + f.format(clock.getLast() / totalN1));
         System.out.println("   average interarrival time  class 2=   " + f.format(clock.getLast() / totalN2));
         System.out.println("   average interarrival time  tot=       " + f.format(clock.getLast() / (totalN1 + totalN2)));
-
-        System.out.println("   average wait class1............ =   " + f.format(areaN1.node / completedN1));
-        System.out.println("   average wait class2............ =   " + f.format(areaN2.node / completedN2));
-        System.out.println("   average wait tot............ =      " + f.format(areaTot.node / (completedN1 + completedN2)));
-
+//
+//        System.out.println("   average wait class1............ =   " + f.format(areaN1.node / completedN1));
+//        System.out.println("   average wait class2............ =   " + f.format(areaN2.node / completedN2));
+//        System.out.println("   average wait tot............ =      " + f.format(areaTot.node / (completedN1 + completedN2)));
+//
         System.out.println("   average service time class 1 .... =   " + f.format(areaN1.service / completedN1));
         System.out.println("   average service time class 2.... =    " + f.format(areaN2.service / completedN2));
         System.out.println("   average service time tot.... =        " + f.format(areaTot.service / (completedN1 + completedN2)));
-
+//
         System.out.println("   average # in the node ... =   " + f.format(areaN1.node / clock.getCurrent()));
         System.out.println("   average # in the node ... =   " + f.format(areaN2.node / clock.getCurrent()));
         System.out.println("   average # in the node ... =   " + f.format(areaTot.node / clock.getCurrent()));
-
+//
         System.out.println("   utilization ............. =   " + f.format(areaN1.service / clock.getCurrent()));
         System.out.println("   utilization ............. =   " + f.format(areaN2.service / clock.getCurrent()));
         System.out.println("   utilization ............. =   " + f.format(areaTot.service / clock.getCurrent()));
-
+//
     }
 }

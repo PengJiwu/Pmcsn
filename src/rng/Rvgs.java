@@ -185,7 +185,7 @@ public class Rvgs{
  * NOTE: use s > 0.0
  *
  * Uses a very accurate approximation of the normal idf due to Odeh & Evans, 
- * J. Applied Statistics, 1974, vol 23, pp 96-97.
+ * J. Applied progetto.events.Statistics, 1974, vol 23, pp 96-97.
  * ========================================================================
  */
     { 

@@ -68,7 +68,10 @@ public class Job {
 
 
         arrival = current + r.streamExponential(1/lambda, 0);
-        service_time = r.streamExponential(1/mu, 1);
+        if (classe ==1)
+         service_time = r.streamExponential(1/mu, 7);
+        else
+            service_time = r.streamExponential(1/mu, 8);
         completion = arrival + service_time;
 
         this.classe = classe;

@@ -21,14 +21,14 @@ public class Simulation {
 
 
     static double START = 0.0;              /* initial time                   */
-    static double STOP = 10000;          /* terminal (close the door) time */
+    static double STOP = 20000;          /* terminal (close the door) time */
     static double INFINITY = 100.0 * STOP;  /* must be much larger than STOP  */
     static double LAMBDA1 = 6;
     static double MU1clet = 0.45;
     static double LAMBDA2 = 6.25;
     static double MU2clet = 0.27;
-    static int N = 7;
-    static int S = 3;
+    static int N = 20;
+    static int S = 20;
 
     MmccArea area1;
     MmccArea area2;
@@ -86,7 +86,10 @@ public class Simulation {
         boolean stopArrivals = false;
 
         createNewArrivalEvent();
+        int i = 0;
         while (clock.getCurrent()<STOP || !eventList.isEmpty()) {
+
+            i++;
 
             if (clock.getCurrent() > STOP) {
                 clock.setLast(clock.getCurrent());
@@ -112,6 +115,7 @@ public class Simulation {
             {
                 cloudlet.processArrival((CloudletArrivalEvent)e);
                 cloudlet.updateStatistics();
+                cloudlet.newupdateStatistics();
 
 
                 if(!stopArrivals) {
@@ -125,26 +129,35 @@ public class Simulation {
 
                 cloudlet.processCompletion((CloudletCompletionEvent)e);
                 cloudlet.updateStatistics();
+                cloudlet.newupdateStatistics();
             }
             else
             if(e instanceof CloudArrivalEvent)
             {
 
                 cloud.processArrival((CloudArrivalEvent)e);
+                cloudlet.updateStatistics();
+                cloudlet.newupdateStatistics();
 
             }
             else
             if(e instanceof CloudCompletionEvent)
             {
 
+                cloud.processCompletion((CloudCompletionEvent)e);
+                cloudlet.updateStatistics();
+                cloudlet.newupdateStatistics();
+
             }
 
-
-
-
-
         }
+
+        Statistics st = Statistics.getMe();
+        st.printStatistics();
+
         cloudlet.printStatistics();
+
+        System.out.println("numero cicli: " + i);
     }
 
     private void createNewArrivalEvent() {

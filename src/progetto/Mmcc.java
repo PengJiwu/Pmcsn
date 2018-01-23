@@ -12,7 +12,7 @@ public class Mmcc {
 
 
     static double START = 0.0;              /* initial time                   */
-    static double STOP = 20000.0;          /* terminal (close the door) time */
+    static double STOP = 20000;          /* terminal (close the door) time */
     static double INFINITY = 100.0 * STOP;  /* must be much larger than STOP  */
 
 //    static double sarrival = START;              /* Why did I do this?       */
@@ -55,7 +55,10 @@ public class Mmcc {
         area2.initAreaParas();
         areaTot.initAreaParas();
 
+        int i = 0;
         while ((t.arrival < STOP) || (n1 + n2 > 0)) {
+
+            i++;
             t.next = Math.min(t.arrival, t.completion);  /* next event time   */
 
             if (n1 > 0) {                               /* update integrals  */
@@ -170,6 +173,9 @@ public class Mmcc {
         }
 
         DecimalFormat f = new DecimalFormat("###0.00");
+
+        System.out.println("numero cicli: " + i);
+
 
         System.out.println("\n job totali:  " + totalN1 + " & " + totalN2);
         System.out.println("job class 1 completati " + indexN1);
