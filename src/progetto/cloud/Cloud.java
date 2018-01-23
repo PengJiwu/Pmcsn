@@ -16,6 +16,7 @@ public class Cloud {
     MmccArea areaTot;
     Clock clock;
 
+
     public Cloud(){
 
         n1 = 0;
