@@ -21,14 +21,14 @@ public class Simulation {
 
 
     static double START = 0.0;              /* initial time                   */
-    static double STOP = 20000;          /* terminal (close the door) time */
+    static double STOP = 10000;          /* terminal (close the door) time */
     static double INFINITY = 100.0 * STOP;  /* must be much larger than STOP  */
     static double LAMBDA1 = 6;
     static double MU1clet = 0.45;
     static double LAMBDA2 = 6.25;
     static double MU2clet = 0.27;
-    static int N = 20;
-    static int S = 20;
+    static int N = 7;
+    static int S = 3;
 
     MmccArea area1;
     MmccArea area2;
@@ -47,10 +47,16 @@ public class Simulation {
 
     public static void main(String[] args) {
 
+        SimulationTimer st = new SimulationTimer();
+        st.startTimer();
 
         Simulation simulation = new Simulation();
         simulation.run();
 
+        st.stopTimer();
+        st.showTimer();
+        double secStop = STOP/1000;
+        System.out.println("For a " + secStop + " seconds long simulation");
 
     }
 
@@ -71,7 +77,7 @@ public class Simulation {
         totalN1 = 0;
         totalN2 = 0;
 
-        cloudlet = new Cloudlet(N,S);
+        cloudlet = new Cloudlet(N,S,rvgs);
         cloud = new Cloud();
     }
 
@@ -121,15 +127,19 @@ public class Simulation {
                 cloudlet.updateStatistics();
             }
             else
+            if(e instanceof CloudArrivalEvent)
+            {
+
+                cloud.processArrival((CloudArrivalEvent)e);
+
+            }
+            else
             if(e instanceof CloudCompletionEvent)
             {
 
             }
 
-            else
-            if(e instanceof CloudArrivalEvent)
-            {
-            }
+
 
 
 

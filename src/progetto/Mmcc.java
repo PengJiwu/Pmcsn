@@ -12,7 +12,7 @@ public class Mmcc {
 
 
     static double START = 0.0;              /* initial time                   */
-    static double STOP = 100.0;          /* terminal (close the door) time */
+    static double STOP = 20000.0;          /* terminal (close the door) time */
     static double INFINITY = 100.0 * STOP;  /* must be much larger than STOP  */
 
 //    static double sarrival = START;              /* Why did I do this?       */

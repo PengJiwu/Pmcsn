@@ -8,10 +8,8 @@ public class EventList {
 
     List<Event> eventList;
     Clock clock;
-    static double STOP = 20000.0;          /* terminal (close the door) time */
-    static double INFINITY = 100.0 * STOP;
 
-    private static EventList me = null;
+    private static EventList me = null; //Application of singleton pattern
 
     public static EventList getEventList(){
         if(me == null)

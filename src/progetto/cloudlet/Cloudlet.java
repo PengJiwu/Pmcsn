@@ -4,6 +4,7 @@ package progetto.cloudlet;
 import progetto.Job;
 import progetto.MmccArea;
 import progetto.events.*;
+import rng.Rvgs;
 
 import java.text.DecimalFormat;
 
@@ -21,8 +22,12 @@ public class Cloudlet {
     Clock clock;
 
     int totalN1,totalN2;
+    Rvgs r; // Needed to create an exponential setup time
 
-    public Cloudlet(int N,int S){
+    static double MU1cloud = 0.25;
+    static double MU2cloud = 0.22;
+
+    public Cloudlet(int N,int S, Rvgs rvgs){
 
         n1 = 0;
         n2 = 0;
@@ -30,6 +35,7 @@ public class Cloudlet {
         completedN2=0;
         this.N = N;
         this.S = S;
+        this.r = rvgs;
         eventList = EventList.getEventList();
 
         areaN1 = new MmccArea();
@@ -56,18 +62,19 @@ public class Cloudlet {
 
                 totalN1++;
 
-                if (n1 == N) {
+
+                if (n1 == N) {                          //Cloudlet is completely full
 
                     sendToTheCloud(nextArrivalJob);  //TODO
-                } else if (n1 + n2 < S) {
+                } else if (n1 + n2 < S) {               // Threshold hasn't been trespassed yet
                     n1++;
                     createNewCompletionEvent(nextArrivalJob,nextArrivalJob.getCompletion());
-                } else if (n2 > 0) {
+                } else if (n2 > 0) {                    // Threshold has been passed and there's at least one class 2 job
                     n1++;
                     n2--;
                     eventList.removeOneC2CompletionEvent();
                     createNewCompletionEvent(nextArrivalJob,nextArrivalJob.getCompletion());
-                } else {
+                } else {                                // Threshold has been passed and there aren't class 2 jobs
                     n1++;
                     createNewCompletionEvent(nextArrivalJob,nextArrivalJob.getCompletion());
                 }
@@ -129,14 +136,46 @@ public class Cloudlet {
 
     private void sendToTheCloud(Job job)
     {
-        return ;
+        //TODO check if correct
+        //save original arrival and set the new one (Shouldn't be the same?)
+        job.setFirstarrival(job.getArrival());
+        job.setArrival(clock.getCurrent()); // not sure if useful
+        System.out.println("old service time is: " + job.getService_time());
+
+      //  job.printAll();
+
+        if (job.getClasse()==1) {
+            job.setService_time(r.streamExponential(1 / MU1cloud, 2));
+            System.out.println("Job di classe 1 al cloud");
+        }
+        else {
+            System.out.println("Job di classe 2 al cloud");
+            job.setService_time(r.streamExponential(1 / MU2cloud, 3));
+        }
+
+
+
+
+        job.setSetup_time(r.streamExponential(0.8,5));
+        job.setService_time(job.getService_time() + job.getSetup_time());
+
+
+        System.out.println("new service time is: " +job.getService_time());
+        System.out.println("***********************************************************************************************");
+
+        Event e = new CloudArrivalEvent(job,clock.getCurrent());
+        eventList.pushEvent(e);
+
     }
 
     public void printStatistics() {
 
         DecimalFormat f = new DecimalFormat("###0.00");
 
-        System.out.println("\n job totali:  " + totalN1 + " & " + totalN2);
+        int total = totalN1 + totalN2;
+
+        System.out.println("\n job totali:  " + totalN1 + " & " + totalN2 );
+        System.out.println("\n job totali:  " + total );
         System.out.println("job class 1 completati " + completedN1);
         System.out.println("job class 2 completati " + completedN2);
 

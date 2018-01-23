@@ -6,8 +6,11 @@ import rng.Rvgs;
 public class Job {
 
     private double arrival;
+    private double firstarrival;
+
     private  double service_time;
     private double completion;
+    private double setup_time;
     private int index;
     private int classe;
     private boolean prelation;
@@ -65,8 +68,6 @@ public class Job {
 
 
         arrival = current + r.streamExponential(1/lambda, 0);
-
-
         service_time = r.streamExponential(1/mu, 1);
         completion = arrival + service_time;
 
@@ -84,5 +85,19 @@ public class Job {
     }
 
 
+    public double getFirstarrival() {
+        return firstarrival;
+    }
 
+    public void setFirstarrival(double firstarrival) {
+        this.firstarrival = firstarrival;
+    }
+
+    public double getSetup_time() {
+        return setup_time;
+    }
+
+    public void setSetup_time(double setup_time) {
+        this.setup_time = setup_time;
+    }
 }
