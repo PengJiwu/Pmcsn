@@ -145,7 +145,7 @@ public class Cloudlet {
         //TODO check if correct
         //save original arrival and set the new one (Shouldn't be the same?)
         job.setFirstarrival(job.getArrival());
-        job.setArrival(clock.getCurrent()); // not sure if useful
+        job.setArrival(clock.getCurrent()); // not sure if useless
        // System.out.println("old service time is: " + job.getService_time());
 
       //  job.printAll();
@@ -165,6 +165,7 @@ public class Cloudlet {
         job.setSetup_time(r.streamExponential(0.8,5));
         job.setService_time(job.getService_time() + job.getSetup_time());
 
+        job.setCompletion(job.getArrival() + job.getService_time());
 
        // System.out.println("new service time is: " +job.getService_time());
        // System.out.println("***********************************************************************************************");
