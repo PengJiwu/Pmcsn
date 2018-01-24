@@ -17,18 +17,23 @@ import progetto.events.*;
 import rng.Rngs;
 import rng.Rvgs;
 
+import java.io.FileNotFoundException;
+import java.io.UnsupportedEncodingException;
+import configuration.configuration;
+
 public class Simulation {
 
-
+    static int N;
+    static int S;
+    static int seed;
     static double START = 0.0;              /* initial time                   */
-    static double STOP = 20000;          /* terminal (close the door) time */
+    static double STOP;          /* terminal (close the door) time */
+
     static double INFINITY = 100.0 * STOP;  /* must be much larger than STOP  */
     static double LAMBDA1 = 6;
     static double MU1clet = 0.45;
     static double LAMBDA2 = 6.25;
     static double MU2clet = 0.27;
-    static int N = 20;
-    static int S = 20;
 
     MmccArea area1;
     MmccArea area2;
@@ -44,8 +49,17 @@ public class Simulation {
 
     Cloudlet cloudlet;
     Cloud cloud;
+    static configuration conf;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
+
+        conf = new configuration();
+        conf.loadFIle();
+        STOP = conf.duration;
+        N = conf.N;
+        S = conf.S;
+        seed = conf.seed;
+
 
         SimulationTimer st = new SimulationTimer();
         st.startTimer();
@@ -81,8 +95,7 @@ public class Simulation {
         cloud = new Cloud();
     }
 
-    private void run()
-    {
+    private void run() throws FileNotFoundException, UnsupportedEncodingException {
         boolean stopArrivals = false;
 
         createNewArrivalEvent();
@@ -158,6 +171,8 @@ public class Simulation {
 
         Statistics st = Statistics.getMe();
         st.printStatistics();
+
+        st.createFile();
 
         //cloudlet.printStatistics();
 

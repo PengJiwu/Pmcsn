@@ -64,15 +64,23 @@ public class EventList {
     public Event popEvent()
     {
 
-        Event e1 = cloudletEventList.get(0);
-        Event e2;
-        if( cloudEventList.size() == 0 ){   //No events in cloud
+        if( cloudletEventList.size() == 0 ){   //No events in cloudlet
+            Event e2 = cloudEventList.get(0);
+
+            cloudEventList.remove(0);
+            return e2;
+        }
+
+
+       else if( cloudEventList.size() == 0 ){   //No events in cloud
+            Event e1 = cloudletEventList.get(0);
             cloudletEventList.remove(0);
             return e1;
         }
 
-        e2 = cloudEventList.get(0);
+        Event e1 = cloudletEventList.get(0);
 
+        Event e2 = cloudEventList.get(0);
 
 
         if (e1.getTimeOfEvent() <= e2.getTimeOfEvent()){
