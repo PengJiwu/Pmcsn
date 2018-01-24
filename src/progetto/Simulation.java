@@ -87,7 +87,7 @@ public class Simulation {
 
         createNewArrivalEvent();
         int i = 0;
-        while (clock.getCurrent()<STOP || !eventList.isEmpty()) {
+        while (clock.getCurrent()<STOP || !eventList.isEmpty(eventList.getCloudEventList()) || !eventList.isEmpty(eventList.getCloudletEventList())) {
 
             i++;
 
@@ -114,8 +114,9 @@ public class Simulation {
             if(e instanceof CloudletArrivalEvent)
             {
                 cloudlet.processArrival((CloudletArrivalEvent)e);
-                cloudlet.updateStatistics();
-                cloudlet.newupdateStatistics();
+              //  cloudlet.updateStatistics();
+                cloud.updateCloudStatistics();
+                cloudlet.updateCloudletStatistics();
 
 
                 if(!stopArrivals) {
@@ -128,16 +129,18 @@ public class Simulation {
             if(e instanceof CloudletCompletionEvent){
 
                 cloudlet.processCompletion((CloudletCompletionEvent)e);
-                cloudlet.updateStatistics();
-                cloudlet.newupdateStatistics();
+                //cloudlet.updateStatistics();
+                cloud.updateCloudStatistics();
+                cloudlet.updateCloudletStatistics();
             }
             else
             if(e instanceof CloudArrivalEvent)
             {
 
                 cloud.processArrival((CloudArrivalEvent)e);
-                cloudlet.updateStatistics();
-                cloudlet.newupdateStatistics();
+                //cloudlet.updateStatistics();
+                cloudlet.updateCloudletStatistics();
+                cloud.updateCloudStatistics();
 
             }
             else
@@ -145,8 +148,9 @@ public class Simulation {
             {
 
                 cloud.processCompletion((CloudCompletionEvent)e);
-                cloudlet.updateStatistics();
-                cloudlet.newupdateStatistics();
+              //  cloudlet.updateStatistics();
+                cloudlet.updateCloudletStatistics();
+                cloud.updateCloudStatistics();
 
             }
 
@@ -155,7 +159,7 @@ public class Simulation {
         Statistics st = Statistics.getMe();
         st.printStatistics();
 
-        cloudlet.printStatistics();
+        //cloudlet.printStatistics();
 
         System.out.println("numero cicli: " + i);
     }
@@ -173,6 +177,6 @@ public class Simulation {
         }
 
         Event newEvent = new CloudletArrivalEvent(newJob, newJob.getArrival());
-        eventList.pushEvent(newEvent);
+        eventList.pushEvent(eventList.getCloudletEventList(),newEvent);
     }
 }

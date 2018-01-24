@@ -68,29 +68,32 @@ public class Statistics {
         completedN2cloudlet = f;
 
 
-        if (cloudletN1 > 0) {                               /* update integrals  */
+      //  if (cloudletN1 > 0) {                               /* update integrals  */
             areaN1Cloudlet.node += (clock.getCurrent() - clock.getPrevious()) * cloudletN1;
             areaN1Cloudlet.service += (clock.getCurrent() - clock.getPrevious());
-        }
+       // }
 
-        if (cloudletN2 > 0) {                               /* update integrals  */
+        //if (cloudletN2 > 0) {                               /* update integrals  */
             areaN2Cloudlet.node += (clock.getCurrent() - clock.getPrevious()) * cloudletN2;
             areaN2Cloudlet.service += clock.getCurrent() - clock.getPrevious();
-        }
+     //   }
 
-        if (cloudletN1 + cloudletN2 > 0) {                               /* update integrals  */
+        //if (cloudletN1 + cloudletN2 > 0) {                               /* update integrals  */
             areatotCloudlet.node += (clock.getCurrent() - clock.getPrevious()) * (cloudletN1 + cloudletN2);
             areatotCloudlet.service += clock.getCurrent() - clock.getPrevious();
-        }
+     //   }
 
 
     }
 
 
-    public void updateCloudStatistics(int n1, int n2)
-    {
+    public void updateCloudStatistics(int n1, int n2, int completedN1, int completedN2) {
+
         cloudN1 = n1;
         cloudN2 = n2;
+
+        completedN1cloud = completedN1;
+        completedN2cloud = completedN2;
 
         if (cloudN1 > 0) {                               /* update integrals  */
             areaN1Cloud.node += (clock.getCurrent() - clock.getPrevious()) * cloudN1;
@@ -103,8 +106,8 @@ public class Statistics {
         }
 
         if (cloudN1 + cloudN2 > 0) {                               /* update integrals  */
-            areatotCloudlet.node += (clock.getCurrent() - clock.getPrevious()) * (cloudN1 + cloudN1);
-            areatotCloudlet.service += clock.getCurrent() - clock.getPrevious();
+            areatotCloud.node += (clock.getCurrent() - clock.getPrevious()) * (cloudN1 + cloudN1);
+            areatotCloud.service += clock.getCurrent() - clock.getPrevious();
         }
 
 
@@ -123,20 +126,20 @@ public class Statistics {
         System.out.println("\n job totali:  " + totalN1 + " & " + totalN2 );
         System.out.println("\n job totali:  " + total );
 
-        System.out.println("job class 1 completati dal cloudlet" + completedN1cloudlet);
-        System.out.println("job class 2 completati dal cloudlet" + completedN2cloudlet);
+        System.out.println("job class 1 completati dal cloudlet " + completedN1cloudlet);
+        System.out.println("job class 2 completati dal cloudlet " + completedN2cloudlet);
 
-        System.out.println("job class 1 completati dal cloud" + completedN1cloud);
-        System.out.println("job class 2 completati dal cloud" + completedN2cloud);
+        System.out.println("job class 1 completati dal cloud " + completedN1cloud);
+        System.out.println("job class 2 completati dal cloud " + completedN2cloud);
 
         int cloudletTotCompl = completedN1cloudlet + completedN2cloudlet;
         double thr = cloudletTotCompl / areatotCloudlet.service;
         System.out.println("Throughput del cloudlet: " + thr);
 
 
-        System.out.println("   average interarrival time  class 1=   " + f.format(clock.getLast() / totalN1));
-        System.out.println("   average interarrival time  class 2=   " + f.format(clock.getLast() / totalN2));
-        System.out.println("   average interarrival time  tot=       " + f.format(clock.getLast() / total));
+        System.out.println("   average interarrival time  class 1 =   " + f.format(clock.getLast() / totalN1));
+        System.out.println("   average interarrival time  class 2 =   " + f.format(clock.getLast() / totalN2));
+        System.out.println("   average interarrival time  tot     =   " + f.format(clock.getLast() / total));
 
         //TODO CHECK IF CORRECT!!!
 //        System.out.println("   average wait class1............ =   " + f.format(areaN1.node / completedN1));
@@ -166,6 +169,8 @@ public class Statistics {
 
         System.out.println("------------------------------------------------------------------------------------------------------------------------------");
     }
+
+
 
 
 }

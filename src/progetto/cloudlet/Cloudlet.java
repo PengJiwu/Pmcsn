@@ -22,6 +22,7 @@ public class Cloudlet {
     Clock clock;
 
     int totalN1,totalN2;
+
     Rvgs r; // Needed to create an exponential setup time
 
     static double MU1cloud = 0.25;
@@ -94,7 +95,7 @@ public class Cloudlet {
     {
         Event e = new CloudletCompletionEvent(job,timeOfEvent);
 
-        eventList.pushEvent(e);
+        eventList.pushEvent(eventList.getCloudletEventList(), e);
     }
 
     public void processCompletion(CloudletCompletionEvent event)
@@ -132,7 +133,8 @@ public class Cloudlet {
 
     }
 
-    public void newupdateStatistics(){
+
+    public void updateCloudletStatistics(){
 
         Statistics stat = Statistics.getMe();
         stat.updateCloudletStatistics(n1,n2,totalN1,totalN2,completedN1,completedN2);
@@ -171,7 +173,7 @@ public class Cloudlet {
        // System.out.println("***********************************************************************************************");
 
         Event e = new CloudArrivalEvent(job,clock.getCurrent());
-        eventList.pushEvent(e);
+        eventList.pushEvent(eventList.getCloudEventList(), e);
 
     }
 

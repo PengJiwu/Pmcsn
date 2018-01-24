@@ -7,7 +7,7 @@ import progetto.events.*;
 public class Cloud {
 
     int n1,n2;
-    int N,S;
+
     EventList eventList;
     int completedN1, completedN2;
 
@@ -59,7 +59,7 @@ public class Cloud {
 
         Event e = new CloudCompletionEvent(nextArrivalJob,completion);
 
-        eventList.pushEvent(e);
+        eventList.pushEvent(eventList.getCloudEventList(), e);
 
     }
 
@@ -67,17 +67,20 @@ public class Cloud {
 
         Job nextArrivalJob = e.getJob();
         if (nextArrivalJob.getClasse() ==1)
-            n1--;
+        {   n1--;
+            completedN1++;}
         else
+            {
             n2--;
+            completedN2++;}
 
 
     }
 
-    public void updateStatistics(){
+    public void updateCloudStatistics(){
 
         Statistics stat = Statistics.getMe();
-        stat.updateCloudStatistics(n1,n2);
+        stat.updateCloudStatistics(n1,n2,completedN1,completedN2);
 
     }
 }
