@@ -8,23 +8,12 @@ public class BatchMeans {
 
     private Statistics statistics;
 
-    int n; //number of jobs
+    double n; //Simulation length
     int k; //batch size
     int b; //number of batches
 
     int i; //batchindex
-
-    public double getMeanvalue() {
-        return meanvalue;
-    }
-
-    public ArrayList<Double> getValuelist() {
-        return valuelist;
-    }
-
-    public ArrayList<Double> getMeanlist() {
-        return meanlist;
-    }
+    private WelfordMean welford;
 
     double meanvalue;
 
@@ -33,10 +22,10 @@ public class BatchMeans {
 
 
 
-    public BatchMeans (Statistics stats){
+    public BatchMeans (){
 
-        statistics = stats;
-        n = stats.getTotal();
+        welford = new WelfordMean();
+        n = configuration.duration;
         b = configuration.batchNumber;
         k = (int) Math.floor((double) n/ (double) b);
 
@@ -44,40 +33,52 @@ public class BatchMeans {
         System.out.println("number of batch is " + b);
         System.out.println("Batch size is " + k);
 
+    }
+
+
+    public void calculateMean(double e){
+
+        welford.addElement(e);
+
+    }
+
+    public void addMeanInList(){
+
+        double e = getMeanvalue();
+        meanlist.add(e);
 
     }
 
 
-    public void calculateMean(){
+    public void incrementIndex(){
 
-        double batchmean = 0.0;
-
-        for (Double d: valuelist){
-
-            batchmean += d;
-
-        }
-
-        batchmean /= k;
-        meanlist.add(batchmean);
-
+        i++;
+        welford.resetIndexes();
+        return;
     }
-
 
 
 
     public double calculateFinalMean(){
 
         for (Double d: meanlist){
-            meanvalue += d;
+            welford.addElement(d);
 
         }
-        meanvalue /= b;
-        return meanvalue;
+
+        return welford.getMean();
     }
 
 
+    public double getMeanvalue() {
+        return welford.getMean();
+    }
 
+
+    public double getBatchSize(){
+
+        return k;
+    }
 
 
 }

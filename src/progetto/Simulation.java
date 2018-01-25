@@ -2,15 +2,7 @@ package progetto;
 
 
 
-/*      TODO LIST:
-*
-*       Lista di eventi <- Interfaccia/classe astrata evento -> ArrivoCloudlet - ArrivoCloud - ComplCloudlet - ComplCloud
-*       Clock che scorre in Simulation
-*       Gestione degli eventi
-*
-*
-* */
-
+import progetto.Statistics.BatchMeans;
 import progetto.Statistics.Statistics;
 import progetto.Statistics.WelfordMean;
 import progetto.cloud.Cloud;
@@ -79,6 +71,7 @@ public class Simulation {
 
     public Simulation()
     {
+
         r = new Rngs();
         r.plantSeeds(123456789);
         rvgs = new Rvgs(r);
@@ -97,12 +90,13 @@ public class Simulation {
     private void run() throws FileNotFoundException, UnsupportedEncodingException {
         boolean stopArrivals = false;
 
-        int i = 0;
+        int i = 1;
+        int j = 0;
 
-        WelfordMean wf = new WelfordMean();
+        BatchMeans bm = new BatchMeans();
 
         createNewArrivalEvent();
-        int j = 0;
+
         while (clock.getCurrent()<STOP || !eventList.isEmpty(eventList.getCloudEventList()) || !eventList.isEmpty(eventList.getCloudletEventList())) {
 
             i++;
@@ -112,11 +106,6 @@ public class Simulation {
                 stopArrivals = true;
             }
 
-//
-//            System.out.println("*********************************************************************************************************************");
-//            System.out.println("CTIME: " + clock.getCurrent());
-////            eventList.printList();
-//
 //            try {
 //                Thread.sleep(1000);
 //            } catch (InterruptedException e1) {
@@ -126,6 +115,12 @@ public class Simulation {
             clock.setPrevious(clock.getCurrent());
             Event e = eventList.popEvent();
             clock.setCurrent(e.getTimeOfEvent());
+
+            if (clock.getCurrent() >= i*bm.getBatchSize())
+            {
+                bm.addMeanInList();
+                bm.incrementIndex();
+            }
 
             if(e instanceof CloudletArrivalEvent)
             {
@@ -144,9 +139,6 @@ public class Simulation {
             else
             if(e instanceof CloudletCompletionEvent){
 
-                j++;
-                if (j ==4)
-                    break;
                 cloudlet.processCompletion((CloudletCompletionEvent)e);
                 //cloudlet.updateStatistics();
                 cloud.updateCloudStatistics();
@@ -154,16 +146,9 @@ public class Simulation {
 
                 double elem = e.getJob().getService_time();
                 System.out.println(" Service time is" + elem);
-                wf.addElement(elem);
-
-//                try {
-//                Thread.sleep(1000);
-//            } catch (InterruptedException e1) {
-//                e1.printStackTrace();
-//            }
 
 
-
+                bm.calculateMean(elem);
             }
             else
             if(e instanceof CloudArrivalEvent)
@@ -191,19 +176,16 @@ public class Simulation {
         Statistics st = Statistics.getMe();
         st.printStatistics();
 
-        double meantscloudlet= wf.getMean();
-        double varianceTScloudlet = wf.getVariance();
-        double standardDVTScloudlet = Math.sqrt(varianceTScloudlet);
 
-        System.out.println("media              = " + meantscloudlet);
-        System.out.println("varianza           = " + varianceTScloudlet);
-        System.out.println("standard deviation = " + standardDVTScloudlet);
 
         //st.createFile();
 
         //cloudlet.printStatistics();
 
         System.out.println("numero cicli: " + i);
+
+        double meanSetupTime = bm.calculateFinalMean();
+        System.out.println(("IL TEMPO DI RISPOSTA MEDIO DEL CLOUDLET È " + meanSetupTime));
     }
 
     private void createNewArrivalEvent() {

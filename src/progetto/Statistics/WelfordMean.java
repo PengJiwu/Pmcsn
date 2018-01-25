@@ -34,7 +34,7 @@ public class WelfordMean {
      * @param elem
      * @return
      */
-    public WelfordMean addElement(double elem) {
+    public void addElement(double elem) {
         current_index++;
 
         double old_mean = current_mean;
@@ -53,6 +53,15 @@ public class WelfordMean {
 
        // System.out.println("Current_Var is " + current_var);
 
-        return this;
+        return;
+    }
+
+
+    public void resetIndexes(){
+
+        current_mean = 0.0;
+        current_var = 0.0;
+        current_index = 0.0;
+
     }
 }
