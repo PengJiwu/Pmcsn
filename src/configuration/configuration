@@ -2,4 +2,5 @@
 N = 20
 S = 20
 seed = 123456789
-duration = 320000.0
+duration = 20000.0
+batchNumber = 64

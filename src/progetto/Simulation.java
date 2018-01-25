@@ -11,6 +11,8 @@ package progetto;
 *
 * */
 
+import progetto.Statistics.Statistics;
+import progetto.Statistics.WelfordMean;
 import progetto.cloud.Cloud;
 import progetto.cloudlet.Cloudlet;
 import progetto.events.*;
@@ -77,9 +79,6 @@ public class Simulation {
 
     public Simulation()
     {
-
-
-
         r = new Rngs();
         r.plantSeeds(123456789);
         rvgs = new Rvgs(r);
@@ -98,8 +97,12 @@ public class Simulation {
     private void run() throws FileNotFoundException, UnsupportedEncodingException {
         boolean stopArrivals = false;
 
-        createNewArrivalEvent();
         int i = 0;
+
+        WelfordMean wf = new WelfordMean();
+
+        createNewArrivalEvent();
+        int j = 0;
         while (clock.getCurrent()<STOP || !eventList.isEmpty(eventList.getCloudEventList()) || !eventList.isEmpty(eventList.getCloudletEventList())) {
 
             i++;
@@ -141,10 +144,26 @@ public class Simulation {
             else
             if(e instanceof CloudletCompletionEvent){
 
+                j++;
+                if (j ==4)
+                    break;
                 cloudlet.processCompletion((CloudletCompletionEvent)e);
                 //cloudlet.updateStatistics();
                 cloud.updateCloudStatistics();
                 cloudlet.updateCloudletStatistics();
+
+                double elem = e.getJob().getService_time();
+                System.out.println(" Service time is" + elem);
+                wf.addElement(elem);
+
+//                try {
+//                Thread.sleep(1000);
+//            } catch (InterruptedException e1) {
+//                e1.printStackTrace();
+//            }
+
+
+
             }
             else
             if(e instanceof CloudArrivalEvent)
@@ -172,7 +191,15 @@ public class Simulation {
         Statistics st = Statistics.getMe();
         st.printStatistics();
 
-        st.createFile();
+        double meantscloudlet= wf.getMean();
+        double varianceTScloudlet = wf.getVariance();
+        double standardDVTScloudlet = Math.sqrt(varianceTScloudlet);
+
+        System.out.println("media              = " + meantscloudlet);
+        System.out.println("varianza           = " + varianceTScloudlet);
+        System.out.println("standard deviation = " + standardDVTScloudlet);
+
+        //st.createFile();
 
         //cloudlet.printStatistics();
 

@@ -1,7 +1,8 @@
-package progetto.events;
+package progetto.Statistics;
 
 import configuration.configuration;
 import progetto.MmccArea;
+import progetto.events.Clock;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -24,6 +25,7 @@ public class Statistics {
     private MmccArea areatotCloud;
 
     private int cloudletN1 = 0, cloudletN2 = 0;
+
     private int cloudN1 = 0, cloudN2 = 0;
 
     private int completedN1cloudlet = 0;
@@ -35,7 +37,11 @@ public class Statistics {
     private int totalN1 = 0;
     private int totalN2 = 0;
 
+    private int total;
+
     private static Statistics me = null;
+
+
 
 
 
@@ -130,7 +136,7 @@ public class Statistics {
 
         DecimalFormat f = new DecimalFormat("###0.00");
 
-        int total = totalN1 + totalN2;
+        total = totalN1 + totalN2;
 
         System.out.println("\n job totali:  " + totalN1 + " & " + totalN2 );
         System.out.println("\n job totali:  " + total );
@@ -177,6 +183,9 @@ public class Statistics {
         System.out.println("   utilization ............. =   " + f.format(areatotCloudlet.service / clock.getCurrent()));
 
         System.out.println("------------------------------------------------------------------------------------------------------------------------------");
+
+        BatchMeans bm = new BatchMeans((this));
+
     }
 
 
@@ -186,7 +195,7 @@ public class Statistics {
 
         int total = totalN1 + totalN2;
         int seed = configuration.seed;
-        String path = "../Pmcsn/src/progetto/Statistics/";
+        String path = "../Pmcsn/src/progetto/Results/";
 
         PrintWriter writer = new PrintWriter(path + "StatN"+ N + "S" + S +"seed" + seed + "STOP" + STOP + ".txt", "UTF-8");
         writer.append("Statistics" + "\n");
@@ -230,6 +239,96 @@ public class Statistics {
 
 
 
+    }
+
+
+    //Getter and setter
+    public int getCloudletN1() {
+        return cloudletN1;
+    }
+
+    public void setCloudletN1(int cloudletN1) {
+        this.cloudletN1 = cloudletN1;
+    }
+
+    public int getCloudletN2() {
+        return cloudletN2;
+    }
+
+    public void setCloudletN2(int cloudletN2) {
+        this.cloudletN2 = cloudletN2;
+    }
+
+    public int getCloudN1() {
+        return cloudN1;
+    }
+
+    public void setCloudN1(int cloudN1) {
+        this.cloudN1 = cloudN1;
+    }
+
+    public int getCloudN2() {
+        return cloudN2;
+    }
+
+    public void setCloudN2(int cloudN2) {
+        this.cloudN2 = cloudN2;
+    }
+
+    public int getCompletedN1cloudlet() {
+        return completedN1cloudlet;
+    }
+
+    public void setCompletedN1cloudlet(int completedN1cloudlet) {
+        this.completedN1cloudlet = completedN1cloudlet;
+    }
+
+    public int getCompletedN2cloudlet() {
+        return completedN2cloudlet;
+    }
+
+    public void setCompletedN2cloudlet(int completedN2cloudlet) {
+        this.completedN2cloudlet = completedN2cloudlet;
+    }
+
+    public int getCompletedN1cloud() {
+        return completedN1cloud;
+    }
+
+    public void setCompletedN1cloud(int completedN1cloud) {
+        this.completedN1cloud = completedN1cloud;
+    }
+
+    public int getCompletedN2cloud() {
+        return completedN2cloud;
+    }
+
+    public void setCompletedN2cloud(int completedN2cloud) {
+        this.completedN2cloud = completedN2cloud;
+    }
+
+    public int getTotalN1() {
+        return totalN1;
+    }
+
+    public void setTotalN1(int totalN1) {
+        this.totalN1 = totalN1;
+    }
+
+    public int getTotalN2() {
+        return totalN2;
+    }
+
+    public void setTotalN2(int totalN2) {
+        this.totalN2 = totalN2;
+    }
+
+    public int getTotal() {
+        return total;
+    }
+
+    public void setTotal(int total) {
+        this.total = total;
     }
 
 

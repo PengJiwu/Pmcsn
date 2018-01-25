@@ -2,6 +2,7 @@ package progetto.cloud;
 
 import progetto.Job;
 import progetto.MmccArea;
+import progetto.Statistics.Statistics;
 import progetto.events.*;
 
 public class Cloud {

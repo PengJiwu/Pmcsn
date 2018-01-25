@@ -10,6 +10,7 @@ public class configuration {
     public static int S = 0;
     public static int seed = 0;
     public static double duration = 0;
+    public static int batchNumber = 0;
 
     public static void loadFIle() throws Exception {
 
@@ -20,6 +21,7 @@ public class configuration {
         S = Integer.parseInt(parameters.getProperty("S"));
         seed = Integer.parseInt(parameters.getProperty("seed"));
         duration = Double.parseDouble(parameters.getProperty("duration"));
+        batchNumber = Integer.parseInt(parameters.getProperty("batchNumber"));
 
     }
 }
