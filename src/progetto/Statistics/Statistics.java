@@ -198,40 +198,39 @@ public class Statistics {
         String path = "../Pmcsn/src/progetto/Results/";
 
         PrintWriter writer = new PrintWriter(path + "StatN"+ N + "S" + S +"seed" + seed + "STOP" + STOP + ".txt", "UTF-8");
-        writer.append("Statistics" + "\n");
-        writer.append("N = " + N + "\n");
+        writer.append("N = " + N + ";\n");
         writer.append("S = " + S + "\n");
-        writer.append("Numbers of job of I class in cludlet" + totalN1 + "\n");
-        writer.append("Numbers of job of II class in cloudlet" + totalN2 + "\n");
-        writer.append("Numbers of job of I class in cloud" + completedN1cloud + "\n");
-        writer.append("Numbers of job of II class in cloud" + completedN2cloud + "\n");
+        writer.append("Numbers of job of I class in cludlet= " + totalN1 + ";\n");
+        writer.append("Numbers of job of II class in cloudlet=" + totalN2 + ";\n");
+        writer.append("Numbers of job of I class in cloud=   " + completedN1cloud + ";\n");
+        writer.append("Numbers of job of II class in cloud =  " + completedN2cloud + ";\n");
 
 
-        writer.append("   average interarrival time  class 2 =   " + f.format(clock.getLast() / totalN2) + "\n");
-        writer.append("   average interarrival time  class 1 =   " + f.format(clock.getLast() / totalN1) + "\n");
-        writer.append("   average interarrival time  tot     =   " + f.format(clock.getLast() / total) + "\n");
+        writer.append("average interarrival time  class 2   = " + f.format(clock.getLast() / totalN2) + ";\n");
+        writer.append("average interarrival time  class 1   = " + f.format(clock.getLast() / totalN1) + ";\n");
+        writer.append("average interarrival time  tot       = " + f.format(clock.getLast() / total) + ";\n");
 
 
-        writer.append("   average service time class 1 cloudlet .... =   " + f.format(areaN1Cloudlet.service / completedN1cloudlet) + "\n");
-        writer.append("   average service time class 2 cloudlet.... =    " + f.format(areaN2Cloudlet.service / completedN2cloudlet) + "\n");
-        writer.append("   average service time tot.... =        " + f.format(areatotCloudlet.service / (completedN1cloudlet + completedN2cloudlet)) + "\n");
+        writer.append("average service time class 1 cloudlet= " + f.format(areaN1Cloudlet.service / completedN1cloudlet) + ";\n");
+        writer.append("average service time class 2 cloudlet= " + f.format(areaN2Cloudlet.service / completedN2cloudlet) + ";\n");
+        writer.append("average service time tot............ = " + f.format(areatotCloudlet.service / (completedN1cloudlet + completedN2cloudlet)) + ";\n");
 
-        writer.append("   average service time class 1 cloud   .... =   " + f.format(areaN1Cloud.service / completedN1cloud) + "\n");
-        writer.append("   average service time class 2 cloud   .... =    " + f.format(areaN2Cloud.service / completedN2cloud) + "\n");
-        writer.append("   average service time tot.... =        " + f.format(areatotCloud.service / (completedN1cloud + completedN2cloud)) + "\n");
+        writer.append("average service time class 1 cloud.. = " + f.format(areaN1Cloud.service / completedN1cloud) + ";\n");
+        writer.append("average service time class 2 cloud.. = " + f.format(areaN2Cloud.service / completedN2cloud) + ";\n");
+        writer.append("average service time tot............ = " + f.format(areatotCloud.service / (completedN1cloud + completedN2cloud)) + ";\n");
 
-        writer.append("   average class 1 # in the cloudlet ... =   " + f.format(areaN1Cloudlet.node / clock.getCurrent()) + "\n");
-        writer.append("   average class 2 # in the cloudlet ... =   " + f.format(areaN2Cloudlet.node / clock.getCurrent()) + "\n");
-        writer.append("   average total # in the cloudlet ... =   " + f.format(areatotCloudlet.node / clock.getCurrent()) + "\n");
+        writer.append("average class 1 # in the cloudlet .. = " + f.format(areaN1Cloudlet.node / clock.getCurrent()) + ";\n");
+        writer.append("average class 2 # in the cloudlet .. = " + f.format(areaN2Cloudlet.node / clock.getCurrent()) + ";\n");
+        writer.append("average total # in the cloudlet .... = " + f.format(areatotCloudlet.node / clock.getCurrent()) + ";\n");
 
 
-        writer.append("   average class 1 # in the cloud ... =   " + f.format(areaN1Cloud.node / clock.getCurrent()) + "\n");
-        writer.append("   average class 2 # in the cloud... =   " + f.format(areaN2Cloud.node / clock.getCurrent()) + "\n");
-        writer.append("   average total # in the cloud ... =   " + f.format(areatotCloud.node / clock.getCurrent()) + "\n");
+        writer.append("average class 1 # in the cloud ..... = " + f.format(areaN1Cloud.node / clock.getCurrent()) + ";\n");
+        writer.append("average class 2 # in the cloud...... = " + f.format(areaN2Cloud.node / clock.getCurrent()) + ";\n");
+        writer.append("average total # in the cloud ....... = " + f.format(areatotCloud.node / clock.getCurrent()) + ";\n");
 
-        writer.append("   utilization classe 1  ............. =   " + f.format(areaN1Cloudlet.service / clock.getCurrent()) + "\n");
-        writer.append("   utilization classe 2............. =   " + f.format(areaN2Cloudlet.service / clock.getCurrent()) + "\n");
-        writer.append("   utilization ............. =   " + f.format(areatotCloudlet.service / clock.getCurrent()) + "\n");
+        writer.append("utilization classe 1  .............. = " + f.format(areaN1Cloudlet.service / clock.getCurrent()) + ";\n");
+        writer.append("utilization classe 2................ = " + f.format(areaN2Cloudlet.service / clock.getCurrent()) + ";\n");
+        writer.append("utilization ........................ = " + f.format(areatotCloudlet.service / clock.getCurrent()) + ".\n");
 
         writer.append(("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^") + "\n\n");
 
