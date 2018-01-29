@@ -91,7 +91,6 @@ public class Simulation {
         boolean stopArrivals = false;
 
         int i = 1;
-        int j = 0;
 
         BatchMeans bm = new BatchMeans();
 
@@ -106,26 +105,15 @@ public class Simulation {
                 stopArrivals = true;
             }
 
-//            try {
-//                Thread.sleep(1000);
-//            } catch (InterruptedException e1) {
-//                e1.printStackTrace();
-//            }
-
             clock.setPrevious(clock.getCurrent());
             Event e = eventList.popEvent();
             clock.setCurrent(e.getTimeOfEvent());
 
-            if (clock.getCurrent() >= i*bm.getBatchSize())
-            {
-                bm.addMeanInList();
-                bm.incrementIndex();
-            }
+
 
             if(e instanceof CloudletArrivalEvent)
             {
                 cloudlet.processArrival((CloudletArrivalEvent)e);
-              //  cloudlet.updateStatistics();
                 cloud.updateCloudStatistics();
                 cloudlet.updateCloudletStatistics();
 
@@ -140,22 +128,18 @@ public class Simulation {
             if(e instanceof CloudletCompletionEvent){
 
                 cloudlet.processCompletion((CloudletCompletionEvent)e);
-                //cloudlet.updateStatistics();
                 cloud.updateCloudStatistics();
                 cloudlet.updateCloudletStatistics();
 
                 double elem = e.getJob().getService_time();
-                System.out.println(" Service time is" + elem);
 
-
-                bm.calculateMean(elem);
+                bm.update(elem);
             }
             else
             if(e instanceof CloudArrivalEvent)
             {
 
                 cloud.processArrival((CloudArrivalEvent)e);
-                //cloudlet.updateStatistics();
                 cloudlet.updateCloudletStatistics();
                 cloud.updateCloudStatistics();
 
@@ -165,7 +149,6 @@ public class Simulation {
             {
 
                 cloud.processCompletion((CloudCompletionEvent)e);
-              //  cloudlet.updateStatistics();
                 cloudlet.updateCloudletStatistics();
                 cloud.updateCloudStatistics();
 
@@ -182,10 +165,9 @@ public class Simulation {
 
         //cloudlet.printStatistics();
 
-        System.out.println("numero cicli: " + i);
-
-        double meanSetupTime = bm.calculateFinalMean();
-        System.out.println(("IL TEMPO DI RISPOSTA MEDIO DEL CLOUDLET È " + meanSetupTime));
+       double mean = bm.calculateFinalMean();
+       double endpoint = bm.calculateEndPoints();
+        System.out.println("Confidence interval for cloudlet response time is: " + mean + " +- " + endpoint);
     }
 
     private void createNewArrivalEvent() {

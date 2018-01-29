@@ -1,6 +1,8 @@
 package progetto.Statistics;
 
 import configuration.configuration;
+import progetto.events.Clock;
+import rng.Rvms;
 
 import java.util.ArrayList;
 
@@ -11,15 +13,18 @@ public class BatchMeans {
     double n; //Simulation length
     int k; //batch size
     int b; //number of batches
+    double alfa;
 
-    int i; //batchindex
+    int i = 1; //batch index
+
+
     private WelfordMean welford;
 
     double meanvalue;
 
     ArrayList<Double> valuelist = new ArrayList<>();
     ArrayList<Double> meanlist = new ArrayList<>();
-
+    Clock clock;
 
 
     public BatchMeans (){
@@ -27,17 +32,30 @@ public class BatchMeans {
         welford = new WelfordMean();
         n = configuration.duration;
         b = configuration.batchNumber;
-        k = (int) Math.floor((double) n/ (double) b);
+        alfa = configuration.alfa;
+        k = (int) Math.floor(n/ (double) b);
 
-        System.out.println("number of jobs n is " + n);
-        System.out.println("number of batch is " + b);
-        System.out.println("Batch size is " + k);
+        clock = Clock.getClock();
 
+//        System.out.println("number of jobs n is " + n);
+//        System.out.println("number of batch is " + b);
+//        System.out.println("Batch size is " + k);
+
+    }
+
+    public void update(double e){
+        if (clock.getCurrent() >= i*getBatchSize())
+        {
+            addMeanInList();
+            incrementIndex();
+        }
+        calculateMean(e);
     }
 
 
     public void calculateMean(double e){
 
+        welford.addBatchElement(e);
         welford.addElement(e);
 
     }
@@ -62,7 +80,7 @@ public class BatchMeans {
     public double calculateFinalMean(){
 
         for (Double d: meanlist){
-            welford.addElement(d);
+            welford.addBatchElement(d);
 
         }
 
@@ -78,6 +96,25 @@ public class BatchMeans {
     public double getBatchSize(){
 
         return k;
+    }
+
+
+    public double calculateCriticalValue(){
+
+        double t;
+        Rvms rvms = new Rvms();
+        t = rvms.idfStudent((k-1), 1-(alfa/2));
+        return t;
+
+    }
+
+    public double calculateEndPoints(){
+
+        double t = calculateCriticalValue();
+        double stdDev = Math.sqrt(welford.getTotal_var());
+        double endPoint = (t*stdDev)/ Math.sqrt(k-1);
+
+        return  endPoint;
     }
 
 

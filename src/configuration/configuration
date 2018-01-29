@@ -4,3 +4,4 @@ S = 20
 seed = 123456789
 duration = 20000.0
 batchNumber = 240
+alfa = 0.05
