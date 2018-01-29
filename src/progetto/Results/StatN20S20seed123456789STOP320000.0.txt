@@ -1,0 +1,27 @@
+Statistics
+N = 20
+S = 20
+Numbers of job of I class in cludlet1920318
+Numbers of job of II class in cloudlet1999405
+Numbers of job of I class in cloud42468
+Numbers of job of II class in cloud1274592
+   average interarrival time  class 2 =   0,1601
+   average interarrival time  class 1 =   0,1666
+   average interarrival time  tot     =   0,0816
+   average service time class 1 cloudlet .... =   0,1704
+   average service time class 2 cloudlet.... =    0,4415
+   average service time tot.... =        0,1230
+   average service time class 1 cloud   .... =   2,1766
+   average service time class 2 cloud   .... =    0,2511
+   average service time tot.... =        0,2430
+   average class 1 # in the cloudlet ... =   13,0689
+   average class 2 # in the cloudlet ... =   5,3188
+   average total # in the cloudlet ... =   18,3877
+   average class 1 # in the cloud ... =   0,6263
+   average class 2 # in the cloud... =   21,1089
+   average total # in the cloud ... =   1,2527
+   utilization classe 1  ............. =   1,0000
+   utilization classe 2............. =   1,0000
+   utilization ............. =   1,0000
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
