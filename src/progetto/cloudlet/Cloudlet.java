@@ -3,7 +3,9 @@ package progetto.cloudlet;
 
 import progetto.Job;
 import progetto.MmccArea;
+import progetto.Statistics.BatchMeansStatistics;
 import progetto.Statistics.Statistics;
+import progetto.cloud.Cloud;
 import progetto.events.*;
 import rng.Rvgs;
 
@@ -15,7 +17,9 @@ public class Cloudlet {
     int n1,n2;
     int N,S;
     EventList eventList;
-    int completedN1, completedN2;
+    static int completedN1;
+    static int completedN2;
+    int interruptedJobs;
 
     MmccArea areaN1;
     MmccArea areaN2;
@@ -33,8 +37,9 @@ public class Cloudlet {
 
         n1 = 0;
         n2 = 0;
-        completedN1=0;
-        completedN2=0;
+        completedN1 = 0;
+        completedN2 = 0;
+        interruptedJobs = 0;
         this.N = N;
         this.S = S;
         this.r = rvgs;
@@ -58,7 +63,10 @@ public class Cloudlet {
     public void processArrival(CloudletArrivalEvent event)
     {
 
-            Job nextArrivalJob = event.getJob();
+        BatchMeansStatistics bm;
+        bm = BatchMeansStatistics.getMe();
+
+        Job nextArrivalJob = event.getJob();
             if (nextArrivalJob.getClasse() == 1) {
                 //Arriva job di classe 1
 
@@ -70,14 +78,35 @@ public class Cloudlet {
                     sendToTheCloud(nextArrivalJob);  //TODO
                 } else if (n1 + n2 < S) {               // Threshold hasn't been trespassed yet
                     n1++;
+
+                    bm.getCloudletPopulation().update(n1 + n2);
+                    bm.getCloudletClassI_Population().update(n1);
+
                     createNewCompletionEvent(nextArrivalJob,nextArrivalJob.getCompletion());
                 } else if (n2 > 0) {                    // Threshold has been passed and there's at least one class 2 job
                     n1++;
                     n2--;
-                    eventList.removeOneC2CompletionEvent();
+
+                    bm.getCloudletPopulation().update(n1 + n2);
+                    bm.getCloudletClassI_Population().update(n1);
+                    bm.getCloudletClassII_Population().update(n2);
+
+                    Job job = eventList.removeOneC2CompletionEvent();
+                    interruptedJobs++;
+                    job.setPrelation(true);
+                    sendToTheCloud(job);
                     createNewCompletionEvent(nextArrivalJob,nextArrivalJob.getCompletion());
+
+                    bm.getInterruptedTasks_classIIpercentage().update((double) interruptedJobs/totalN2);
+
+
+
                 } else {                                // Threshold has been passed and there aren't class 2 jobs
                     n1++;
+
+                    bm.getCloudletPopulation().update(n1 + n2);
+                    bm.getCloudletClassI_Population().update(n1);
+
                     createNewCompletionEvent(nextArrivalJob,nextArrivalJob.getCompletion());
                 }
             } else {
@@ -87,6 +116,10 @@ public class Cloudlet {
                     sendToTheCloud(nextArrivalJob);
                 } else {
                     n2++;
+
+                    bm.getCloudletPopulation().update(n1 + n2);
+                    bm.getCloudletClassII_Population().update(n2);
+
                     createNewCompletionEvent(nextArrivalJob,nextArrivalJob.getCompletion());
                 }
             }
@@ -102,13 +135,67 @@ public class Cloudlet {
     public void processCompletion(CloudletCompletionEvent event)
     {
 
+        BatchMeansStatistics bm;
+        bm = BatchMeansStatistics.getMe();
+
         if (event.getJob().getClasse() == 1) {
             n1--;
             completedN1++;
+
+            bm.getCloudletPopulation().update(n1 + n2);
+            bm.getCloudletClassI_Population().update(n1);
+
+            double cloudletClassIRTime = event.getJob().getService_time();
+
+            bm.getCloudletClassI_RTime().update(cloudletClassIRTime);
+            //System.out.println("system response time classe 1 " + systemClassIRTime);
+            bm.getSystemClassI_RTime().update(cloudletClassIRTime);
+
+            bm.getCloudletThroughput_ClassI().update(completedN1/clock.getCurrent());
+            //System.out.println(completedN1/clock.getCurrent());
+
+
         } else {
             n2--;
             completedN2++;
+
+            bm.getCloudletPopulation().update(n1 + n2);
+            bm.getCloudletClassII_Population().update(n2);
+
+            double cloudletClassIIRTime = event.getJob().getService_time();
+
+            bm.getCloudletClassII_RTime().update(cloudletClassIIRTime);
+
+            bm.getSystemClassII_RTime().update(cloudletClassIIRTime);
+
+            bm.getCloudletThroughput_ClassII().update(completedN2/clock.getCurrent());
+            //System.out.println(completedN2/clock.getCurrent());
+
+
+
+
         }
+
+        double cloudletCompletion = completedN1 + completedN2;
+        double cloudCompletion = Cloud.getCompletedN1() + Cloud.getCompletedN2();
+        double completed = cloudCompletion + cloudletCompletion;
+
+        bm.getSystemThroughput().update(completed/clock.getCurrent());
+        bm.getCloudletThroughput_ClassI().update((completedN1 + Cloud.getCompletedN1())/clock.getCurrent());
+        bm.getCloudletThroughput_ClassII().update((completedN2 + Cloud.getCompletedN2())/clock.getCurrent());
+
+
+        //TODO: perde uno steve
+
+        double systemRTime = event.getJob().getService_time();
+
+        //System.out.println("system response time " + systemRTime);
+
+        bm.getSystemRTime().update(systemRTime);
+
+        bm.getCloudletThroughput().update((completedN2 + completedN1)/ clock.getCurrent());
+        //System.out.println((completedN2 + completedN1)/ clock.getCurrent());
+
 
 
     }
@@ -209,5 +296,13 @@ public class Cloudlet {
         System.out.println("   utilization ............. =   " + f.format(areaN2.service / clock.getCurrent()));
         System.out.println("   utilization ............. =   " + f.format(areaTot.service / clock.getCurrent()));
 //
+    }
+
+    public static int getCompletedN1() {
+        return completedN1;
+    }
+
+    public static int getCompletedN2() {
+        return completedN2;
     }
 }

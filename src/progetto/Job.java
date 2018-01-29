@@ -13,7 +13,7 @@ public class Job {
     private double setup_time;
     private int index;
     private int classe;
-    private boolean prelation;
+    private boolean prelation = false;
 
     public double getArrival() {
         return arrival;
@@ -102,5 +102,9 @@ public class Job {
 
     public void setSetup_time(double setup_time) {
         this.setup_time = setup_time;
+    }
+
+    public boolean getPrelation() {
+        return prelation;
     }
 }

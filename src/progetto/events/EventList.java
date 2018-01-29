@@ -1,10 +1,14 @@
 package progetto.events;
 
 import progetto.Job;
+import rng.Rvgs;
 
 import java.util.*;
 
 public class EventList {
+
+    Rvgs r; // Needed to create an exponential setup time
+
 
     List<Event> cloudletEventList;
 
@@ -101,7 +105,7 @@ public class EventList {
 
     }
 
-    public void removeOneC2CompletionEvent()
+    public Job removeOneC2CompletionEvent()
     {
 
         int i = 0;
@@ -129,12 +133,14 @@ public class EventList {
 
         cloudletEventList.remove(event);
         Job job = event.getJob();
-        job.setArrival(clock.getCurrent());
-//        job.setCompletion(INFINITY);
-//        job.setService_time(INFINITY);
-        Event newEvent = new CloudArrivalEvent(job,clock.getCurrent());
-        this.pushEvent(cloudEventList,newEvent);
+       // job.setFirstarrival(job.getArrival());
+       // job.setArrival(clock.getCurrent());
+       // job.setService_time(r.streamExponential(1 / 0.22, 3));
 
+        //Event newEvent = new CloudArrivalEvent(job,clock.getCurrent());
+        //this.pushEvent(cloudEventList,newEvent);
+
+        return job;
     }
 
     public void printList(List<Event> list)
