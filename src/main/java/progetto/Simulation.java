@@ -173,6 +173,8 @@ public class Simulation {
 
     private void createNewArrivalEvent() {
         Job newJob;
+
+        r.selectStream(1);
         if (rvgs.uniform(0, 1) > LAMBDA1 / (LAMBDA1 + LAMBDA2)) {
                     /*Il prossimo arrivo sarà job di classe 2 */
             newJob = new Job(clock.getCurrent(), rvgs, (LAMBDA1 + LAMBDA2), MU2clet, 2);

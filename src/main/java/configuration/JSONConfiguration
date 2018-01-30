@@ -2,7 +2,7 @@
   "N":20,
   "S":20,
   "seed":123456789,
-  "duration":20000.0,
-  "batchNumber":240,
+  "duration":245760.0,
+  "batchNumber":960,
   "alfa":0.05
 }

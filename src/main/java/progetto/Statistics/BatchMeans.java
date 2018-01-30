@@ -10,10 +10,10 @@ public class BatchMeans {
 
     private Statistics statistics;
 
-    double n; //Simulation length
-    int k; //batch size
-    int b; //number of batches
-    double alfa;
+    double n;      //Simulation length
+    int k;         //batch size
+    int b;     //number of batches
+    double alfa;  //confidence parameter
 
     int i = 1; //batch index
 
@@ -40,9 +40,9 @@ public class BatchMeans {
 
         welford = new WelfordMean();
         n = Configuration.getConfiguration().duration;
-        b = Configuration.getConfiguration().batchNumber;
         alfa = Configuration.getConfiguration().alfa;
-        k = (int) Math.floor(n/ (double) b);
+        k = Configuration.getConfiguration().batchNumber;
+        b = (int) (n/k);
 
         clock = Clock.getClock();
 
@@ -120,10 +120,21 @@ public class BatchMeans {
     public double calculateEndPoints(){
 
         double t = calculateCriticalValue();
-        double stdDev = Math.sqrt(welford.getTotal_var());
+        double stdDev = Math.sqrt(welford.getTotalVariance());
         double endPoint = (t*stdDev)/ Math.sqrt(k-1);
 
         return  endPoint;
+    }
+
+    public double getVariance(){
+
+        return welford.getTotalVariance();
+    }
+
+
+    public double getTotalMean(){
+
+        return welford.getTotal_mean();
     }
 
 

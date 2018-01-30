@@ -156,7 +156,6 @@ public class Statistics {
         System.out.println("   average interarrival time  class 2 =   " + f.format(clock.getLast() / totalN2));
         System.out.println("   average interarrival time  tot     =   " + f.format(clock.getLast() / total));
 
-        //TODO CHECK IF CORRECT!!!
 //        System.out.println("   average wait class1............ =   " + f.format(areaN1.node / completedN1));
 //        System.out.println("   average wait class2............ =   " + f.format(areaN2.node / completedN2));
 //        System.out.println("   average wait tot............ =      " + f.format(areaTot.node / (completedN1 + completedN2)));

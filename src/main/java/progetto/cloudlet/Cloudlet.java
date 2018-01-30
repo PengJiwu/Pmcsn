@@ -75,7 +75,7 @@ public class Cloudlet {
 
                 if (n1 == N) {                          //Cloudlet is completely full
 
-                    sendToTheCloud(nextArrivalJob);  //TODO
+                    sendToTheCloud(nextArrivalJob);
                 } else if (n1 + n2 < S) {               // Threshold hasn't been trespassed yet
                     n1++;
 
@@ -93,6 +93,7 @@ public class Cloudlet {
 
                     Job job = eventList.removeOneC2CompletionEvent();
                     interruptedJobs++;
+                    System.out.println("Number of interrupted jobs: " + interruptedJobs );
                     job.setPrelation(true);
                     sendToTheCloud(job);
                     createNewCompletionEvent(nextArrivalJob,nextArrivalJob.getCompletion());
@@ -185,8 +186,6 @@ public class Cloudlet {
         bm.getSystemThroughput_ClassII().update((completedN2 + Cloud.getCompletedN2())/clock.getCurrent());
 
 
-        //TODO: perde uno steve
-
         double systemRTime = event.getJob().getService_time();
 
         //System.out.println("system response time " + systemRTime);
@@ -241,18 +240,18 @@ public class Cloudlet {
       //  job.printAll();
 
         if (job.getClasse()==1) {
-            job.setService_time(r.streamExponential(1 / MU1cloud, 2));
+            job.setService_time(r.streamExponential(1 / MU1cloud, 6));
        //     System.out.println("Job di classe 1 al cloud");
         }
         else {
        //     System.out.println("Job di classe 2 al cloud");
-            job.setService_time(r.streamExponential(1 / MU2cloud, 3));
+            job.setService_time(r.streamExponential(1 / MU2cloud, 7));
         }
 
 
 
 
-        job.setSetup_time(r.streamExponential(0.8,5));
+        job.setSetup_time(r.streamExponential(0.8,8));
         job.setService_time(job.getService_time() + job.getSetup_time());
 
         job.setCompletion(job.getArrival() + job.getService_time());

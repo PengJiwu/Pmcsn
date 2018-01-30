@@ -1,6 +1,7 @@
 package progetto.Statistics;
 
 import java.lang.reflect.Array;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class BatchMeansStatistics {
@@ -264,12 +265,20 @@ public class BatchMeansStatistics {
 
     public static void printAll(){
 
+        DecimalFormat f = new DecimalFormat("###0.000000");
         for (BatchMeans b: batchMeans){
 
-            double finalMean = b.calculateFinalMean();
-            double endPoints= b.calculateEndPoints();
+//            double finalMean = b.calculateFinalMean();
+//            double endPoints = b.calculateEndPoints();
+//            double variance  = b.getVariance();
+
+            String finalMean  = f.format(b.calculateFinalMean());
+            String endPoints  = f.format(b.calculateEndPoints());
+            String variance  = f.format(b.getVariance());
 
             System.out.println(b.getAttributeName() + finalMean + "+-" + endPoints);
+            System.out.println("Variance is: " + variance);
+            System.out.println("Mean is    : " + b.getTotalMean());
 
         }
 
