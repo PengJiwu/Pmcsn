@@ -166,8 +166,6 @@ public class Simulation {
 
         //cloudlet.printStatistics();
 
-       double mean = bm.calculateFinalMean();
-       double endpoint = bm.calculateEndPoints();
         BatchMeansStatistics.printAll();
     }
 
