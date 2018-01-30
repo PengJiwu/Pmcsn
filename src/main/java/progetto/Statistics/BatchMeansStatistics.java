@@ -1,5 +1,9 @@
 package progetto.Statistics;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
@@ -266,15 +270,25 @@ public class BatchMeansStatistics {
 
         for (BatchMeans b: batchMeans){
 
-            double finalMean = b.calculateFinalMean();
-            double endPoints= b.calculateEndPoints();
+            b.calculateFinalMean();
+            b.calculateEndPoints();
 
-            System.out.println(b.getAttributeName() + finalMean + "+-" + endPoints);
+            System.out.println(b.getAttributeName() + b.finalMean + " +-" + b.endPoints);
+
+
+
+
 
         }
 
-    }
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            mapper.writeValue(new File("src/main/java/progetto/Results/prova.json"),batchMeans);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
+    }
 
 
 }

@@ -1,5 +1,6 @@
 package progetto.Statistics;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import configuration.Configuration;
 import progetto.events.Clock;
 import rng.Rvms;
@@ -14,6 +15,8 @@ public class BatchMeans {
     int k; //batch size
     int b; //number of batches
     double alfa;
+    double finalMean;
+    double endPoints;
 
     int i = 1; //batch index
 
@@ -28,6 +31,8 @@ public class BatchMeans {
     private String attributeName;
 
     private WelfordMean welford;
+
+
 
     double meanvalue;
 
@@ -86,22 +91,22 @@ public class BatchMeans {
 
 
 
-    public double calculateFinalMean(){
+    public void calculateFinalMean(){
 
         for (Double d: meanlist){
             welford.addBatchElement(d);
 
         }
 
-        return welford.getMean();
+        this.finalMean = welford.getMean();
     }
 
-
+    @JsonIgnore
     public double getMeanvalue() {
         return welford.getMean();
     }
 
-
+    @JsonIgnore
     public double getBatchSize(){
 
         return k;
@@ -117,13 +122,21 @@ public class BatchMeans {
 
     }
 
-    public double calculateEndPoints(){
+    public void calculateEndPoints(){
 
         double t = calculateCriticalValue();
         double stdDev = Math.sqrt(welford.getTotal_var());
         double endPoint = (t*stdDev)/ Math.sqrt(k-1);
 
-        return  endPoint;
+        this.endPoints = endPoint;
+    }
+
+    public double getFinalMean() {
+        return finalMean;
+    }
+
+    public double getEndPoints() {
+        return endPoints;
     }
 
 
