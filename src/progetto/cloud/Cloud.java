@@ -114,8 +114,8 @@ public class Cloud {
             n2--;
             completedN2++;
 
-                bm.getCloudClassII_Population().update(n2);
-                bm.getCloudPopulation().update(n1 + n2);
+            bm.getCloudClassII_Population().update(n2);
+            bm.getCloudPopulation().update(n1 + n2);
 
             double cloudClassIIRTime = nextArrivalJob.getCompletion() - nextArrivalJob.getFirstarrival();
             bm.getCloudClassII_RTime().update(cloudClassIIRTime);
@@ -135,8 +135,8 @@ public class Cloud {
         double completed = cloudCompletion + cloudletCompletion;
 
         bm.getSystemThroughput().update(completed/clock.getCurrent());
-        bm.getCloudThroughput_ClassI().update((completedN1 + Cloudlet.getCompletedN1())/clock.getCurrent());
-        bm.getCloudThroughput_ClassII().update((completedN2 + Cloudlet.getCompletedN2())/clock.getCurrent());
+        bm.getCloudThroughput_ClassI().update(((completedN1 + Cloudlet.getCompletedN1())/clock.getCurrent()));
+        bm.getCloudThroughput_ClassII().update(((completedN2 + Cloudlet.getCompletedN2())/clock.getCurrent()));
 
     }
 

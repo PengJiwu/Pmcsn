@@ -73,6 +73,9 @@ public class BatchMeansStatistics {
 
         // systemUtilization = new BatchMeans();
 
+        cloudThroughput_ClassI = new BatchMeans();
+        cloudThroughput_ClassII = new BatchMeans();
+
         systemRTime = new BatchMeans();
         systemRTime.setAttributeName("System Response Time = ");
         batchMeans.add(systemRTime);
