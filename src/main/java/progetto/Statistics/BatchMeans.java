@@ -17,6 +17,10 @@ public class BatchMeans {
 
     int i = 1; //batch index
 
+    public String getAttributeName() {
+        return attributeName;
+    }
+
     public void setAttributeName(String attributeName) {
         this.attributeName = attributeName;
     }

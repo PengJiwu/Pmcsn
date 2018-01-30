@@ -133,9 +133,9 @@ public class Cloud {
         double cloudletCompletion = Cloudlet.getCompletedN1() + Cloudlet.getCompletedN2();
         double completed = cloudCompletion + cloudletCompletion;
 
-        bm.getSystemThroughput().update(completed/clock.getCurrent());
-        bm.getCloudThroughput_ClassI().update(((completedN1 + Cloudlet.getCompletedN1())/clock.getCurrent()));
-        bm.getCloudThroughput_ClassII().update(((completedN2 + Cloudlet.getCompletedN2())/clock.getCurrent()));
+        bm.getSystemThroughput().update((double) completed/clock.getCurrent());
+        bm.getSystemThroughput_ClassI().update(((double) (completedN1 + Cloudlet.getCompletedN1())/clock.getCurrent()));
+        bm.getSystemThroughput_ClassII().update(((double)(completedN2 + Cloudlet.getCompletedN2())/clock.getCurrent()));
 
     }
 

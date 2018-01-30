@@ -52,9 +52,16 @@ public class BatchMeansStatistics {
     private static BatchMeans cloudThroughput_ClassI;             //necessary for computation
     private static BatchMeans cloudThroughput_ClassII;             //necessary for computation
 
-    private ArrayList<BatchMeans> batchMeans = new ArrayList<BatchMeans>();
+    private static ArrayList<BatchMeans> batchMeans = new ArrayList<BatchMeans>();
 
 
+    public static BatchMeans getSystemThroughput_ClassI() {
+        return systemThroughput_ClassI;
+    }
+
+    public static BatchMeans getSystemThroughput_ClassII() {
+        return systemThroughput_ClassII;
+    }
 
     public static BatchMeansStatistics getMe() {
 
@@ -139,7 +146,7 @@ public class BatchMeansStatistics {
 
 
         cloudPopulation = new BatchMeans();
-        cloudPopulation.setAttributeName("Cloud population = ");
+        cloudPopulation.setAttributeName("\nCloud population = ");
         batchMeans.add(cloudPopulation);
 
         cloudClassI_Population = new BatchMeans();
@@ -152,7 +159,7 @@ public class BatchMeansStatistics {
 
 
         cloudletClassI_RTime = new BatchMeans();
-        cloudletClassI_RTime.setAttributeName("Cloudlet Response Time for class 1 jobs = ");
+        cloudletClassI_RTime.setAttributeName("\nCloudlet Response Time for class 1 jobs = ");
         batchMeans.add(cloudletClassI_RTime);
 
         cloudletClassII_RTime = new BatchMeans();
@@ -161,7 +168,7 @@ public class BatchMeansStatistics {
 
 
         cloudClassI_RTime = new BatchMeans();
-        cloudClassI_RTime.setAttributeName("Cloud Response Time for class 1 jobs = ");
+        cloudClassI_RTime.setAttributeName("\nCloud Response Time for class 1 jobs = ");
         batchMeans.add(cloudClassI_RTime);
 
         cloudClassII_RTime = new BatchMeans();
@@ -255,12 +262,14 @@ public class BatchMeansStatistics {
     }
 
 
-    public void printAll(){
+    public static void printAll(){
 
         for (BatchMeans b: batchMeans){
 
+            double finalMean = b.calculateFinalMean();
+            double endPoints= b.calculateEndPoints();
 
-            System.out.println();
+            System.out.println(b.getAttributeName() + finalMean + "+-" + endPoints);
 
         }
 

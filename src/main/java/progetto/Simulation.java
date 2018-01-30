@@ -4,6 +4,7 @@ package progetto;
 
 import configuration.Configuration;
 import progetto.Statistics.BatchMeans;
+import progetto.Statistics.BatchMeansStatistics;
 import progetto.Statistics.Statistics;
 import progetto.cloud.Cloud;
 import progetto.cloudlet.Cloudlet;
@@ -83,6 +84,8 @@ public class Simulation {
 
         cloudlet = new Cloudlet(N,S,rvgs);
         cloud = new Cloud();
+
+
     }
 
     private void run() throws FileNotFoundException, UnsupportedEncodingException {
@@ -165,7 +168,7 @@ public class Simulation {
 
        double mean = bm.calculateFinalMean();
        double endpoint = bm.calculateEndPoints();
-        System.out.println("Confidence interval for cloudlet response time is: " + mean + " +- " + endpoint);
+        BatchMeansStatistics.printAll();
     }
 
     private void createNewArrivalEvent() {
