@@ -17,6 +17,11 @@ public class BatchMeans {
 
     int i = 1; //batch index
 
+    public void setAttributeName(String attributeName) {
+        this.attributeName = attributeName;
+    }
+
+    private String attributeName;
 
     private WelfordMean welford;
 
