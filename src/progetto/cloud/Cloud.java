@@ -51,8 +51,7 @@ public class Cloud {
 
 
 
-    public void processArrival(CloudArrivalEvent event)
-    {
+    public void processArrival(CloudArrivalEvent event)  {
 
         BatchMeansStatistics bm;
         bm = BatchMeansStatistics.getMe();
@@ -140,7 +139,7 @@ public class Cloud {
 
     }
 
-    public void updateCloudStatistics(){
+    public void updateCloudStatistics() {
 
         Statistics stat = Statistics.getMe();
         stat.updateCloudStatistics(n1,n2,completedN1,completedN2);

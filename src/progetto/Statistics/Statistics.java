@@ -1,6 +1,6 @@
 package progetto.Statistics;
 
-import configuration.configuration;
+import configuration.Configuration;
 import progetto.MmccArea;
 import progetto.events.Clock;
 
@@ -12,9 +12,9 @@ import java.text.DecimalFormat;
 public class Statistics {
 
 
-    int N = configuration.N;
-    int S = configuration.S;
-    double STOP = configuration.duration;
+    int N = Configuration.getConfiguration().N;
+    int S = Configuration.getConfiguration().S;
+    double STOP = Configuration.getConfiguration().duration;
 
     private MmccArea areaN1Cloudlet;
     private MmccArea areaN2Cloudlet;
@@ -59,7 +59,7 @@ public class Statistics {
 
     }
 
-    public static Statistics getMe() {
+    public static Statistics getMe(){
         if (me == null){
 
             me = new Statistics();
@@ -188,15 +188,22 @@ public class Statistics {
     }
 
 
-    public void createFile() throws FileNotFoundException, UnsupportedEncodingException {
+    public void createFile(){
 
         DecimalFormat f = new DecimalFormat("###0.0000");
 
         int total = totalN1 + totalN2;
-        int seed = configuration.seed;
+        int seed = Configuration.getConfiguration().seed;
         String path = "../Pmcsn/src/progetto/Results/";
 
-        PrintWriter writer = new PrintWriter(path + "StatN"+ N + "S" + S +"seed" + seed + "STOP" + STOP + ".txt", "UTF-8");
+        PrintWriter writer = null;
+        try {
+            writer = new PrintWriter(path + "StatN"+ N + "S" + S +"seed" + seed + "STOP" + STOP + ".txt", "UTF-8");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         writer.append("N = " + N + ";\n");
         writer.append("S = " + S + "\n");
         writer.append("Numbers of job of I class in cludlet= " + totalN1 + ";\n");

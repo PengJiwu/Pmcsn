@@ -1,6 +1,6 @@
 package progetto.Statistics;
 
-import configuration.configuration;
+import configuration.Configuration;
 import progetto.events.Clock;
 import rng.Rvms;
 
@@ -32,12 +32,12 @@ public class BatchMeans {
     Clock clock;
 
 
-    public BatchMeans (){
+    public BatchMeans () {
 
         welford = new WelfordMean();
-        n = configuration.duration;
-        b = configuration.batchNumber;
-        alfa = configuration.alfa;
+        n = Configuration.getConfiguration().duration;
+        b = Configuration.getConfiguration().batchNumber;
+        alfa = Configuration.getConfiguration().alfa;
         k = (int) Math.floor(n/ (double) b);
 
         clock = Clock.getClock();

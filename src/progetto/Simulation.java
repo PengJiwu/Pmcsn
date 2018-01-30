@@ -2,9 +2,9 @@ package progetto;
 
 
 
+import configuration.Configuration;
 import progetto.Statistics.BatchMeans;
 import progetto.Statistics.Statistics;
-import progetto.Statistics.WelfordMean;
 import progetto.cloud.Cloud;
 import progetto.cloudlet.Cloudlet;
 import progetto.events.*;
@@ -13,7 +13,6 @@ import rng.Rvgs;
 
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
-import configuration.configuration;
 
 public class Simulation {
 
@@ -43,12 +42,11 @@ public class Simulation {
 
     Cloudlet cloudlet;
     Cloud cloud;
-    static configuration conf;
+    static Configuration conf;
 
     public static void main(String[] args) throws Exception {
 
-        conf = new configuration();
-        conf.loadFIle();
+        conf = Configuration.getConfiguration();
         STOP = conf.duration;
         N = conf.N;
         S = conf.S;
