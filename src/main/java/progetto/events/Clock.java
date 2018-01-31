@@ -10,14 +10,15 @@ public class Clock {
     private double previous;
 
     static double START = 0.0;              /* initial time                   */
-    static double STOP = 100.0;          /* terminal (close the door) time */
+    static double STOP = 100.0;             /* terminal (close the door) time */
     static double INFINITY = 100.0 * STOP;
 
     static Clock me = null;
 
     public static Clock getClock(){
-        if(me == null)
-        {
+
+        if(me == null) {
+
             me = new Clock();
             return me;
         }

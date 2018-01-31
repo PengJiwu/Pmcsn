@@ -14,16 +14,7 @@ public class BatchMeans {
     int k;         //batch size
     int b;     //number of batches
     double alfa;  //confidence parameter
-
     int i = 1; //batch index
-
-    public String getAttributeName() {
-        return attributeName;
-    }
-
-    public void setAttributeName(String attributeName) {
-        this.attributeName = attributeName;
-    }
 
     private String attributeName;
 
@@ -35,7 +26,6 @@ public class BatchMeans {
     ArrayList<Double> meanlist = new ArrayList<>();
     Clock clock;
 
-
     public BatchMeans () {
 
         welford = new WelfordMean();
@@ -45,15 +35,14 @@ public class BatchMeans {
         b = (int) (n/k);
 
         clock = Clock.getClock();
-
 //        System.out.println("number of jobs n is " + n);
 //        System.out.println("number of batch is " + b);
 //        System.out.println("Batch size is " + k);
     }
 
-    public void update(double e){
-        if (clock.getCurrent() >= i*getBatchSize())
-        {
+    public void update(double e) {
+
+        if (clock.getCurrent() >= i*getBatchSize()) {
             addMeanInList();
             incrementIndex();
         }
@@ -61,20 +50,18 @@ public class BatchMeans {
     }
 
 
-    public void calculateMean(double e){
+    public void calculateMean(double e) {
 
         welford.addBatchElement(e);
         welford.addElement(e);
 
     }
 
-    public void addMeanInList(){
+    public void addMeanInList() {
 
         double e = getMeanvalue();
         meanlist.add(e);
-
     }
-
 
     public void incrementIndex(){
 
@@ -83,23 +70,18 @@ public class BatchMeans {
         return;
     }
 
+    public double calculateFinalMean() {
 
-
-    public double calculateFinalMean(){
-
-        for (Double d: meanlist){
+        for (Double d: meanlist)
             welford.addBatchElement(d);
 
-        }
-
         return welford.getMean();
-    }
 
+    }
 
     public double getMeanvalue() {
         return welford.getMean();
     }
-
 
     public double getBatchSize(){
 
@@ -107,7 +89,7 @@ public class BatchMeans {
     }
 
 
-    public double calculateCriticalValue(){
+    public double calculateCriticalValue() {
 
         double t;
         Rvms rvms = new Rvms();
@@ -116,7 +98,7 @@ public class BatchMeans {
 
     }
 
-    public double calculateEndPoints(){
+    public double calculateEndPoints() {
 
         double t = calculateCriticalValue();
         double stdDev = Math.sqrt(welford.getTotalVariance());
@@ -125,16 +107,23 @@ public class BatchMeans {
         return  endPoint;
     }
 
-    public double getVariance(){
+    public double getVariance() {
 
         return welford.getTotalVariance();
     }
 
 
-    public double getTotalMean(){
+    public double getTotalMean() {
 
         return welford.getTotal_mean();
     }
 
+    public String getAttributeName() {
+        return attributeName;
+    }
+
+    public void setAttributeName(String attributeName) {
+        this.attributeName = attributeName;
+    }
 
 }

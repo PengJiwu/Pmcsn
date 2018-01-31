@@ -21,15 +21,6 @@ public class Cloud {
     MmccArea areaTot;
     Clock clock;
 
-
-    public static int getCompletedN1() {
-        return completedN1;
-    }
-
-    public static int getCompletedN2() {
-        return completedN2;
-    }
-
     public Cloud(){
 
         n1 = 0;
@@ -50,16 +41,14 @@ public class Cloud {
     }
 
 
-
     public void processArrival(CloudArrivalEvent event)  {
 
         BatchMeansStatistics bm;
         bm = BatchMeansStatistics.getMe();
 
-
-
         Job nextArrivalJob = event.getJob();
         if (nextArrivalJob.getClasse() ==1) {
+
             n1++;
 
             bm.getCloudClassI_Population().update(n1);
@@ -68,6 +57,7 @@ public class Cloud {
         }
 
         else {
+
             n2++;
 
             bm.getCloudClassII_Population().update(n2);
@@ -75,15 +65,13 @@ public class Cloud {
 
         }
 
-        createNewCompletionEvent(nextArrivalJob,nextArrivalJob.getCompletion());
-
-
+        createNewCompletionEvent(nextArrivalJob, nextArrivalJob.getCompletion());
 
     }
 
     private void createNewCompletionEvent(Job nextArrivalJob, double completion) {
 
-        Event e = new CloudCompletionEvent(nextArrivalJob,completion);
+        Event e = new CloudCompletionEvent(nextArrivalJob, completion);
 
         eventList.pushEvent(eventList.getCloudEventList(), e);
 
@@ -95,7 +83,9 @@ public class Cloud {
         bm = BatchMeansStatistics.getMe();
 
         Job nextArrivalJob = e.getJob();
+
         if (nextArrivalJob.getClasse() ==1) {
+
             n1--;
             completedN1++;
 
@@ -107,9 +97,8 @@ public class Cloud {
             bm.getSystemClassI_RTime().update(cloudClassIRTime);
 
         }
+        else {
 
-        else
-            {
             n2--;
             completedN2++;
 
@@ -123,8 +112,7 @@ public class Cloud {
             if (nextArrivalJob.getPrelation() == true)
                 bm.getInterruptedTasks_classII_RTime().update(nextArrivalJob.getCompletion() - nextArrivalJob.getFirstarrival());
 
-            }
-
+        }
 
         double systemRTime = nextArrivalJob.getCompletion() - nextArrivalJob.getFirstarrival();
         bm.getSystemRTime().update(systemRTime);
@@ -144,5 +132,13 @@ public class Cloud {
         Statistics stat = Statistics.getMe();
         stat.updateCloudStatistics(n1,n2,completedN1,completedN2);
 
+    }
+
+    public static int getCompletedN1() {
+        return completedN1;
+    }
+
+    public static int getCompletedN2() {
+        return completedN2;
     }
 }
