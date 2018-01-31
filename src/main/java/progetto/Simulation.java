@@ -33,6 +33,10 @@ public class Simulation {
     MmccArea area2;
     MmccArea areaTot;
 
+    public static void setS(int s) {
+        S = s;
+    }
+
     Rngs r;
     Rvgs rvgs;
 
@@ -54,6 +58,7 @@ public class Simulation {
         seed = conf.seed;
 
 
+
         SimulationTimer st = new SimulationTimer();
         st.startTimer();
 
@@ -72,7 +77,7 @@ public class Simulation {
     {
 
         r = new Rngs();
-        r.plantSeeds(123456789);
+        r.plantSeeds(seed);
         rvgs = new Rvgs(r);
 
         clock = Clock.getClock();
@@ -88,7 +93,7 @@ public class Simulation {
 
     }
 
-    private void run() throws FileNotFoundException, UnsupportedEncodingException {
+    public void run() throws FileNotFoundException, UnsupportedEncodingException {
         boolean stopArrivals = false;
 
         int i = 1;
@@ -158,7 +163,7 @@ public class Simulation {
         }
 
         Statistics st = Statistics.getMe();
-        st.printStatistics();
+      //  st.printStatistics();
 
 
 
@@ -167,6 +172,24 @@ public class Simulation {
         //cloudlet.printStatistics();
 
         BatchMeansStatistics.printAll();
+
+//        System.out.println("For S = " + S);
+//
+//        System.out.println(BatchMeansStatistics.getSystemRTime().getAttributeName());
+//        System.out.println(BatchMeansStatistics.getSystemRTime().getMeanvalue() + "\n");
+//
+//        System.out.println(BatchMeansStatistics.getCloudletRTime().getAttributeName());
+//        System.out.println(BatchMeansStatistics.getCloudletRTime().getMeanvalue()+ "\n");
+//
+//        System.out.println(BatchMeansStatistics.getCloudRTime().getAttributeName());
+//        System.out.println(BatchMeansStatistics.getCloudRTime().getMeanvalue()+ "\n");
+
+
+
+
+
+
+
     }
 
     private void createNewArrivalEvent() {

@@ -1,8 +1,8 @@
 {
   "N":20,
-  "S":20,
+  "S": 20,
   "seed":123456789,
-  "duration":245760.0,
-  "batchNumber":960,
+  "duration":64000.0,
+  "batchNumber":64,
   "alfa":0.05
 }

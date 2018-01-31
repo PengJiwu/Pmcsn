@@ -182,7 +182,12 @@ public class BatchMeansStatistics {
         batchMeans.add(cloudClassII_RTime);
 
         cloudRTime = new BatchMeans();
+        cloudRTime.setAttributeName("Cloud Response Time = ");
+        batchMeans.add(cloudRTime);
+
         cloudletRTime = new BatchMeans();
+        cloudletRTime.setAttributeName("Cloudlet Response Time = ");
+        batchMeans.add(cloudletRTime);
 
     }
 

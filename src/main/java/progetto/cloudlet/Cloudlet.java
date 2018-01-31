@@ -97,7 +97,6 @@ public class Cloudlet {
                 Job job = eventList.removeOneC2CompletionEvent();
                 interruptedJobs++;
 
-                System.out.println("Number of interrupted jobs: " + interruptedJobs );
 
                 job.setPrelation(true);
                 sendToTheCloud(job);
