@@ -53,6 +53,11 @@ public class BatchMeansStatistics {
     private static BatchMeans cloudThroughput_ClassI;             //necessary for computation
     private static BatchMeans cloudThroughput_ClassII;             //necessary for computation
 
+
+    private static BatchMeans cloudRTime;
+    private static BatchMeans cloudletRTime;
+
+
     private static ArrayList<BatchMeans> batchMeans = new ArrayList<BatchMeans>();
 
 
@@ -176,6 +181,9 @@ public class BatchMeansStatistics {
         cloudClassII_RTime.setAttributeName("Cloud Response Time for class 2 jobs = ");
         batchMeans.add(cloudClassII_RTime);
 
+        cloudRTime = new BatchMeans();
+        cloudletRTime = new BatchMeans();
+
     }
 
     public static BatchMeans getSystemRTime() {
@@ -262,6 +270,21 @@ public class BatchMeansStatistics {
         return cloudThroughput_ClassII;
     }
 
+    public static BatchMeans getCloudRTime() {
+        return cloudRTime;
+    }
+
+    public static void setCloudRTime(BatchMeans cloudRTime) {
+        BatchMeansStatistics.cloudRTime = cloudRTime;
+    }
+
+    public static BatchMeans getCloudletRTime() {
+        return cloudletRTime;
+    }
+
+    public static void setCloudletRTime(BatchMeans cloudletRTime) {
+        BatchMeansStatistics.cloudletRTime = cloudletRTime;
+    }
 
     public static void printAll(){
 

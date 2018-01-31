@@ -163,6 +163,8 @@ public class Cloudlet {
             bm.getCloudletThroughput_ClassI().update(completedN1/clock.getCurrent());
             //System.out.println(completedN1/clock.getCurrent());
 
+            bm.getCloudletRTime().update(cloudletClassIRTime);
+
         } else {
 
             n2--;
@@ -179,6 +181,9 @@ public class Cloudlet {
 
             bm.getCloudletThroughput_ClassII().update(completedN2/clock.getCurrent());
             //System.out.println(completedN2/clock.getCurrent());
+
+            bm.getCloudletRTime().update(cloudletClassIIRTime);
+
 
         }
 

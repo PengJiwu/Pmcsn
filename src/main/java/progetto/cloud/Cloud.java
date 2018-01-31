@@ -96,6 +96,9 @@ public class Cloud {
             bm.getCloudClassI_RTime().update(cloudClassIRTime);
             bm.getSystemClassI_RTime().update(cloudClassIRTime);
 
+            bm.getCloudRTime().update(cloudClassIRTime);
+
+
         }
         else {
 
@@ -108,6 +111,9 @@ public class Cloud {
             double cloudClassIIRTime = nextArrivalJob.getCompletion() - nextArrivalJob.getFirstarrival();
             bm.getCloudClassII_RTime().update(cloudClassIIRTime);
             bm.getSystemClassII_RTime().update(cloudClassIIRTime);
+
+            bm.getCloudRTime().update(cloudClassIIRTime);
+
 
             if (nextArrivalJob.getPrelation() == true)
                 bm.getInterruptedTasks_classII_RTime().update(nextArrivalJob.getCompletion() - nextArrivalJob.getFirstarrival());
