@@ -173,22 +173,6 @@ public class Simulation {
 
         BatchMeansStatistics.printAll();
 
-//        System.out.println("For S = " + S);
-//
-//        System.out.println(BatchMeansStatistics.getSystemRTime().getAttributeName());
-//        System.out.println(BatchMeansStatistics.getSystemRTime().getMeanvalue() + "\n");
-//
-//        System.out.println(BatchMeansStatistics.getCloudletRTime().getAttributeName());
-//        System.out.println(BatchMeansStatistics.getCloudletRTime().getMeanvalue()+ "\n");
-//
-//        System.out.println(BatchMeansStatistics.getCloudRTime().getAttributeName());
-//        System.out.println(BatchMeansStatistics.getCloudRTime().getMeanvalue()+ "\n");
-
-
-
-
-
-
 
     }
 

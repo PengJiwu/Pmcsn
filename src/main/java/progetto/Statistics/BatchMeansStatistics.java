@@ -1,6 +1,9 @@
 package progetto.Statistics;
 
-import java.lang.reflect.Array;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.File;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -296,19 +299,21 @@ public class BatchMeansStatistics {
         DecimalFormat f = new DecimalFormat("###0.000000");
         for (BatchMeans b: batchMeans){
 
-//            double finalMean = b.calculateFinalMean();
-//            double endPoints = b.calculateEndPoints();
-//            double variance  = b.getVariance();
 
             String finalMean  = f.format(b.calculateFinalMean());
             String endPoints  = f.format(b.calculateEndPoints());
-            String variance  = f.format(b.getVariance());
-
             System.out.println(b.getAttributeName() + finalMean + "+-" + endPoints);
-            System.out.println("Variance is: " + variance);
-            System.out.println("Mean is    : " + b.getTotalMean());
+
 
         }
+
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            mapper.writeValue(new File("src/main/java/progetto/Results/prova.json"),batchMeans);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 
     }
 
