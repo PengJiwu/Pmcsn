@@ -72,9 +72,10 @@ public class BatchMeans {
 
     public double calculateFinalMean() {
 
-        for (Double d: meanlist)
+        for (Double d: meanlist) {
+            welford.resetIndexes();
             welford.addBatchElement(d);
-
+        }
         return welford.getMean();
 
     }

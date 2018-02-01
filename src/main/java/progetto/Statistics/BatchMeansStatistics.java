@@ -9,68 +9,63 @@ import java.util.ArrayList;
 
 public class BatchMeansStatistics {
 
-   // private static BatchMeans systemUtilization;                   //necessary for computation
+   // private  BatchMeans systemUtilization;                   //necessary for computation
 
 
 
-    private static BatchMeans systemRTime;                         //requested ok
-    private static BatchMeans systemClassI_RTime;                  //requested ok
-    private static BatchMeans systemClassII_RTime;                 //requested ok
+    private  BatchMeans systemRTime;                         //requested ok
+    private  BatchMeans systemClassI_RTime;                  //requested ok
+    private  BatchMeans systemClassII_RTime;                 //requested ok
 
 
-    private static BatchMeans systemThroughput;                    //requested ok
-    private static BatchMeans systemThroughput_ClassI;             //requested ok
-    private static BatchMeans systemThroughput_ClassII;            //requested ok
+    private  BatchMeans systemThroughput;                    //requested ok
+    private  BatchMeans systemThroughput_ClassI;             //requested ok
+    private  BatchMeans systemThroughput_ClassII;            //requested ok
 
 
-    private static BatchMeans cloudletThroughput;                  //requested ok
-    private static BatchMeans cloudletThroughput_ClassI;           //requested ok
-    private static BatchMeans cloudletThroughput_ClassII;          //requested ok
+    private  BatchMeans cloudletThroughput;                  //requested ok
+    private  BatchMeans cloudletThroughput_ClassI;           //requested ok
+    private  BatchMeans cloudletThroughput_ClassII;          //requested ok
 
 
-    private static BatchMeans interruptedTasks_classIIpercentage;  //requested ok
-    private static BatchMeans interruptedTasks_classII_RTime;      //requested ok
+    private  BatchMeans interruptedTasks_classIIpercentage;  //requested ok
+    private  BatchMeans interruptedTasks_classII_RTime;      //requested ok
 
 
-    private static BatchMeans cloudletPopulation;                  //requested ok
-    private static BatchMeans cloudletClassI_Population;           //requested ok
-    private static BatchMeans cloudletClassII_Population;          //requested ok
+    private  BatchMeans cloudletPopulation;                  //requested ok
+    private  BatchMeans cloudletClassI_Population;           //requested ok
+    private  BatchMeans cloudletClassII_Population;          //requested ok
 
 
-    private static BatchMeans cloudPopulation;                     //requested ok
-    private static BatchMeans cloudClassI_Population;              //requested ok
-    private static BatchMeans cloudClassII_Population;             //requested ok
+    private  BatchMeans cloudPopulation;                     //requested ok
+    private  BatchMeans cloudClassI_Population;              //requested ok
+    private  BatchMeans cloudClassII_Population;             //requested ok
 
 
-    //private static BatchMeans cloudletRTime;             //necessary for computation
-    private static BatchMeans cloudletClassI_RTime;             //necessary for computation ok
-    private static BatchMeans cloudletClassII_RTime;             //necessary for computation ok
+    //private  BatchMeans cloudletRTime;             //necessary for computation
+    private  BatchMeans cloudletClassI_RTime;             //necessary for computation ok
+    private  BatchMeans cloudletClassII_RTime;             //necessary for computation ok
 
 
-    //private static BatchMeans cloudRTime;             //necessary for computation
-    private static BatchMeans cloudClassI_RTime;             //necessary for computation ok
-    private static BatchMeans cloudClassII_RTime;             //necessary for computation ok
+    //private  BatchMeans cloudRTime;             //necessary for computation
+    private  BatchMeans cloudClassI_RTime;             //necessary for computation ok
+    private  BatchMeans cloudClassII_RTime;             //necessary for computation ok
 
 
-    //private static BatchMeans cloudThroughput;                 //necessary for computation
-    private static BatchMeans cloudThroughput_ClassI;             //necessary for computation
-    private static BatchMeans cloudThroughput_ClassII;             //necessary for computation
+    //private  BatchMeans cloudThroughput;                 //necessary for computation
+    private  BatchMeans cloudThroughput_ClassI;             //necessary for computation
+    private  BatchMeans cloudThroughput_ClassII;             //necessary for computation
 
 
-    private static BatchMeans cloudRTime;
-    private static BatchMeans cloudletRTime;
+    private  BatchMeans cloudRTime;
+    private  BatchMeans cloudletRTime;
 
 
-    private static ArrayList<BatchMeans> batchMeans = new ArrayList<BatchMeans>();
+    private  ArrayList<BatchMeans> batchMeans = new ArrayList<BatchMeans>();
+
+    static BatchMeansStatistics me = null;
 
 
-    public static BatchMeans getSystemThroughput_ClassI() {
-        return systemThroughput_ClassI;
-    }
-
-    public static BatchMeans getSystemThroughput_ClassII() {
-        return systemThroughput_ClassII;
-    }
 
     public static BatchMeansStatistics getMe() {
 
@@ -82,8 +77,6 @@ public class BatchMeansStatistics {
         }
         return me;
     }
-
-    static BatchMeansStatistics me = null;
 
     private BatchMeansStatistics() {
 
@@ -194,116 +187,126 @@ public class BatchMeansStatistics {
 
     }
 
-    public static BatchMeans getSystemRTime() {
+    public BatchMeans getSystemRTime() {
         return systemRTime;
     }
 
-    public static BatchMeans getSystemClassI_RTime() {
+    public BatchMeans getSystemClassI_RTime() {
         return systemClassI_RTime;
     }
 
-    public static BatchMeans getSystemClassII_RTime() {
+    public BatchMeans getSystemClassII_RTime() {
         return systemClassII_RTime;
     }
 
-    public static BatchMeans getSystemThroughput() {
+    public BatchMeans getSystemThroughput() {
         return systemThroughput;
     }
 
-    public static BatchMeans getCloudletThroughput() {
+    public BatchMeans getCloudletThroughput() {
         return cloudletThroughput;
     }
 
-    public static BatchMeans getCloudletThroughput_ClassI() {
+    public BatchMeans getCloudletThroughput_ClassI() {
         return cloudletThroughput_ClassI;
     }
 
-    public static BatchMeans getCloudletThroughput_ClassII() {
+    public BatchMeans getCloudletThroughput_ClassII() {
         return cloudletThroughput_ClassII;
     }
 
-    public static BatchMeans getInterruptedTasks_classIIpercentage() {
+    public BatchMeans getInterruptedTasks_classIIpercentage() {
         return interruptedTasks_classIIpercentage;
     }
 
-    public static BatchMeans getInterruptedTasks_classII_RTime() {
+    public BatchMeans getInterruptedTasks_classII_RTime() {
         return interruptedTasks_classII_RTime;
     }
 
-    public static BatchMeans getCloudletPopulation() {
+    public BatchMeans getCloudletPopulation() {
         return cloudletPopulation;
     }
 
-    public static BatchMeans getCloudletClassI_Population() {
+    public BatchMeans getCloudletClassI_Population() {
         return cloudletClassI_Population;
     }
 
-    public static BatchMeans getCloudletClassII_Population() {
+    public BatchMeans getCloudletClassII_Population() {
         return cloudletClassII_Population;
     }
 
-    public static BatchMeans getCloudPopulation() {
+    public BatchMeans getCloudPopulation() {
         return cloudPopulation;
     }
 
-    public static BatchMeans getCloudClassI_Population() {
+    public BatchMeans getCloudClassI_Population() {
         return cloudClassI_Population;
     }
 
-    public static BatchMeans getCloudClassII_Population() {
+    public BatchMeans getCloudClassII_Population() {
         return cloudClassII_Population;
     }
 
-    public static BatchMeans getCloudletClassI_RTime() {
+    public BatchMeans getCloudletClassI_RTime() {
         return cloudletClassI_RTime;
     }
 
-    public static BatchMeans getCloudletClassII_RTime() {
+    public BatchMeans getCloudletClassII_RTime() {
         return cloudletClassII_RTime;
     }
 
-    public static BatchMeans getCloudClassI_RTime() {
+    public BatchMeans getCloudClassI_RTime() {
         return cloudClassI_RTime;
     }
 
-    public static BatchMeans getCloudClassII_RTime() {
+    public BatchMeans getCloudClassII_RTime() {
         return cloudClassII_RTime;
     }
 
-    public static BatchMeans getCloudThroughput_ClassI() {
+    public BatchMeans getCloudThroughput_ClassI() {
         return cloudThroughput_ClassI;
     }
 
-    public static BatchMeans getCloudThroughput_ClassII() {
+    public BatchMeans getCloudThroughput_ClassII() {
         return cloudThroughput_ClassII;
     }
 
-    public static BatchMeans getCloudRTime() {
+    public  BatchMeans getCloudRTime() {
         return cloudRTime;
     }
 
-    public static void setCloudRTime(BatchMeans cloudRTime) {
-        BatchMeansStatistics.cloudRTime = cloudRTime;
+    public  void setCloudRTime(BatchMeans cloudRTime) {
+        this.cloudRTime = cloudRTime;
     }
 
-    public static BatchMeans getCloudletRTime() {
+    public  BatchMeans getCloudletRTime() {
         return cloudletRTime;
     }
 
-    public static void setCloudletRTime(BatchMeans cloudletRTime) {
-        BatchMeansStatistics.cloudletRTime = cloudletRTime;
+    public  void setCloudletRTime(BatchMeans cloudletRTime) {
+        this.cloudletRTime = cloudletRTime;
     }
 
-    public static void printAll(){
+    public  BatchMeans getSystemThroughput_ClassI() {
+        return systemThroughput_ClassI;
+    }
+
+    public  BatchMeans getSystemThroughput_ClassII() {
+        return systemThroughput_ClassII;
+    }
+
+
+
+    public  void printAll(){
 
         DecimalFormat f = new DecimalFormat("###0.000000");
         for (BatchMeans b: batchMeans){
 
-
+            double total_mean = b.getTotalMean();
             String finalMean  = f.format(b.calculateFinalMean());
             String endPoints  = f.format(b.calculateEndPoints());
             System.out.println(b.getAttributeName() + finalMean + "+-" + endPoints);
-
+            System.out.println("total mean is:" + total_mean);
 
         }
 

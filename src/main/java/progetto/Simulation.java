@@ -3,6 +3,9 @@ package progetto;
 
 
 import configuration.Configuration;
+import progetto.Charts.N1JobChart;
+import progetto.Charts.N2JobChart;
+import progetto.Charts.ThroughputChart;
 import progetto.Statistics.BatchMeans;
 import progetto.Statistics.BatchMeansStatistics;
 import progetto.Statistics.Statistics;
@@ -58,6 +61,7 @@ public class Simulation {
         seed = conf.seed;
 
 
+        N1JobChart.getN1JobChart();
 
         SimulationTimer st = new SimulationTimer();
         st.startTimer();
@@ -171,7 +175,10 @@ public class Simulation {
 
         //cloudlet.printStatistics();
 
-        BatchMeansStatistics.printAll();
+        BatchMeansStatistics.getMe().printAll();
+        N1JobChart.getN1JobChart().printJSON("n1");
+        N2JobChart.getN2JobChart().printJSON("n2");
+        ThroughputChart.getThroughputChart().printJSON("thr");
 
 
     }

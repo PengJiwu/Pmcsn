@@ -1,6 +1,9 @@
 package progetto.cloudlet;
 
 
+import progetto.Charts.N1JobChart;
+import progetto.Charts.N2JobChart;
+import progetto.Charts.ThroughputChart;
 import progetto.Job;
 import progetto.MmccArea;
 import progetto.Statistics.BatchMeansStatistics;
@@ -191,7 +194,7 @@ public class Cloudlet {
         double completed = cloudCompletion + cloudletCompletion;
 
         bm.getSystemThroughput().update(completed/clock.getCurrent());
-        bm.getSystemThroughput_ClassI().update((completedN1 + Cloud.getCompletedN1())/clock.getCurrent());
+        bm.getSystemThroughput_ClassI().update((double)(completedN1 + Cloud.getCompletedN1())/clock.getCurrent());
         bm.getSystemThroughput_ClassII().update((completedN2 + Cloud.getCompletedN2())/clock.getCurrent());
 
         double systemRTime = event.getJob().getService_time();
@@ -199,7 +202,9 @@ public class Cloudlet {
         //System.out.println("system response time " + systemRTime);
         bm.getSystemRTime().update(systemRTime);
 
-        bm.getCloudletThroughput().update((completedN2 + completedN1)/ clock.getCurrent());
+        double boh = (double) (completedN2 + completedN1)/ clock.getCurrent();
+        bm.getCloudletThroughput().update(boh);
+        ThroughputChart.getThroughputChart().addCoordinates(clock.getCurrent(),boh);
         //System.out.println((completedN2 + completedN1)/ clock.getCurrent());
 
     }
@@ -226,6 +231,16 @@ public class Cloudlet {
 
         Statistics stat = Statistics.getMe();
         stat.updateCloudletStatistics(n1,n2,totalN1,totalN2,completedN1,completedN2);
+
+        if (n1 > 0) {                               /* update integrals  */
+            areaN1.service += (clock.getCurrent() - clock.getPrevious());
+            N1JobChart.getN1JobChart().addCoordinates(areaN1.service,n1);
+        }
+        if (n2 > 0) {                               /* update integrals  */
+            areaN2.service += (clock.getCurrent() - clock.getPrevious());
+            N2JobChart.getN2JobChart().addCoordinates(areaN2.service,n2);
+        }
+
 
     }
 
