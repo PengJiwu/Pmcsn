@@ -93,10 +93,11 @@ public class Cloud {
             bm.getCloudPopulation().update(n1 + n2);
 
             double cloudClassIRTime = e.getJob().getCompletion() - e.getJob().getFirstarrival();
-            bm.getCloudClassI_RTime().update(cloudClassIRTime);
+
+            bm.getCloudClassI_RTime().update(nextArrivalJob.getService_time());
             bm.getSystemClassI_RTime().update(cloudClassIRTime);
 
-            bm.getCloudRTime().update(cloudClassIRTime);
+            bm.getCloudRTime().update(nextArrivalJob.getService_time());
 
 
         }
@@ -109,10 +110,10 @@ public class Cloud {
             bm.getCloudPopulation().update(n1 + n2);
 
             double cloudClassIIRTime = nextArrivalJob.getCompletion() - nextArrivalJob.getFirstarrival();
-            bm.getCloudClassII_RTime().update(cloudClassIIRTime);
+            bm.getCloudClassII_RTime().update(nextArrivalJob.getService_time());
             bm.getSystemClassII_RTime().update(cloudClassIIRTime);
 
-            bm.getCloudRTime().update(cloudClassIIRTime);
+            bm.getCloudRTime().update(nextArrivalJob.getService_time());
 
 
             if (nextArrivalJob.getPrelation() == true)

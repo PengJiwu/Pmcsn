@@ -29,6 +29,7 @@ public class Cloudlet {
     static int completedN2;
     int interruptedJobs;
     int persianJobs;
+    int class1toCloud;
 
     MmccArea areaN1;
     MmccArea areaN2;
@@ -50,6 +51,7 @@ public class Cloudlet {
 
         interruptedJobs = 0;
         persianJobs = 0;
+        class1toCloud = 0;
 
         totalN1 = 0;
         totalN2 = 0;
@@ -86,7 +88,10 @@ public class Cloudlet {
             if (n1 == N)    {                      //Cloudlet is completely full
                 sendToTheCloud(nextArrivalJob);
                 bm.getSentToTheCloudJobs().update((double)(persianJobs + interruptedJobs)/(totalN1 + totalN2));
-                persianJobs ++;}
+                persianJobs ++;
+                class1toCloud++;
+                            }
+
 
             else if (n1 + n2 < S) {               // Threshold hasn't been trespassed yet
 
@@ -268,17 +273,24 @@ public class Cloudlet {
         //  job.printAll();
         if (job.getClasse()==1) {
             job.setService_time(r.streamExponential(1 / MU1cloud, 6));
+            job.setCompletion(job.getArrival() + job.getService_time());
         //     System.out.println("Job di classe 1 al cloud");
         }
+
         else {
        //     System.out.println("Job di classe 2 al cloud");
             job.setService_time(r.streamExponential(1 / MU2cloud, 7));
+
+            if (job.getPrelation() == true){
+                job.setSetup_time(r.streamExponential(0.8,8));
+
+                job.setService_time(job.getService_time() + job.getSetup_time());
+            }
+            job.setCompletion(job.getArrival() + job.getService_time());
+
         }
 
-        job.setSetup_time(r.streamExponential(0.8,8));
-        job.setService_time(job.getService_time() + job.getSetup_time());
 
-        job.setCompletion(job.getArrival() + job.getService_time());
 
        // System.out.println("new service time is: " +job.getService_time());
        // System.out.println("***********************************************************************************************");

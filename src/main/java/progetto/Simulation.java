@@ -167,7 +167,7 @@ public class Simulation {
         }
 
         Statistics st = Statistics.getMe();
-      //  st.printStatistics();
+        st.printStatistics();
 
 
 
