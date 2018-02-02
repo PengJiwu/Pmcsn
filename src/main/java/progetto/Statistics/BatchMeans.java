@@ -76,6 +76,7 @@ public class BatchMeans {
             welford.resetIndexes();
             welford.addBatchElement(d);
         }
+
         return welford.getMean();
 
     }

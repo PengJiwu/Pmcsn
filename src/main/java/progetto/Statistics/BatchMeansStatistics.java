@@ -60,6 +60,8 @@ public class BatchMeansStatistics {
     private  BatchMeans cloudRTime;
     private  BatchMeans cloudletRTime;
 
+    private BatchMeans sentToTheCloudJobs;
+
 
     private  ArrayList<BatchMeans> batchMeans = new ArrayList<BatchMeans>();
 
@@ -185,6 +187,15 @@ public class BatchMeansStatistics {
         cloudletRTime.setAttributeName("Cloudlet Response Time = ");
         batchMeans.add(cloudletRTime);
 
+        sentToTheCloudJobs = new BatchMeans();
+        sentToTheCloudJobs.setAttributeName("Number of jobs sent to the cloud is no spazio n'uguale un altro spazio = ");
+        batchMeans.add(sentToTheCloudJobs);
+
+
+    }
+
+    public BatchMeans getSentToTheCloudJobs() {
+        return sentToTheCloudJobs;
     }
 
     public BatchMeans getSystemRTime() {

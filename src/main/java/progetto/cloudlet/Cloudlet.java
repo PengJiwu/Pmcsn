@@ -21,11 +21,14 @@ public class Cloudlet {
     int N,S;
     int totalN1,totalN2;
 
+    int arrivalN2;
+
 
     EventList eventList;
     static int completedN1;
     static int completedN2;
     int interruptedJobs;
+    int persianJobs;
 
     MmccArea areaN1;
     MmccArea areaN2;
@@ -41,9 +44,13 @@ public class Cloudlet {
 
         n1 = 0;
         n2 = 0;
+
         completedN1 = 0;
         completedN2 = 0;
+
         interruptedJobs = 0;
+        persianJobs = 0;
+
         totalN1 = 0;
         totalN2 = 0;
 
@@ -76,8 +83,10 @@ public class Cloudlet {
             //Arriva job di classe 1
             totalN1++;
 
-            if (n1 == N)                          //Cloudlet is completely full
+            if (n1 == N)    {                      //Cloudlet is completely full
                 sendToTheCloud(nextArrivalJob);
+                bm.getSentToTheCloudJobs().update((double)(persianJobs + interruptedJobs)/(totalN1 + totalN2));
+                persianJobs ++;}
 
             else if (n1 + n2 < S) {               // Threshold hasn't been trespassed yet
 
@@ -92,20 +101,22 @@ public class Cloudlet {
 
                 n1++;
                 n2--;
+                interruptedJobs++;
 
                 bm.getCloudletPopulation().update(n1 + n2);
                 bm.getCloudletClassI_Population().update(n1);
                 bm.getCloudletClassII_Population().update(n2);
+                bm.getSentToTheCloudJobs().update((double)(persianJobs + interruptedJobs)/(totalN1 + totalN2));
 
                 Job job = eventList.removeOneC2CompletionEvent();
-                interruptedJobs++;
+
 
 
                 job.setPrelation(true);
                 sendToTheCloud(job);
                 createNewCompletionEvent(nextArrivalJob,nextArrivalJob.getCompletion());
 
-                bm.getInterruptedTasks_classIIpercentage().update((double) interruptedJobs/totalN2);
+                bm.getInterruptedTasks_classIIpercentage().update((double) interruptedJobs/(totalN2));
 
             } else {                                // Threshold has been passed and there aren't class 2 jobs
 
@@ -124,9 +135,12 @@ public class Cloudlet {
 
             if (n1 + n2 >= S) {
                 sendToTheCloud(nextArrivalJob);
+                persianJobs++;
+                bm.getSentToTheCloudJobs().update((double)(persianJobs + interruptedJobs)/(totalN1 + totalN2));
             } else {
 
                 n2++;
+                arrivalN2++;
 
                 bm.getCloudletPopulation().update(n1 + n2);
                 bm.getCloudletClassII_Population().update(n2);
