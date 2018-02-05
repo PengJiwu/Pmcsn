@@ -272,7 +272,7 @@ public class Cloudlet {
         // System.out.println("old service time is: " + job.getService_time());
         //  job.printAll();
         if (job.getClasse()==1) {
-            job.setService_time(r.streamExponential(1 / MU1cloud, 6));
+            job.setService_time(r.streamExponential((1 / MU1cloud), 6));
             job.setCompletion(job.getArrival() + job.getService_time());
         //     System.out.println("Job di classe 1 al cloud");
         }

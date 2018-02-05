@@ -141,11 +141,11 @@ public class BatchMeansStatistics {
         batchMeans.add(cloudletPopulation);
 
         cloudletClassI_Population = new BatchMeans();
-        cloudletClassI_Population.setAttributeName("Cloudlet popupation for class 1 jobs = ");
+        cloudletClassI_Population.setAttributeName("Cloudlet population for class 1 jobs = ");
         batchMeans.add(cloudletClassI_Population);
 
         cloudletClassII_Population = new BatchMeans();
-        cloudletClassII_Population.setAttributeName("Cloudlet popupation for class 2 jobs = ");
+        cloudletClassII_Population.setAttributeName("Cloudlet population for class 2 jobs = ");
         batchMeans.add(cloudletClassII_Population);
 
 
@@ -170,6 +170,10 @@ public class BatchMeansStatistics {
         cloudletClassII_RTime.setAttributeName("Cloudlet Response Time for class 2 jobs = ");
         batchMeans.add(cloudletClassII_RTime);
 
+        cloudletRTime = new BatchMeans();
+        cloudletRTime.setAttributeName("Cloudlet Response Time = ");
+        batchMeans.add(cloudletRTime);
+
 
         cloudClassI_RTime = new BatchMeans();
         cloudClassI_RTime.setAttributeName("\nCloud Response Time for class 1 jobs = ");
@@ -183,12 +187,10 @@ public class BatchMeansStatistics {
         cloudRTime.setAttributeName("Cloud Response Time = ");
         batchMeans.add(cloudRTime);
 
-        cloudletRTime = new BatchMeans();
-        cloudletRTime.setAttributeName("Cloudlet Response Time = ");
-        batchMeans.add(cloudletRTime);
+
 
         sentToTheCloudJobs = new BatchMeans();
-        sentToTheCloudJobs.setAttributeName("Number of jobs sent to the cloud is no spazio n'uguale un altro spazio = ");
+        sentToTheCloudJobs.setAttributeName("Number of jobs sent to the cloud is = ");
         batchMeans.add(sentToTheCloudJobs);
 
 

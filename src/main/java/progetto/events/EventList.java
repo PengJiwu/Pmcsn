@@ -99,11 +99,7 @@ public class EventList {
 
         cloudletEventList.remove(event);
         Job job = event.getJob();
-        // job.setFirstarrival(job.getArrival());
-        // job.setArrival(clock.getCurrent());
-        // job.setService_time(r.streamExponential(1 / 0.22, 3));
-        //Event newEvent = new CloudArrivalEvent(job,clock.getCurrent());
-        //this.pushEvent(cloudEventList,newEvent);
+
         return job;
     }
 
