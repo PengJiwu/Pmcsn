@@ -1,6 +1,5 @@
 package progetto;
 
-import rng.Rngs;
 import rng.Rvgs;
 
 public class Job {
@@ -12,7 +11,7 @@ public class Job {
     private double completion;
     private double setup_time;
     private int index;
-    private int classe;
+    private int jobClass;
     private boolean prelation = false;
 
     public double getArrival() {
@@ -31,11 +30,11 @@ public class Job {
         return index;
     }
 
-    public int getClasse() {
-        return classe;
+    public int getJobClass() {
+        return jobClass;
     }
 
-    public boolean isPrelation() {
+    public boolean isPrelated() {
         return prelation;
     }
 
@@ -55,32 +54,32 @@ public class Job {
         this.index = index;
     }
 
-    public void setClasse(int classe) {
-        this.classe = classe;
+    public void setJobClass(int jobClass) {
+        this.jobClass = jobClass;
     }
 
     public void setPrelation(boolean prelation) {
         this.prelation = prelation;
     }
 
-    public Job(double current, Rvgs r, double lambda, double mu,int classe)
+    public Job(double current, Rvgs r, double lambda, double mu,int jobClass)
     {
 
 
         arrival = current + r.streamExponential(1/lambda, 0);
-        if (classe ==1)
+        if (jobClass ==1)
          service_time = r.streamExponential(1/mu, 4);
         else
             service_time = r.streamExponential(1/mu, 5);
         completion = arrival + service_time;
 
-        this.classe = classe;
+        this.jobClass = jobClass;
     }
 
     public void printAll()
     {
 
-        System.out.println("JOB di tipo " + classe);
+        System.out.println("JOB di tipo " + jobClass);
         System.out.println("ARRIVO:     " + arrival);
         System.out.println("TSERV       " + service_time);
         System.out.println("TCOMPL      " + completion + "\n");

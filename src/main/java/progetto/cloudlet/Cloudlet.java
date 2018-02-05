@@ -28,7 +28,7 @@ public class Cloudlet {
     static int completedN1;
     static int completedN2;
     int interruptedJobs;
-    int persianJobs;
+    int blockedJobs;
     int class1toCloud;
 
     MmccArea areaN1;
@@ -50,7 +50,7 @@ public class Cloudlet {
         completedN2 = 0;
 
         interruptedJobs = 0;
-        persianJobs = 0;
+        blockedJobs = 0;
         class1toCloud = 0;
 
         totalN1 = 0;
@@ -76,20 +76,19 @@ public class Cloudlet {
     public void processArrival(CloudletArrivalEvent event)
     {
 
-        BatchMeansStatistics bm;
-        bm = BatchMeansStatistics.getMe();
+        BatchMeansStatistics bm = BatchMeansStatistics.getMe();
 
         Job nextArrivalJob = event.getJob();
-        if (nextArrivalJob.getClasse() == 1) {
+        if (nextArrivalJob.getJobClass() == 1) {
 
             //Arriva job di classe 1
             totalN1++;
 
             if (n1 == N)    {                      //Cloudlet is completely full
                 sendToTheCloud(nextArrivalJob);
-                bm.getSentToTheCloudJobs().update((double)(persianJobs + interruptedJobs)/(totalN1 + totalN2));
-                persianJobs ++;
+                blockedJobs++;
                 class1toCloud++;
+                bm.getSentToTheCloudJobs().update((double)(blockedJobs + interruptedJobs)/(totalN1 + totalN2));
                             }
 
 
@@ -98,7 +97,7 @@ public class Cloudlet {
                 n1++;
 
                 bm.getCloudletPopulation().update(n1 + n2);
-                bm.getCloudletClassI_Population().update(n1);
+                bm.getCloudletPopulation_ClassI().update(n1);
 
                 createNewCompletionEvent(nextArrivalJob,nextArrivalJob.getCompletion());
 
@@ -109,9 +108,9 @@ public class Cloudlet {
                 interruptedJobs++;
 
                 bm.getCloudletPopulation().update(n1 + n2);
-                bm.getCloudletClassI_Population().update(n1);
-                bm.getCloudletClassII_Population().update(n2);
-                bm.getSentToTheCloudJobs().update((double)(persianJobs + interruptedJobs)/(totalN1 + totalN2));
+                bm.getCloudletPopulation_ClassI().update(n1);
+                bm.getCloudletPopulation_ClassII().update(n2);
+                bm.getSentToTheCloudJobs().update((double)(blockedJobs + interruptedJobs)/(totalN1 + totalN2));
 
                 Job job = eventList.removeOneC2CompletionEvent();
 
@@ -121,14 +120,14 @@ public class Cloudlet {
                 sendToTheCloud(job);
                 createNewCompletionEvent(nextArrivalJob,nextArrivalJob.getCompletion());
 
-                bm.getInterruptedTasks_classIIpercentage().update((double) interruptedJobs/(totalN2));
+                bm.getInterruptedTasksPercentage_ClassII().update((double) interruptedJobs/(totalN2));
 
             } else {                                // Threshold has been passed and there aren't class 2 jobs
 
                 n1++;
 
                 bm.getCloudletPopulation().update(n1 + n2);
-                bm.getCloudletClassI_Population().update(n1);
+                bm.getCloudletPopulation_ClassI().update(n1);
 
                 createNewCompletionEvent(nextArrivalJob,nextArrivalJob.getCompletion());
             }
@@ -140,15 +139,15 @@ public class Cloudlet {
 
             if (n1 + n2 >= S) {
                 sendToTheCloud(nextArrivalJob);
-                persianJobs++;
-                bm.getSentToTheCloudJobs().update((double)(persianJobs + interruptedJobs)/(totalN1 + totalN2));
+                blockedJobs++;
+                bm.getSentToTheCloudJobs().update((double)(blockedJobs + interruptedJobs)/(totalN1 + totalN2));
             } else {
 
                 n2++;
                 arrivalN2++;
 
                 bm.getCloudletPopulation().update(n1 + n2);
-                bm.getCloudletClassII_Population().update(n2);
+                bm.getCloudletPopulation_ClassII().update(n2);
 
                 createNewCompletionEvent(nextArrivalJob,nextArrivalJob.getCompletion());
             }
@@ -159,7 +158,7 @@ public class Cloudlet {
 
         Event e = new CloudletCompletionEvent(job,timeOfEvent);
 
-        eventList.pushEvent(eventList.getCloudletEventList(), e);
+        eventList.pushEvent(e);
     }
 
     public void processCompletion(CloudletCompletionEvent event) {
@@ -167,22 +166,20 @@ public class Cloudlet {
         BatchMeansStatistics bm;
         bm = BatchMeansStatistics.getMe();
 
-        if (event.getJob().getClasse() == 1) {
+        if (event.getJob().getJobClass() == 1) {
 
             n1--;
             completedN1++;
 
             bm.getCloudletPopulation().update(n1 + n2);
-            bm.getCloudletClassI_Population().update(n1);
+            bm.getCloudletPopulation_ClassI().update(n1);
 
             double cloudletClassIRTime = event.getJob().getService_time();
 
-            bm.getCloudletClassI_RTime().update(cloudletClassIRTime);
-            //System.out.println("system response time classe 1 " + systemClassIRTime);
-            bm.getSystemClassI_RTime().update(cloudletClassIRTime);
+            bm.getCloudletRTime_ClassI().update(cloudletClassIRTime);
+            bm.getSystemRTime_ClassI().update(cloudletClassIRTime);
 
             bm.getCloudletThroughput_ClassI().update(completedN1/clock.getCurrent());
-            //System.out.println(completedN1/clock.getCurrent());
 
             bm.getCloudletRTime().update(cloudletClassIRTime);
 
@@ -192,17 +189,15 @@ public class Cloudlet {
             completedN2++;
 
             bm.getCloudletPopulation().update(n1 + n2);
-            bm.getCloudletClassII_Population().update(n2);
+            bm.getCloudletPopulation_ClassII().update(n2);
 
             double cloudletClassIIRTime = event.getJob().getService_time();
 
-            bm.getCloudletClassII_RTime().update(cloudletClassIIRTime);
+            bm.getCloudletRTime_ClassII().update(cloudletClassIIRTime);
 
-            bm.getSystemClassII_RTime().update(cloudletClassIIRTime);
+            bm.getSystemRTime_ClassII().update(cloudletClassIIRTime);
 
             bm.getCloudletThroughput_ClassII().update(completedN2/clock.getCurrent());
-            //System.out.println(completedN2/clock.getCurrent());
-
             bm.getCloudletRTime().update(cloudletClassIIRTime);
 
 
@@ -217,14 +212,10 @@ public class Cloudlet {
         bm.getSystemThroughput_ClassII().update((completedN2 + Cloud.getCompletedN2())/clock.getCurrent());
 
         double systemRTime = event.getJob().getService_time();
-
-        //System.out.println("system response time " + systemRTime);
         bm.getSystemRTime().update(systemRTime);
-
         double boh = (double) (completedN2 + completedN1)/ clock.getCurrent();
         bm.getCloudletThroughput().update(boh);
         ThroughputChart.getThroughputChart().addCoordinates(clock.getCurrent(),boh);
-        //System.out.println((completedN2 + completedN1)/ clock.getCurrent());
 
     }
 
@@ -264,39 +255,25 @@ public class Cloudlet {
     }
 
     private void sendToTheCloud(Job job) {
-        //TODO check if correct
         //save original arrival and set the new one (Shouldn't be the same?)
         job.setFirstarrival(job.getArrival());
-        job.setArrival(clock.getCurrent()); // not sure if useless
+        job.setArrival(clock.getCurrent());
 
-        // System.out.println("old service time is: " + job.getService_time());
-        //  job.printAll();
-        if (job.getClasse()==1) {
+        if (job.getJobClass()==1) {
             job.setService_time(r.streamExponential((1 / MU1cloud), 6));
-            job.setCompletion(job.getArrival() + job.getService_time());
-        //     System.out.println("Job di classe 1 al cloud");
         }
-
         else {
-       //     System.out.println("Job di classe 2 al cloud");
             job.setService_time(r.streamExponential(1 / MU2cloud, 7));
-
-            if (job.getPrelation() == true){
+            if (job.isPrelated()){
                 job.setSetup_time(r.streamExponential(0.8,8));
-
                 job.setService_time(job.getService_time() + job.getSetup_time());
             }
-            job.setCompletion(job.getArrival() + job.getService_time());
-
         }
-
-
-
-       // System.out.println("new service time is: " +job.getService_time());
-       // System.out.println("***********************************************************************************************");
+        job.setCompletion(job.getArrival() + job.getService_time());
 
         Event e = new CloudArrivalEvent(job,clock.getCurrent());
-        eventList.pushEvent(eventList.getCloudEventList(), e);
+
+        eventList.pushEvent(e);
 
     }
 
@@ -341,3 +318,5 @@ public class Cloudlet {
         return completedN2;
     }
 }
+
+

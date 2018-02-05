@@ -81,7 +81,7 @@ public class Mmcc {
 
             if (t.current == t.arrival) {               /* process an arrival */
                 if (nextArrivalJob != null)
-                    if (nextArrivalJob.getClasse() == 1) {
+                    if (nextArrivalJob.getJobClass() == 1) {
                         //Arriva job di classe 1
 
                         if (n1 == N) {
@@ -145,7 +145,7 @@ public class Mmcc {
                 t.completion = nextCompletionJob.getCompletion();
             } else {/* process a completion */
                 nextCompletionJob.printAll();
-                if (nextCompletionJob.getClasse() == 1) {
+                if (nextCompletionJob.getJobClass() == 1) {
                     n1--;
                     indexN1++;
                 } else {
@@ -267,7 +267,7 @@ public class Mmcc {
         Job jobToSend = null;
         for (Object j : jobList) {
             Job job = (Job) j;
-            if (job.getClasse() == 2)
+            if (job.getJobClass() == 2)
                 if (job.getCompletion() > maxCompletion) {
                     maxCompletion = job.getCompletion();
                     jobToSend = job;

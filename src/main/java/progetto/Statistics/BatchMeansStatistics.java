@@ -14,8 +14,8 @@ public class BatchMeansStatistics {
 
 
     private  BatchMeans systemRTime;                         //requested ok
-    private  BatchMeans systemClassI_RTime;                  //requested ok
-    private  BatchMeans systemClassII_RTime;                 //requested ok
+    private  BatchMeans systemRTime_ClassI;                  //requested ok
+    private  BatchMeans systemRTime_ClassII;                 //requested ok
 
 
     private  BatchMeans systemThroughput;                    //requested ok
@@ -28,28 +28,28 @@ public class BatchMeansStatistics {
     private  BatchMeans cloudletThroughput_ClassII;          //requested ok
 
 
-    private  BatchMeans interruptedTasks_classIIpercentage;  //requested ok
-    private  BatchMeans interruptedTasks_classII_RTime;      //requested ok
+    private  BatchMeans interruptedTasksPercentage_ClassII;  //requested ok
+    private  BatchMeans interruptedTasksRTime_ClassII;      //requested ok
 
 
     private  BatchMeans cloudletPopulation;                  //requested ok
-    private  BatchMeans cloudletClassI_Population;           //requested ok
-    private  BatchMeans cloudletClassII_Population;          //requested ok
+    private  BatchMeans cloudletPopulation_ClassI;           //requested ok
+    private  BatchMeans cloudletPopulation_ClassII;          //requested ok
 
 
     private  BatchMeans cloudPopulation;                     //requested ok
-    private  BatchMeans cloudClassI_Population;              //requested ok
-    private  BatchMeans cloudClassII_Population;             //requested ok
+    private  BatchMeans cloudPopulation_ClassI;              //requested ok
+    private  BatchMeans cloudPopulation_ClassII;             //requested ok
 
 
     //private  BatchMeans cloudletRTime;             //necessary for computation
-    private  BatchMeans cloudletClassI_RTime;             //necessary for computation ok
-    private  BatchMeans cloudletClassII_RTime;             //necessary for computation ok
+    private  BatchMeans cloudletRTime_ClassI;             //necessary for computation ok
+    private  BatchMeans cloudletRTime_ClassII;             //necessary for computation ok
 
 
     //private  BatchMeans cloudRTime;             //necessary for computation
-    private  BatchMeans cloudClassI_RTime;             //necessary for computation ok
-    private  BatchMeans cloudClassII_RTime;             //necessary for computation ok
+    private  BatchMeans cloudRTime_ClassI;             //necessary for computation ok
+    private  BatchMeans cloudRTime_ClassII;             //necessary for computation ok
 
 
     //private  BatchMeans cloudThroughput;                 //necessary for computation
@@ -92,13 +92,13 @@ public class BatchMeansStatistics {
         batchMeans.add(systemRTime);
 
 
-        systemClassI_RTime = new BatchMeans();
-        systemClassI_RTime.setAttributeName("System Response Time for class 1 jobs = ");
-        batchMeans.add(systemClassI_RTime);
+        systemRTime_ClassI = new BatchMeans();
+        systemRTime_ClassI.setAttributeName("System Response Time for class 1 jobs = ");
+        batchMeans.add(systemRTime_ClassI);
 
-        systemClassII_RTime = new BatchMeans();
-        systemClassII_RTime.setAttributeName("System Response Time for class 2 jobs = ");
-        batchMeans.add(systemClassII_RTime);
+        systemRTime_ClassII = new BatchMeans();
+        systemRTime_ClassII.setAttributeName("System Response Time for class 2 jobs = ");
+        batchMeans.add(systemRTime_ClassII);
 
 
         systemThroughput = new BatchMeans();
@@ -127,61 +127,61 @@ public class BatchMeansStatistics {
         batchMeans.add(cloudletThroughput_ClassII);
 
 
-        interruptedTasks_classIIpercentage = new BatchMeans();
-        interruptedTasks_classIIpercentage.setAttributeName("\nInterrupted class 2 jobs percentage = ");
-        batchMeans.add(interruptedTasks_classIIpercentage);
+        interruptedTasksPercentage_ClassII = new BatchMeans();
+        interruptedTasksPercentage_ClassII.setAttributeName("\nInterrupted class 2 jobs percentage = ");
+        batchMeans.add(interruptedTasksPercentage_ClassII);
 
-        interruptedTasks_classII_RTime = new BatchMeans();
-        interruptedTasks_classII_RTime.setAttributeName("Interrupted class 2 jobs response time = ");
-        batchMeans.add(interruptedTasks_classII_RTime);
+        interruptedTasksRTime_ClassII = new BatchMeans();
+        interruptedTasksRTime_ClassII.setAttributeName("Interrupted class 2 jobs response time = ");
+        batchMeans.add(interruptedTasksRTime_ClassII);
 
 
         cloudletPopulation = new BatchMeans();
         cloudletPopulation.setAttributeName("\nCloudlet Population = ");
         batchMeans.add(cloudletPopulation);
 
-        cloudletClassI_Population = new BatchMeans();
-        cloudletClassI_Population.setAttributeName("Cloudlet population for class 1 jobs = ");
-        batchMeans.add(cloudletClassI_Population);
+        cloudletPopulation_ClassI = new BatchMeans();
+        cloudletPopulation_ClassI.setAttributeName("Cloudlet population for class 1 jobs = ");
+        batchMeans.add(cloudletPopulation_ClassI);
 
-        cloudletClassII_Population = new BatchMeans();
-        cloudletClassII_Population.setAttributeName("Cloudlet population for class 2 jobs = ");
-        batchMeans.add(cloudletClassII_Population);
+        cloudletPopulation_ClassII = new BatchMeans();
+        cloudletPopulation_ClassII.setAttributeName("Cloudlet population for class 2 jobs = ");
+        batchMeans.add(cloudletPopulation_ClassII);
 
 
         cloudPopulation = new BatchMeans();
         cloudPopulation.setAttributeName("\nCloud population = ");
         batchMeans.add(cloudPopulation);
 
-        cloudClassI_Population = new BatchMeans();
-        cloudClassI_Population.setAttributeName("Cloud population for class 1 jobs = ");
-        batchMeans.add(cloudClassI_Population);
+        cloudPopulation_ClassI = new BatchMeans();
+        cloudPopulation_ClassI.setAttributeName("Cloud population for class 1 jobs = ");
+        batchMeans.add(cloudPopulation_ClassI);
 
-        cloudClassII_Population = new BatchMeans();
-        cloudClassII_Population.setAttributeName("Cloud population for class 2 jobs = ");
-        batchMeans.add(cloudClassII_Population);
+        cloudPopulation_ClassII = new BatchMeans();
+        cloudPopulation_ClassII.setAttributeName("Cloud population for class 2 jobs = ");
+        batchMeans.add(cloudPopulation_ClassII);
 
 
-        cloudletClassI_RTime = new BatchMeans();
-        cloudletClassI_RTime.setAttributeName("\nCloudlet Response Time for class 1 jobs = ");
-        batchMeans.add(cloudletClassI_RTime);
+        cloudletRTime_ClassI = new BatchMeans();
+        cloudletRTime_ClassI.setAttributeName("\nCloudlet Response Time for class 1 jobs = ");
+        batchMeans.add(cloudletRTime_ClassI);
 
-        cloudletClassII_RTime = new BatchMeans();
-        cloudletClassII_RTime.setAttributeName("Cloudlet Response Time for class 2 jobs = ");
-        batchMeans.add(cloudletClassII_RTime);
+        cloudletRTime_ClassII = new BatchMeans();
+        cloudletRTime_ClassII.setAttributeName("Cloudlet Response Time for class 2 jobs = ");
+        batchMeans.add(cloudletRTime_ClassII);
 
         cloudletRTime = new BatchMeans();
         cloudletRTime.setAttributeName("Cloudlet Response Time = ");
         batchMeans.add(cloudletRTime);
 
 
-        cloudClassI_RTime = new BatchMeans();
-        cloudClassI_RTime.setAttributeName("\nCloud Response Time for class 1 jobs = ");
-        batchMeans.add(cloudClassI_RTime);
+        cloudRTime_ClassI = new BatchMeans();
+        cloudRTime_ClassI.setAttributeName("\nCloud Response Time for class 1 jobs = ");
+        batchMeans.add(cloudRTime_ClassI);
 
-        cloudClassII_RTime = new BatchMeans();
-        cloudClassII_RTime.setAttributeName("Cloud Response Time for class 2 jobs = ");
-        batchMeans.add(cloudClassII_RTime);
+        cloudRTime_ClassII = new BatchMeans();
+        cloudRTime_ClassII.setAttributeName("Cloud Response Time for class 2 jobs = ");
+        batchMeans.add(cloudRTime_ClassII);
 
         cloudRTime = new BatchMeans();
         cloudRTime.setAttributeName("Cloud Response Time = ");
@@ -204,12 +204,12 @@ public class BatchMeansStatistics {
         return systemRTime;
     }
 
-    public BatchMeans getSystemClassI_RTime() {
-        return systemClassI_RTime;
+    public BatchMeans getSystemRTime_ClassI() {
+        return systemRTime_ClassI;
     }
 
-    public BatchMeans getSystemClassII_RTime() {
-        return systemClassII_RTime;
+    public BatchMeans getSystemRTime_ClassII() {
+        return systemRTime_ClassII;
     }
 
     public BatchMeans getSystemThroughput() {
@@ -228,52 +228,52 @@ public class BatchMeansStatistics {
         return cloudletThroughput_ClassII;
     }
 
-    public BatchMeans getInterruptedTasks_classIIpercentage() {
-        return interruptedTasks_classIIpercentage;
+    public BatchMeans getInterruptedTasksPercentage_ClassII() {
+        return interruptedTasksPercentage_ClassII;
     }
 
-    public BatchMeans getInterruptedTasks_classII_RTime() {
-        return interruptedTasks_classII_RTime;
+    public BatchMeans getInterruptedTasksRTime_ClassII() {
+        return interruptedTasksRTime_ClassII;
     }
 
     public BatchMeans getCloudletPopulation() {
         return cloudletPopulation;
     }
 
-    public BatchMeans getCloudletClassI_Population() {
-        return cloudletClassI_Population;
+    public BatchMeans getCloudletPopulation_ClassI() {
+        return cloudletPopulation_ClassI;
     }
 
-    public BatchMeans getCloudletClassII_Population() {
-        return cloudletClassII_Population;
+    public BatchMeans getCloudletPopulation_ClassII() {
+        return cloudletPopulation_ClassII;
     }
 
     public BatchMeans getCloudPopulation() {
         return cloudPopulation;
     }
 
-    public BatchMeans getCloudClassI_Population() {
-        return cloudClassI_Population;
+    public BatchMeans getCloudPopulation_ClassI() {
+        return cloudPopulation_ClassI;
     }
 
-    public BatchMeans getCloudClassII_Population() {
-        return cloudClassII_Population;
+    public BatchMeans getCloudPopulation_ClassII() {
+        return cloudPopulation_ClassII;
     }
 
-    public BatchMeans getCloudletClassI_RTime() {
-        return cloudletClassI_RTime;
+    public BatchMeans getCloudletRTime_ClassI() {
+        return cloudletRTime_ClassI;
     }
 
-    public BatchMeans getCloudletClassII_RTime() {
-        return cloudletClassII_RTime;
+    public BatchMeans getCloudletRTime_ClassII() {
+        return cloudletRTime_ClassII;
     }
 
-    public BatchMeans getCloudClassI_RTime() {
-        return cloudClassI_RTime;
+    public BatchMeans getCloudRTime_ClassI() {
+        return cloudRTime_ClassI;
     }
 
-    public BatchMeans getCloudClassII_RTime() {
-        return cloudClassII_RTime;
+    public BatchMeans getCloudRTime_ClassII() {
+        return cloudRTime_ClassII;
     }
 
     public BatchMeans getCloudThroughput_ClassI() {

@@ -6,7 +6,6 @@ import configuration.Configuration;
 import progetto.Charts.N1JobChart;
 import progetto.Charts.N2JobChart;
 import progetto.Charts.ThroughputChart;
-import progetto.Statistics.BatchMeans;
 import progetto.Statistics.BatchMeansStatistics;
 import progetto.Statistics.Statistics;
 import progetto.cloud.Cloud;
@@ -31,11 +30,6 @@ public class Simulation {
     static double MU1clet = 0.45;
     static double LAMBDA2 = 6.25;
     static double MU2clet = 0.27;
-
-    MmccArea area1;
-    MmccArea area2;
-    MmccArea areaTot;
-
     public static void setS(int s) {
         S = s;
     }
@@ -59,9 +53,6 @@ public class Simulation {
         N = conf.N;
         S = conf.S;
         seed = conf.seed;
-
-
-        N1JobChart.getN1JobChart();
 
         SimulationTimer st = new SimulationTimer();
         st.startTimer();
@@ -100,15 +91,9 @@ public class Simulation {
     public void run() throws FileNotFoundException, UnsupportedEncodingException {
         boolean stopArrivals = false;
 
-        int i = 1;
-
-        BatchMeans bm = new BatchMeans();
-
         createNewArrivalEvent();
 
         while (clock.getCurrent()<STOP || !eventList.isEmpty(eventList.getCloudEventList()) || !eventList.isEmpty(eventList.getCloudletEventList())) {
-
-            i++;
 
             if (clock.getCurrent() > STOP) {
                 clock.setLast(clock.getCurrent());
@@ -140,10 +125,6 @@ public class Simulation {
                 cloudlet.processCompletion((CloudletCompletionEvent)e);
                 cloud.updateCloudStatistics();
                 cloudlet.updateCloudletStatistics();
-
-                double elem = e.getJob().getService_time();
-
-                bm.update(elem);
             }
             else
             if(e instanceof CloudArrivalEvent)
@@ -168,13 +149,6 @@ public class Simulation {
 
         Statistics st = Statistics.getMe();
         st.printStatistics();
-
-
-
-        //st.createFile();
-
-        //cloudlet.printStatistics();
-
         BatchMeansStatistics.getMe().printAll();
         N1JobChart.getN1JobChart().printJSON("n1");
         N2JobChart.getN2JobChart().printJSON("n2");
@@ -198,6 +172,6 @@ public class Simulation {
         }
 
         Event newEvent = new CloudletArrivalEvent(newJob, newJob.getArrival());
-        eventList.pushEvent(eventList.getCloudletEventList(),newEvent);
+        eventList.pushEvent(newEvent);
     }
 }

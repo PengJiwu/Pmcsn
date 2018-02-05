@@ -2,7 +2,6 @@ package progetto.cloud;
 
 import progetto.Job;
 import progetto.MmccArea;
-import progetto.Statistics.BatchMeans;
 import progetto.Statistics.BatchMeansStatistics;
 import progetto.Statistics.Statistics;
 import progetto.cloudlet.Cloudlet;
@@ -47,11 +46,11 @@ public class Cloud {
         bm = BatchMeansStatistics.getMe();
 
         Job nextArrivalJob = event.getJob();
-        if (nextArrivalJob.getClasse() ==1) {
+        if (nextArrivalJob.getJobClass() ==1) {
 
             n1++;
 
-            bm.getCloudClassI_Population().update(n1);
+            bm.getCloudPopulation_ClassI().update(n1);
             bm.getCloudPopulation().update(n1 + n2);
 
         }
@@ -60,7 +59,7 @@ public class Cloud {
 
             n2++;
 
-            bm.getCloudClassII_Population().update(n2);
+            bm.getCloudPopulation_ClassII().update(n2);
             bm.getCloudPopulation().update(n1 + n2);
 
         }
@@ -73,7 +72,7 @@ public class Cloud {
 
         Event e = new CloudCompletionEvent(nextArrivalJob, completion);
 
-        eventList.pushEvent(eventList.getCloudEventList(), e);
+        eventList.pushEvent(e);
 
     }
 
@@ -82,22 +81,22 @@ public class Cloud {
         BatchMeansStatistics bm;
         bm = BatchMeansStatistics.getMe();
 
-        Job nextArrivalJob = e.getJob();
+        Job completedJob = e.getJob();
 
-        if (nextArrivalJob.getClasse() ==1) {
+        if (completedJob.getJobClass() ==1) {
 
             n1--;
             completedN1++;
 
-            bm.getCloudClassI_Population().update(n1);
+            bm.getCloudPopulation_ClassI().update(n1);
             bm.getCloudPopulation().update(n1 + n2);
 
-            double cloudClassIRTime = nextArrivalJob.getCompletion() - nextArrivalJob.getFirstarrival();
+            double cloudClassIRTime = completedJob.getCompletion() - completedJob.getFirstarrival();
 
-            bm.getCloudClassI_RTime().update(nextArrivalJob.getService_time());
-            bm.getSystemClassI_RTime().update(cloudClassIRTime);
+            bm.getCloudRTime_ClassI().update(completedJob.getService_time());
+            bm.getSystemRTime_ClassI().update(cloudClassIRTime);
 
-            bm.getCloudRTime().update(nextArrivalJob.getService_time());
+            bm.getCloudRTime().update(completedJob.getService_time());
 
 
         }
@@ -106,22 +105,22 @@ public class Cloud {
             n2--;
             completedN2++;
 
-            bm.getCloudClassII_Population().update(n2);
+            bm.getCloudPopulation_ClassII().update(n2);
             bm.getCloudPopulation().update(n1 + n2);
 
-            double cloudClassIIRTime = nextArrivalJob.getCompletion() - nextArrivalJob.getFirstarrival();
-            bm.getCloudClassII_RTime().update(nextArrivalJob.getService_time());
-            bm.getSystemClassII_RTime().update(cloudClassIIRTime);
+            double cloudClassIIRTime = completedJob.getCompletion() - completedJob.getFirstarrival();
+            bm.getCloudRTime_ClassII().update(completedJob.getService_time());
+            bm.getSystemRTime_ClassII().update(cloudClassIIRTime);
 
-            bm.getCloudRTime().update(nextArrivalJob.getService_time());
+            bm.getCloudRTime().update(completedJob.getService_time());
 
 
-            if (nextArrivalJob.getPrelation() == true)
-                bm.getInterruptedTasks_classII_RTime().update(nextArrivalJob.getCompletion() - nextArrivalJob.getFirstarrival());
+            if (completedJob.isPrelated())
+                bm.getInterruptedTasksRTime_ClassII().update(completedJob.getCompletion() - completedJob.getFirstarrival());
 
         }
 
-        double systemRTime = nextArrivalJob.getCompletion() - nextArrivalJob.getFirstarrival();
+        double systemRTime = completedJob.getCompletion() - completedJob.getFirstarrival();
         bm.getSystemRTime().update(systemRTime);
 
         double cloudCompletion = completedN1 + completedN2;

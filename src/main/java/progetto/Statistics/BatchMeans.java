@@ -35,9 +35,6 @@ public class BatchMeans {
         b = (int) (n/k);
 
         clock = Clock.getClock();
-//        System.out.println("number of jobs n is " + n);
-//        System.out.println("number of batch is " + b);
-//        System.out.println("Batch size is " + k);
     }
 
     public void update(double e) {

@@ -9,9 +9,9 @@ public class EventList {
 
     Rvgs r; // Needed to create an exponential setup time
 
-    List<Event> cloudletEventList;
+    private List<Event> cloudletEventList;
 
-    List<Event> cloudEventList;
+    private List<Event> cloudEventList;
 
     Clock clock;
 
@@ -36,13 +36,29 @@ public class EventList {
 
     }
 
-    public void pushEvent(List<Event> list, Event e) {
+    public void pushEvent(Event e) {
 
-        list.add(e);
-        Collections.sort(list, new Comparator<Event>() {
-            @Override public int compare(Event e1, Event e2) {
-                return(e2.getTimeOfEvent() < e1.getTimeOfEvent())?1:-1;
-        }});
+
+        if (e instanceof CloudletArrivalEvent || e instanceof CloudletCompletionEvent) {
+            cloudletEventList.add(e);
+            Collections.sort(cloudletEventList, new Comparator<Event>() {
+                @Override
+                public int compare(Event e1, Event e2) {
+                    return (e2.getTimeOfEvent() < e1.getTimeOfEvent()) ? 1 : -1;
+                }
+            });
+        } else if (e instanceof CloudArrivalEvent || e instanceof CloudCompletionEvent) {
+
+
+            cloudEventList.add(e);
+            Collections.sort(cloudEventList, new Comparator<Event>() {
+                @Override
+                public int compare(Event e1, Event e2) {
+                    return (e2.getTimeOfEvent() < e1.getTimeOfEvent()) ? 1 : -1;
+                }
+            });
+        }
+
     }
 
     public Event popEvent() {
@@ -90,7 +106,7 @@ public class EventList {
             Event e = (Event) li.previous();
 
             if (e instanceof CloudletCompletionEvent)
-                if(e.getJob().getClasse() == 2) {
+                if(e.getJob().getJobClass() == 2) {
 
                     event = e;
                     break;
