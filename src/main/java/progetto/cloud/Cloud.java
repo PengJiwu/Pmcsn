@@ -1,7 +1,11 @@
 package progetto.cloud;
 
+import progetto.Charts.N1RTCharts;
+import progetto.Charts.N2RTCharts;
+import progetto.Charts.RTCharts;
 import progetto.Job;
 import progetto.MmccArea;
+import progetto.Statistics.BatchMeans;
 import progetto.Statistics.BatchMeansStatistics;
 import progetto.Statistics.Statistics;
 import progetto.cloudlet.Cloudlet;
@@ -93,6 +97,11 @@ public class Cloud {
 
             double cloudClassIRTime = completedJob.getCompletion() - completedJob.getFirstarrival();
 
+
+
+
+            N1RTCharts.getN1JobChart().addCoordinates(clock.getCurrent(),cloudClassIRTime);
+
             bm.getCloudRTime_ClassI().update(completedJob.getService_time());
             bm.getSystemRTime_ClassI().update(cloudClassIRTime);
 
@@ -112,6 +121,9 @@ public class Cloud {
             bm.getCloudRTime_ClassII().update(completedJob.getService_time());
             bm.getSystemRTime_ClassII().update(cloudClassIIRTime);
 
+
+
+            N2RTCharts.getN2JobChart().addCoordinates(clock.getCurrent(),cloudClassIIRTime);
             bm.getCloudRTime().update(completedJob.getService_time());
 
 
@@ -122,6 +134,8 @@ public class Cloud {
 
         double systemRTime = completedJob.getCompletion() - completedJob.getFirstarrival();
         bm.getSystemRTime().update(systemRTime);
+        RTCharts.getRTCharts().addCoordinates(clock.getCurrent(),systemRTime);
+
 
         double cloudCompletion = completedN1 + completedN2;
         double cloudletCompletion = Cloudlet.getCompletedN1() + Cloudlet.getCompletedN2();

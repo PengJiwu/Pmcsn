@@ -1,9 +1,7 @@
 package progetto.cloudlet;
 
 
-import progetto.Charts.N1JobChart;
-import progetto.Charts.N2JobChart;
-import progetto.Charts.ThroughputChart;
+import progetto.Charts.*;
 import progetto.Job;
 import progetto.MmccArea;
 import progetto.Statistics.BatchMeansStatistics;
@@ -179,6 +177,8 @@ public class Cloudlet {
             bm.getCloudletRTime_ClassI().update(cloudletClassIRTime);
             bm.getSystemRTime_ClassI().update(cloudletClassIRTime);
 
+            N1RTCharts.getN1JobChart().addCoordinates(clock.getCurrent(),cloudletClassIRTime);
+
             bm.getCloudletThroughput_ClassI().update(completedN1/clock.getCurrent());
 
             bm.getCloudletRTime().update(cloudletClassIRTime);
@@ -197,6 +197,8 @@ public class Cloudlet {
 
             bm.getSystemRTime_ClassII().update(cloudletClassIIRTime);
 
+            N2RTCharts.getN2JobChart().addCoordinates(clock.getCurrent(),cloudletClassIIRTime);
+
             bm.getCloudletThroughput_ClassII().update(completedN2/clock.getCurrent());
             bm.getCloudletRTime().update(cloudletClassIIRTime);
 
@@ -213,6 +215,9 @@ public class Cloudlet {
 
         double systemRTime = event.getJob().getService_time();
         bm.getSystemRTime().update(systemRTime);
+
+        RTCharts.getRTCharts().addCoordinates(clock.getCurrent(),systemRTime);
+
         double boh = (double) (completedN2 + completedN1)/ clock.getCurrent();
         bm.getCloudletThroughput().update(boh);
         ThroughputChart.getThroughputChart().addCoordinates(clock.getCurrent(),boh);

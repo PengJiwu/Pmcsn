@@ -3,9 +3,8 @@ package progetto;
 
 
 import configuration.Configuration;
-import progetto.Charts.N1JobChart;
-import progetto.Charts.N2JobChart;
-import progetto.Charts.ThroughputChart;
+import progetto.Charts.*;
+import progetto.Statistics.BatchMeans;
 import progetto.Statistics.BatchMeansStatistics;
 import progetto.Statistics.Statistics;
 import progetto.cloud.Cloud;
@@ -147,13 +146,20 @@ public class Simulation {
 
         }
 
-        Statistics st = Statistics.getMe();
-        st.printStatistics();
+//        Statistics st = Statistics.getMe();
+//        st.printStatistics();
         BatchMeansStatistics.getMe().printAll();
         N1JobChart.getN1JobChart().printJSON("n1");
         N2JobChart.getN2JobChart().printJSON("n2");
         ThroughputChart.getThroughputChart().printJSON("thr");
+        RTCharts.getRTCharts().printJSON("rt");
+        N1RTCharts.getN1JobChart().printJSON("n1RT");
+        N2RTCharts.getN2JobChart().printJSON("n2RT");
 
+        BatchMeansStatistics.getMe().printPop();
+//        Populations.getPopulations().printALL();
+
+        Populations.getPopulations().printJSON("Population");
 
     }
 
@@ -174,4 +180,4 @@ public class Simulation {
         Event newEvent = new CloudletArrivalEvent(newJob, newJob.getArrival());
         eventList.pushEvent(newEvent);
     }
-}
+}  ;;

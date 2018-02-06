@@ -1,11 +1,14 @@
 package progetto.Statistics;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import progetto.Charts.Coordinates;
+import progetto.Charts.Populations;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 public class BatchMeansStatistics {
 
@@ -330,6 +333,31 @@ public class BatchMeansStatistics {
             e.printStackTrace();
         }
 
+
+    }
+
+
+    public void printPop(){
+
+        int i = 0;
+
+        while(i<64){
+
+            Coordinates coordinates = new Coordinates();
+            coordinates.setTime(i);
+            for (BatchMeans b: batchMeans) {
+                if (b.getAttributeName().equals("Cloudlet population for class 1 jobs = "))
+                    coordinates.setCloudletPopulation_n1(b.meanlist.get(i));
+                if (b.getAttributeName().equals("Cloudlet population for class 2 jobs = "))
+                    coordinates.setCloudletPopulation_n2(b.meanlist.get(i));
+                if (b.getAttributeName().equals("Cloud population for class 1 jobs = "))
+                    coordinates.setCloudPopulation_n1(b.meanlist.get(i));
+                if (b.getAttributeName().equals("Cloud population for class 2 jobs = "))
+                    coordinates.setCloudPopulation_n2(b.meanlist.get(i));
+            }
+            Populations.getPopulations().updateCord(coordinates);
+        i++;
+        }
 
     }
 
