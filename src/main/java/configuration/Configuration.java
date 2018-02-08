@@ -6,6 +6,16 @@ import progetto.events.Clock;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * This class is used to take in input the parameters needed to configure our system, like
+ * N, numbers of Cloudlet server
+ * S, Cloudlet threshold
+ * seed, necessary to generate pesudo-random numbers
+ * duration, to indicate the length of simulation
+ * batchNumber, number of batches
+ * and alfa, to setup confidence level.
+ */
+
 public class Configuration {
     public int N = 0;
     public int S = 0;
@@ -33,11 +43,7 @@ public class Configuration {
             return me;
     }
 
-    private Configuration()
-    {
-
-    }
-
+    private Configuration() {}
 
 
     @Override
@@ -52,29 +58,6 @@ public class Configuration {
                 '}';
     }
 
-    public int getN() {
-        return N;
-    }
-
-    public int getS() {
-        return S;
-    }
-
-    public int getSeed() {
-        return seed;
-    }
-
-    public double getDuration() {
-        return duration;
-    }
-
-    public int getBatchNumber() {
-        return batchNumber;
-    }
-
-    public double getAlfa() {
-        return alfa;
-    }
 }
 
 

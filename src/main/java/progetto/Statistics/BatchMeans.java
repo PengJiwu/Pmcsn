@@ -6,24 +6,24 @@ import rng.Rvms;
 
 import java.util.ArrayList;
 
+/**
+ * This class implements Batch Means Method in order to calculate the mean
+ */
+
 public class BatchMeans {
 
-    private Statistics statistics;
-
-    double n;      //Simulation length
-    int k;         //batch size
-    int b;     //number of batches
-    double alfa;  //confidence parameter
-    int i = 1; //batch index
+    double n;                   // Simulation length
+    int k;                      // Batch size
+    int b;                      // Number of batches
+    double alfa;                // Confidence parameter
+    int i = 1;                  // Batch index
 
     private String attributeName;
 
     private WelfordMean welford;
 
-    double meanvalue;
-
-    ArrayList<Double> valuelist = new ArrayList<>();
     ArrayList<Double> meanlist = new ArrayList<>();
+
     Clock clock;
 
     public BatchMeans () {
@@ -35,39 +35,64 @@ public class BatchMeans {
         b = (int) (n/k);
 
         clock = Clock.getClock();
+
     }
 
-    public void update(double e) {
+    /**
+     * This method takes in input a double and updates current mean using Welford Algorithm
+     * @param e
+     */
 
-        if (clock.getCurrent() >= i*getBatchSize()) {
+    public void update (double e) {
+
+        if (clock.getCurrent() >= i * getBatchSize()) {       // check if begins a new Batch
             addMeanInList();
             incrementIndex();
         }
+
         calculateMean(e);
+
     }
 
+    /**
+     * This method takes in input a double element and adds it into the Batch
+     * @param e
+     */
 
-    public void calculateMean(double e) {
+    public void calculateMean (double e) {
 
         welford.addBatchElement(e);
         welford.addElement(e);
 
     }
 
-    public void addMeanInList() {
+    /**
+     * This method adds mean in the list
+     */
+
+    public void addMeanInList () {
 
         double e = getMeanvalue();
         meanlist.add(e);
     }
 
-    public void incrementIndex(){
+    /**
+     * This method increments Batch index and reset Welford values
+     */
+
+    public void incrementIndex (){
 
         i++;
         welford.resetIndexes();
         return;
     }
 
-    public double calculateFinalMean() {
+    /**
+     * This method calculates final mean using Welford Method
+     * @return
+     */
+
+    public double calculateFinalMean () {
 
         welford.resetIndexes();
         for (Double d: meanlist) {
@@ -79,42 +104,43 @@ public class BatchMeans {
 
     }
 
-    public double getMeanvalue() {
-        return welford.getMean();
-    }
+    /**
+     * This method calculate critical value for confidence interval
+     * @return
+     */
 
-    public double getBatchSize(){
-
-        return k;
-    }
-
-
-    public double calculateCriticalValue() {
+    public double calculateCriticalValue () {
 
         double t;
         Rvms rvms = new Rvms();
-        t = rvms.idfStudent((k-1), 1-(alfa/2));
+        t = rvms.idfStudent((k-1), 1 - (alfa/2));
         return t;
 
     }
 
-    public double calculateEndPoints() {
+    /**
+     * This method calculates end points for confidence interval
+     * @return
+     */
+
+    public double calculateEndPoints () {
 
         double t = calculateCriticalValue();
         double stdDev = Math.sqrt(welford.getTotalVariance());
-        double endPoint = (t*stdDev)/ Math.sqrt(k-1);
+        double endPoint = (t * stdDev)/ Math.sqrt(k-1);
 
         return  endPoint;
     }
 
-    public double getVariance() {
-
-        return welford.getTotalVariance();
+    public double getMeanvalue () {
+        return welford.getMean();
     }
 
+    public double getBatchSize (){
+        return k;
+    }
 
     public double getTotalMean() {
-
         return welford.getTotal_mean();
     }
 

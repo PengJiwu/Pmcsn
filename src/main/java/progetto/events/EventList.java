@@ -5,9 +5,11 @@ import rng.Rvgs;
 
 import java.util.*;
 
-public class EventList {
+/**
+ * This class implements the singleton pattern for a general shared list of events
+ */
 
-    Rvgs r; // Needed to create an exponential setup time
+public class EventList {
 
     private List<Event> cloudletEventList;
 
@@ -15,11 +17,11 @@ public class EventList {
 
     Clock clock;
 
-    private static EventList me = null; //Application of singleton pattern
+    private static EventList me = null;             //Application of singleton pattern
 
     public static EventList getEventList() {
 
-        if(me == null) {
+        if (me == null) {
 
             me = new EventList();
             return me;
@@ -27,6 +29,10 @@ public class EventList {
         else
             return me;
     }
+
+    /**
+     * This constructor creates list of Cloud and Cloudlet events
+     */
 
     private EventList () {
 
@@ -36,10 +42,14 @@ public class EventList {
 
     }
 
+    /**
+     * This method takes in input an event and pushes it into the list
+     * @param e
+     */
+
     public void pushEvent(Event e) {
 
-
-        if (e instanceof CloudletArrivalEvent || e instanceof CloudletCompletionEvent) {
+        if (e instanceof CloudletArrivalEvent || e instanceof CloudletCompletionEvent) {    // Cloudlet event
             cloudletEventList.add(e);
             Collections.sort(cloudletEventList, new Comparator<Event>() {
                 @Override
@@ -47,8 +57,8 @@ public class EventList {
                     return (e2.getTimeOfEvent() < e1.getTimeOfEvent()) ? 1 : -1;
                 }
             });
-        } else if (e instanceof CloudArrivalEvent || e instanceof CloudCompletionEvent) {
-
+        }
+        else if (e instanceof CloudArrivalEvent || e instanceof CloudCompletionEvent) {     // Cloud event
 
             cloudEventList.add(e);
             Collections.sort(cloudEventList, new Comparator<Event>() {
@@ -57,20 +67,24 @@ public class EventList {
                     return (e2.getTimeOfEvent() < e1.getTimeOfEvent()) ? 1 : -1;
                 }
             });
-        }
 
+        }
     }
+
+    /**
+     * This method removes first event of the list
+     * @return
+     */
 
     public Event popEvent() {
 
-        if( cloudletEventList.size() == 0 ){   //No events in cloudlet
+        if (cloudletEventList.size() == 0 ){                 //No events in Cloudlet
 
             Event e2 = cloudEventList.get(0);
             cloudEventList.remove(0);
             return e2;
         }
-
-       else if( cloudEventList.size() == 0 ) {   //No events in cloud
+        else if (cloudEventList.size() == 0 ) {             //No events in Cloud
 
             Event e1 = cloudletEventList.get(0);
             cloudletEventList.remove(0);
@@ -80,9 +94,10 @@ public class EventList {
         Event e1 = cloudletEventList.get(0);
         Event e2 = cloudEventList.get(0);
 
-        if (e1.getTimeOfEvent() <= e2.getTimeOfEvent()) {
+        if (e1.getTimeOfEvent() <= e2.getTimeOfEvent()) {   // Gets minimum
             cloudletEventList.remove(0);
-            return e1;}
+            return e1;
+        }
 
         else {
             cloudEventList.remove(0);
@@ -90,19 +105,19 @@ public class EventList {
         }
     }
 
-    public boolean isEmpty(List<Event> list) {
-        return list.isEmpty();
-    }
+    /**
+     * This method removes a completion event of class 2 job from the Cloudlet list
+     * Called whenever a prelation happens
+     * @return
+     */
 
     public Job removeOneC2CompletionEvent() {
 
-        int i = 0;
         ListIterator li = cloudletEventList.listIterator(cloudletEventList.size());
         Event event = null;
 
-        while(li.hasPrevious()) {
+        while (li.hasPrevious()) {
 
-            i++;
             Event e = (Event) li.previous();
 
             if (e instanceof CloudletCompletionEvent)
@@ -119,30 +134,8 @@ public class EventList {
         return job;
     }
 
-    public void printList(List<Event> list) {
-
-        for(Object o : list) {
-
-            System.out.println("JOB: ");
-            ((Event) o).getJob().printAll();
-            System.out.println(((Event) o).getTimeOfEvent());
-
-            if(o instanceof CloudletArrivalEvent) {
-                System.out.println("Tipo: Arrivo Cloudlet");
-            }
-
-            if(o instanceof CloudletCompletionEvent){
-                System.out.println("Tipo: Completion Cloudlet");
-            }
-
-            if(o instanceof CloudCompletionEvent) {
-                System.out.println("Tipo: Completion Cloud");
-            }
-
-            if(o instanceof CloudArrivalEvent) {
-                System.out.println("Tipo: Arrivo Cloud");
-            }
-        }
+    public boolean isEmpty(List<Event> list) {
+        return list.isEmpty();
     }
 
     public List<Event> getCloudletEventList() {

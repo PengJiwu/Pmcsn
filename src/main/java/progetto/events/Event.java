@@ -2,6 +2,10 @@ package progetto.events;
 
 import progetto.Job;
 
+/**
+ * This class implements a generic event
+ */
+
 public abstract class Event {
 
     private Job job;

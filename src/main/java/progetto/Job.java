@@ -2,6 +2,10 @@ package progetto;
 
 import rng.Rvgs;
 
+/**
+ * This class models a job
+ */
+
 public class Job {
 
     private double arrival;
@@ -10,9 +14,22 @@ public class Job {
     private  double service_time;
     private double completion;
     private double setup_time;
-    private int index;
     private int jobClass;
     private boolean prelation = false;
+
+    /**
+     * This constructor takes in input some parameters to establish job's class
+     * @param current
+     * @param r
+     * @param lambda
+     * @param jobClass
+     */
+
+    public Job(double current, Rvgs r, double lambda, int jobClass) {
+
+        arrival = current + r.streamExponential(1/lambda, 0);
+        this.jobClass = jobClass;
+    }
 
     public double getArrival() {
         return arrival;
@@ -24,10 +41,6 @@ public class Job {
 
     public double getCompletion() {
         return completion;
-    }
-
-    public int getIndex() {
-        return index;
     }
 
     public int getJobClass() {
@@ -50,36 +63,9 @@ public class Job {
         this.completion = completion;
     }
 
-    public void setIndex(int index) {
-        this.index = index;
-    }
-
-    public void setJobClass(int jobClass) {
-        this.jobClass = jobClass;
-    }
-
     public void setPrelation(boolean prelation) {
         this.prelation = prelation;
     }
-
-    public Job(double current, Rvgs r, double lambda,int jobClass)
-    {
-
-
-        arrival = current + r.streamExponential(1/lambda, 0);
-        this.jobClass = jobClass;
-    }
-
-    public void printAll()
-    {
-
-        System.out.println("JOB di tipo " + jobClass);
-        System.out.println("ARRIVO:     " + arrival);
-        System.out.println("TSERV       " + service_time);
-        System.out.println("TCOMPL      " + completion + "\n");
-
-    }
-
 
     public double getFirstarrival() {
         return firstarrival;
@@ -97,7 +83,4 @@ public class Job {
         this.setup_time = setup_time;
     }
 
-    public boolean getPrelation() {
-        return prelation;
-    }
 }

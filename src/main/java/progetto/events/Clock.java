@@ -1,29 +1,38 @@
 package progetto.events;
 
-import java.util.ArrayList;
+
+/**
+ * This class implements the clock of the simulation
+ */
 
 public class Clock {
 
-    private double current;                 /* current time                        */
-    private double next;                    /* next (most imminent) event time     */
+    private double current;                 // current time
+    private double next;                    // next (most imminent) event time
     private double last;
     private double previous;
 
-    static double START = 0.0;              /* initial time                   */
-    static double STOP = 100.0;             /* terminal (close the door) time */
+    static double START = 0.0;              // initial time
+    static double STOP = 100.0;             // terminal (close the door) time
     static double INFINITY = 100.0 * STOP;
 
     static Clock me = null;
 
+    /**
+     * This method implements singleton pattern, allowing a global shared clock
+     * @return
+     */
+
     public static Clock getClock(){
 
-        if(me == null) {
+        if (me == null) {
 
             me = new Clock();
             return me;
         }
         else
             return me;
+
     }
 
 
@@ -35,7 +44,6 @@ public class Clock {
         previous = INFINITY;
 
     }
-
 
     public double getCurrent() {
         return current;
@@ -68,4 +76,5 @@ public class Clock {
     public void setPrevious(double previous) {
         this.previous = previous;
     }
+
 }

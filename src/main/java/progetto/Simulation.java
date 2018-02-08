@@ -1,7 +1,5 @@
 package progetto;
 
-
-
 import configuration.Configuration;
 import progetto.Charts.*;
 import progetto.Statistics.BatchMeansStatistics;
@@ -14,22 +12,19 @@ import rng.Rvgs;
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 
+/**
+ * This is the main core of the simulation
+ */
+
 public class Simulation {
 
     static int N;
     static int S;
     static int seed;
-    static double START = 0.0;              /* initial time                   */
     static double STOP;          /* terminal (close the door) time */
 
-    static double INFINITY = 100.0 * STOP;  /* must be much larger than STOP  */
     static double LAMBDA1 = 6;
-    static double MU1clet = 0.45;
     static double LAMBDA2 = 6.25;
-    static double MU2clet = 0.27;
-    public static void setS(int s) {
-        S = s;
-    }
 
     Rngs r;
     Rvgs rvgs;
@@ -42,6 +37,13 @@ public class Simulation {
     Cloudlet cloudlet;
     Cloud cloud;
     static Configuration conf;
+
+
+    /**
+     * This method starts simulation
+     * @param args
+     * @throws Exception
+     */
 
     public static void main(String[] args) throws Exception {
 
@@ -65,8 +67,7 @@ public class Simulation {
     }
 
 
-    public Simulation()
-    {
+    public Simulation () {
 
         r = new Rngs();
         r.plantSeeds(seed);
@@ -82,15 +83,22 @@ public class Simulation {
         cloudlet = new Cloudlet(N,S,rvgs);
         cloud = new Cloud(rvgs);
 
-
     }
 
+    /**
+     * This method runs the simulation
+     * @throws FileNotFoundException
+     * @throws UnsupportedEncodingException
+     */
+
     public void run() throws FileNotFoundException, UnsupportedEncodingException {
+
         boolean stopArrivals = false;
 
         createNewArrivalEvent();
 
-        while (clock.getCurrent()<STOP || !eventList.isEmpty(eventList.getCloudEventList()) || !eventList.isEmpty(eventList.getCloudletEventList())) {
+        while (clock.getCurrent()<STOP || !eventList.isEmpty(eventList.getCloudEventList()) ||
+                !eventList.isEmpty(eventList.getCloudletEventList())) {
 
             if (clock.getCurrent() > STOP) {
                 clock.setLast(clock.getCurrent());
@@ -101,52 +109,27 @@ public class Simulation {
             Event e = eventList.popEvent();
             clock.setCurrent(e.getTimeOfEvent());
 
+            if (e instanceof CloudletArrivalEvent) {                        // Next event is a Cloudlet arrival
 
-
-            if(e instanceof CloudletArrivalEvent)
-            {
                 cloudlet.dispatchArrival((CloudletArrivalEvent)e);
-                cloud.updateCloudStatistics();
-                cloudlet.updateCloudletStatistics();
 
-
-                if(!stopArrivals) {
+                if(!stopArrivals)
                     createNewArrivalEvent();
-                }
-
 
             }
-            else
-            if(e instanceof CloudletCompletionEvent){
-
+            else if(e instanceof CloudletCompletionEvent)                   // Next event is a Cloudlet completion
                 cloudlet.processCompletion((CloudletCompletionEvent)e);
-                cloud.updateCloudStatistics();
-                cloudlet.updateCloudletStatistics();
-            }
-            else
-            if(e instanceof CloudArrivalEvent)
-            {
 
+            else if(e instanceof CloudArrivalEvent)                         // Next event is a Cloud arrival
                 cloud.processArrival((CloudArrivalEvent)e);
-                cloudlet.updateCloudletStatistics();
-                cloud.updateCloudStatistics();
 
-            }
-            else
-            if(e instanceof CloudCompletionEvent)
-            {
-
+            else if(e instanceof CloudCompletionEvent)                      // Next event is a Cloud completion
                 cloud.processCompletion((CloudCompletionEvent)e);
-                cloudlet.updateCloudletStatistics();
-                cloud.updateCloudStatistics();
-
-            }
 
         }
 
-//        Statistics st = Statistics.getMe();
-//        st.printStatistics();
         BatchMeansStatistics.getMe().printAll();
+
 //        N1JobChart.getN1JobChart().printJSON("n1");
 //        N2JobChart.getN2JobChart().printJSON("n2");
 //        ThroughputChart.getThroughputChart().printJSON("thr");
@@ -155,22 +138,25 @@ public class Simulation {
 //        N2RTCharts.getN2JobChart().printJSON("n2RT");
 
         BatchMeansStatistics.getMe().printPop();
-//        Populations.getPopulations().printALL();
-
-        Populations.getPopulations().printJSON("Population");
 
     }
 
+    /**
+     * This method creates a new arrival event
+     */
+
     private void createNewArrivalEvent() {
+
         Job newJob;
 
         r.selectStream(1);
-        if (rvgs.uniform(0, 1) > LAMBDA1 / (LAMBDA1 + LAMBDA2)) {
-                    /*Il prossimo arrivo sarà job di classe 2 */
+        if (rvgs.uniform(0, 1) > LAMBDA1 / (LAMBDA1 + LAMBDA2)) {    // Next event is a class 2 job arrival
+
             newJob = new Job(clock.getCurrent(), rvgs, (LAMBDA1 + LAMBDA2), 2);
             totalN2++;
-        } else {
-                    /*Il prossimo arrivo sarà job di classe 1*/
+
+        } else {                                                            // Next event is a class 1 job arrival
+
             newJob = new Job(clock.getCurrent(), rvgs, (LAMBDA1 + LAMBDA2), 1);
             totalN1++;
         }
@@ -178,4 +164,4 @@ public class Simulation {
         Event newEvent = new CloudletArrivalEvent(newJob, newJob.getArrival());
         eventList.pushEvent(newEvent);
     }
-}  ;;
+}
