@@ -10,6 +10,7 @@ import progetto.Statistics.BatchMeansStatistics;
 import progetto.Statistics.Statistics;
 import progetto.cloudlet.Cloudlet;
 import progetto.events.*;
+import rng.Rvgs;
 
 public class Cloud {
 
@@ -24,12 +25,19 @@ public class Cloud {
     MmccArea areaTot;
     Clock clock;
 
-    public Cloud(){
+    private Rvgs r;
+
+    static double MU1cloud = 0.25;
+    static double MU2cloud = 0.22;
+
+    public Cloud(Rvgs rvgs){
 
         n1 = 0;
         n2 = 0;
         completedN1=0;
         completedN2=0;
+
+        this.r = rvgs;
 
         eventList = EventList.getEventList();
 
@@ -67,8 +75,24 @@ public class Cloud {
             bm.getCloudPopulation().update(n1 + n2);
 
         }
-
+        calcolateServiceTime(nextArrivalJob);
         createNewCompletionEvent(nextArrivalJob, nextArrivalJob.getCompletion());
+
+    }
+
+    private void calcolateServiceTime(Job job)
+    {
+        if (job.getJobClass()==1) {
+            job.setService_time(r.streamExponential(1 / MU1cloud, 6));
+        }
+        else {
+            job.setService_time(r.streamExponential(1 / MU2cloud, 7));
+            if (job.isPrelated()){
+                job.setSetup_time(r.streamExponential(0.8,8));
+                job.setService_time(job.getService_time() + job.getSetup_time());
+            }
+        }
+        job.setCompletion(job.getArrival() + job.getService_time());
 
     }
 

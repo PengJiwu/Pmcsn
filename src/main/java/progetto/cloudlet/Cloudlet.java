@@ -1,7 +1,6 @@
 package progetto.cloudlet;
 
 
-import progetto.Charts.*;
 import progetto.Job;
 import progetto.MmccArea;
 import progetto.Statistics.BatchMeansStatistics;
@@ -18,9 +17,7 @@ public class Cloudlet {
     int n1,n2;
     int N,S;
     int totalN1,totalN2;
-
     int arrivalN2;
-
 
     EventList eventList;
     static int completedN1;
@@ -35,9 +32,9 @@ public class Cloudlet {
     Clock clock;
 
     Rvgs r; // Needed to create an exponential setup time
+    static double MU1clet = 0.45;
+    static double MU2clet = 0.27;
 
-    static double MU1cloud = 0.25;
-    static double MU2cloud = 0.22;
 
     public Cloudlet(int N,int S, Rvgs rvgs){
 
@@ -71,7 +68,7 @@ public class Cloudlet {
     }
 
 
-    public void processArrival(CloudletArrivalEvent event)
+    public void dispatchArrival(CloudletArrivalEvent event)
     {
 
         BatchMeansStatistics bm = BatchMeansStatistics.getMe();
@@ -96,8 +93,7 @@ public class Cloudlet {
 
                 bm.getCloudletPopulation().update(n1 + n2);
                 bm.getCloudletPopulation_ClassI().update(n1);
-
-                createNewCompletionEvent(nextArrivalJob,nextArrivalJob.getCompletion());
+                processArrival(nextArrivalJob);
 
             } else if (n2 > 0) {                    // Threshold has been passed and there's at least one class 2 job
 
@@ -109,25 +105,18 @@ public class Cloudlet {
                 bm.getCloudletPopulation_ClassI().update(n1);
                 bm.getCloudletPopulation_ClassII().update(n2);
                 bm.getSentToTheCloudJobs().update((double)(blockedJobs + interruptedJobs)/(totalN1 + totalN2));
-
                 Job job = eventList.removeOneC2CompletionEvent();
-
-
-
                 job.setPrelation(true);
                 sendToTheCloud(job);
-                createNewCompletionEvent(nextArrivalJob,nextArrivalJob.getCompletion());
-
+                processArrival(nextArrivalJob);
                 bm.getInterruptedTasksPercentage_ClassII().update((double) interruptedJobs/(totalN2));
 
             } else {                                // Threshold has been passed and there aren't class 2 jobs
 
                 n1++;
-
                 bm.getCloudletPopulation().update(n1 + n2);
                 bm.getCloudletPopulation_ClassI().update(n1);
-
-                createNewCompletionEvent(nextArrivalJob,nextArrivalJob.getCompletion());
+                processArrival(nextArrivalJob);
             }
         }
         else {
@@ -147,9 +136,30 @@ public class Cloudlet {
                 bm.getCloudletPopulation().update(n1 + n2);
                 bm.getCloudletPopulation_ClassII().update(n2);
 
-                createNewCompletionEvent(nextArrivalJob,nextArrivalJob.getCompletion());
+                processArrival(nextArrivalJob);
             }
         }
+    }
+
+    private void processArrival(Job nextArrivalJob)
+    {
+
+        calcolateServiceTime(nextArrivalJob);
+        createNewCompletionEvent(nextArrivalJob,nextArrivalJob.getCompletion());
+    }
+
+    private void calcolateServiceTime(Job job)
+    {
+
+        if (job.getJobClass()==1) {
+            job.setService_time(r.streamExponential((1 / MU1clet), 4));
+        }
+        else {
+            job.setService_time(r.streamExponential(1 / MU2clet, 5));
+        }
+        job.setCompletion(job.getArrival() + job.getService_time());
+
+
     }
 
     private void createNewCompletionEvent(Job job, double timeOfEvent) {
@@ -177,7 +187,7 @@ public class Cloudlet {
             bm.getCloudletRTime_ClassI().update(cloudletClassIRTime);
             bm.getSystemRTime_ClassI().update(cloudletClassIRTime);
 
-            N1RTCharts.getN1JobChart().addCoordinates(clock.getCurrent(),cloudletClassIRTime);
+//            N1RTCharts.getN1JobChart().addCoordinates(clock.getCurrent(),cloudletClassIRTime);
 
             bm.getCloudletThroughput_ClassI().update(completedN1/clock.getCurrent());
 
@@ -197,7 +207,7 @@ public class Cloudlet {
 
             bm.getSystemRTime_ClassII().update(cloudletClassIIRTime);
 
-            N2RTCharts.getN2JobChart().addCoordinates(clock.getCurrent(),cloudletClassIIRTime);
+//            N2RTCharts.getN2JobChart().addCoordinates(clock.getCurrent(),cloudletClassIIRTime);
 
             bm.getCloudletThroughput_ClassII().update(completedN2/clock.getCurrent());
             bm.getCloudletRTime().update(cloudletClassIIRTime);
@@ -216,11 +226,11 @@ public class Cloudlet {
         double systemRTime = event.getJob().getService_time();
         bm.getSystemRTime().update(systemRTime);
 
-        RTCharts.getRTCharts().addCoordinates(clock.getCurrent(),systemRTime);
+//        RTCharts.getRTCharts().addCoordinates(clock.getCurrent(),systemRTime);
 
         double boh = (double) (completedN2 + completedN1)/ clock.getCurrent();
         bm.getCloudletThroughput().update(boh);
-        ThroughputChart.getThroughputChart().addCoordinates(clock.getCurrent(),boh);
+//        ThroughputChart.getThroughputChart().addCoordinates(clock.getCurrent(),boh);
 
     }
 
@@ -249,11 +259,11 @@ public class Cloudlet {
 
         if (n1 > 0) {                               /* update integrals  */
             areaN1.service += (clock.getCurrent() - clock.getPrevious());
-            N1JobChart.getN1JobChart().addCoordinates(areaN1.service,n1);
+//            N1JobChart.getN1JobChart().addCoordinates(areaN1.service,n1);
         }
         if (n2 > 0) {                               /* update integrals  */
             areaN2.service += (clock.getCurrent() - clock.getPrevious());
-            N2JobChart.getN2JobChart().addCoordinates(areaN2.service,n2);
+//            N2JobChart.getN2JobChart().addCoordinates(areaN2.service,n2);
         }
 
 
@@ -263,18 +273,18 @@ public class Cloudlet {
         //save original arrival and set the new one (Shouldn't be the same?)
         job.setFirstarrival(job.getArrival());
         job.setArrival(clock.getCurrent());
-
-        if (job.getJobClass()==1) {
-            job.setService_time(r.streamExponential((1 / MU1cloud), 6));
-        }
-        else {
-            job.setService_time(r.streamExponential(1 / MU2cloud, 7));
-            if (job.isPrelated()){
-                job.setSetup_time(r.streamExponential(0.8,8));
-                job.setService_time(job.getService_time() + job.getSetup_time());
-            }
-        }
-        job.setCompletion(job.getArrival() + job.getService_time());
+//
+//        if (job.getJobClass()==1) {
+//            job.setService_time(r.streamExponential((1 / MU1cloud), 6));
+//        }
+//        else {
+//            job.setService_time(r.streamExponential(1 / MU2cloud, 7));
+//            if (job.isPrelated()){
+//                job.setSetup_time(r.streamExponential(0.8,8));
+//                job.setService_time(job.getService_time() + job.getSetup_time());
+//            }
+//        }
+//        job.setCompletion(job.getArrival() + job.getService_time());
 
         Event e = new CloudArrivalEvent(job,clock.getCurrent());
 

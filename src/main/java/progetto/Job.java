@@ -62,17 +62,11 @@ public class Job {
         this.prelation = prelation;
     }
 
-    public Job(double current, Rvgs r, double lambda, double mu,int jobClass)
+    public Job(double current, Rvgs r, double lambda,int jobClass)
     {
 
 
         arrival = current + r.streamExponential(1/lambda, 0);
-        if (jobClass ==1)
-         service_time = r.streamExponential(1/mu, 4);
-        else
-            service_time = r.streamExponential(1/mu, 5);
-        completion = arrival + service_time;
-
         this.jobClass = jobClass;
     }
 

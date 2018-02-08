@@ -4,9 +4,7 @@ package progetto;
 
 import configuration.Configuration;
 import progetto.Charts.*;
-import progetto.Statistics.BatchMeans;
 import progetto.Statistics.BatchMeansStatistics;
-import progetto.Statistics.Statistics;
 import progetto.cloud.Cloud;
 import progetto.cloudlet.Cloudlet;
 import progetto.events.*;
@@ -82,7 +80,7 @@ public class Simulation {
         totalN2 = 0;
 
         cloudlet = new Cloudlet(N,S,rvgs);
-        cloud = new Cloud();
+        cloud = new Cloud(rvgs);
 
 
     }
@@ -107,7 +105,7 @@ public class Simulation {
 
             if(e instanceof CloudletArrivalEvent)
             {
-                cloudlet.processArrival((CloudletArrivalEvent)e);
+                cloudlet.dispatchArrival((CloudletArrivalEvent)e);
                 cloud.updateCloudStatistics();
                 cloudlet.updateCloudletStatistics();
 
@@ -149,12 +147,12 @@ public class Simulation {
 //        Statistics st = Statistics.getMe();
 //        st.printStatistics();
         BatchMeansStatistics.getMe().printAll();
-        N1JobChart.getN1JobChart().printJSON("n1");
-        N2JobChart.getN2JobChart().printJSON("n2");
-        ThroughputChart.getThroughputChart().printJSON("thr");
-        RTCharts.getRTCharts().printJSON("rt");
-        N1RTCharts.getN1JobChart().printJSON("n1RT");
-        N2RTCharts.getN2JobChart().printJSON("n2RT");
+//        N1JobChart.getN1JobChart().printJSON("n1");
+//        N2JobChart.getN2JobChart().printJSON("n2");
+//        ThroughputChart.getThroughputChart().printJSON("thr");
+//        RTCharts.getRTCharts().printJSON("rt");
+//        N1RTCharts.getN1JobChart().printJSON("n1RT");
+//        N2RTCharts.getN2JobChart().printJSON("n2RT");
 
         BatchMeansStatistics.getMe().printPop();
 //        Populations.getPopulations().printALL();
@@ -169,11 +167,11 @@ public class Simulation {
         r.selectStream(1);
         if (rvgs.uniform(0, 1) > LAMBDA1 / (LAMBDA1 + LAMBDA2)) {
                     /*Il prossimo arrivo sarà job di classe 2 */
-            newJob = new Job(clock.getCurrent(), rvgs, (LAMBDA1 + LAMBDA2), MU2clet, 2);
+            newJob = new Job(clock.getCurrent(), rvgs, (LAMBDA1 + LAMBDA2), 2);
             totalN2++;
         } else {
                     /*Il prossimo arrivo sarà job di classe 1*/
-            newJob = new Job(clock.getCurrent(), rvgs, (LAMBDA1 + LAMBDA2), MU1clet, 1);
+            newJob = new Job(clock.getCurrent(), rvgs, (LAMBDA1 + LAMBDA2), 1);
             totalN1++;
         }
 
