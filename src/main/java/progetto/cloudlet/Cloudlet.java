@@ -12,24 +12,26 @@ import rng.Rvgs;
 
 public class Cloudlet {
 
-    int n1, n2;
-    int N, S;
-    int totalN1, totalN2;
-    int arrivalN2;
+    private int  n1, n2;
+    private int N, S;
+    private int totalN1, totalN2;
+    private int arrivalN2;
 
-    EventList eventList;
+    private    EventList eventList;
 
-    static int completedN1;
-    static int completedN2;
-    int interruptedJobs;
-    int blockedJobs;
-    int class1toCloud;
+    static private int completedN1;
+    static private int completedN2;
+    private int interruptedJobs;
+    private int blockedJobsN1;
+    private int blockedJobsN2;
+    private int class1toCloud;
 
-    Clock clock;
+    private Clock clock;
 
-    Rvgs r; // Needed to create an exponential setup time
-    static double MU1clet = 0.45;
-    static double MU2clet = 0.27;
+    private Rvgs r; // Needed to create an exponential setup time
+    private double MU1clet = 0.45;
+    private double MU2clet = 0.27;
+
 
     /**
      * This method inizializes variables
@@ -47,7 +49,8 @@ public class Cloudlet {
         completedN2 = 0;
 
         interruptedJobs = 0;
-        blockedJobs = 0;
+        blockedJobsN1 = 0;
+        blockedJobsN2 = 0;
         class1toCloud = 0;
 
         totalN1 = 0;
@@ -69,7 +72,7 @@ public class Cloudlet {
 
     public void dispatchArrival(CloudletArrivalEvent event) {
 
-        BatchMeansStatistics bm = BatchMeansStatistics.getMe();
+//        BatchMeansStatistics bm = BatchMeansStatistics.getMe();
 
         Job nextArrivalJob = event.getJob();
 
@@ -81,19 +84,13 @@ public class Cloudlet {
 
                 sendToTheCloud(nextArrivalJob);
 
-                blockedJobs++;
+                blockedJobsN1++;
                 class1toCloud++;
-
-                bm.getSentToTheCloudJobs().update((double)(blockedJobs + interruptedJobs)/(totalN1 + totalN2));
 
             }
             else if (n1 + n2 < S) {                     // Threshold hasn't been trespassed yet
 
                 n1++;
-
-                // Updates statistics
-                bm.getCloudletPopulation().update(n1 + n2);
-                bm.getCloudletPopulation_ClassI().update(n1);
                 processArrival(nextArrivalJob);
 
             }
@@ -102,28 +99,15 @@ public class Cloudlet {
                 n1++;
                 n2--;
                 interruptedJobs++;
-
-                // Updates statistics
-                bm.getCloudletPopulation().update(n1 + n2);
-                bm.getCloudletPopulation_ClassI().update(n1);
-                bm.getCloudletPopulation_ClassII().update(n2);
-                bm.getSentToTheCloudJobs().update((double)(blockedJobs + interruptedJobs)/(totalN1 + totalN2));
-
                 Job job = eventList.removeOneC2CompletionEvent();
                 job.setPrelation(true);
 
                 sendToTheCloud(job);
                 processArrival(nextArrivalJob);
-                bm.getInterruptedTasksPercentage_ClassII().update((double) interruptedJobs/(totalN2));
-
             }
             else {                                     // Threshold has been passed and there aren't class 2 jobs
 
                 n1++;
-
-                // Updates statistics
-                bm.getCloudletPopulation().update(n1 + n2);
-                bm.getCloudletPopulation_ClassI().update(n1);
                 processArrival(nextArrivalJob);
             }
 
@@ -136,23 +120,22 @@ public class Cloudlet {
             if (n1 + n2 >= S) {                      // Threshold has been passed
 
                 sendToTheCloud(nextArrivalJob);
-                blockedJobs++;
-
-                bm.getSentToTheCloudJobs().update((double)(blockedJobs + interruptedJobs)/(totalN1 + totalN2));
+                blockedJobsN2++;
             }
             else {
 
                 n2++;
                 arrivalN2++;
-
-                // Update statistics
-                bm.getCloudletPopulation().update(n1 + n2);
-                bm.getCloudletPopulation_ClassII().update(n2);
-
                 processArrival(nextArrivalJob);
             }
         }
+
+
+        updateCompletionStatistics(null);
+
+
     }
+
 
     /**
      * This method takes in input an arrival and processes it
@@ -212,55 +195,12 @@ public class Cloudlet {
             n1--;
             completedN1++;
 
-            double cloudletClassIRTime = event.getJob().getService_time();
-
-            // Update statistics
-            bm.getCloudletPopulation().update(n1 + n2);
-            bm.getCloudletPopulation_ClassI().update(n1);
-
-            bm.getCloudletRTime().update(cloudletClassIRTime);
-            bm.getCloudletRTime_ClassI().update(cloudletClassIRTime);
-
-            bm.getCloudletThroughput_ClassI().update(completedN1/clock.getCurrent());
-
-            bm.getSystemRTime_ClassI().update(cloudletClassIRTime);
-
         }
         else {                                                          // Class 2 job
-
             n2--;
             completedN2++;
-
-            double cloudletClassIIRTime = event.getJob().getService_time();
-
-            // Update statistics
-            bm.getCloudletPopulation().update(n1 + n2);
-            bm.getCloudletPopulation_ClassII().update(n2);
-
-            bm.getCloudletRTime().update(cloudletClassIIRTime);
-            bm.getCloudletRTime_ClassII().update(cloudletClassIIRTime);
-
-            bm.getCloudletThroughput_ClassII().update(completedN2/clock.getCurrent());
-
-            bm.getSystemRTime_ClassII().update(cloudletClassIIRTime);
-
         }
-
-        double cloudletCompletion = completedN1 + completedN2;
-        double cloudCompletion = Cloud.getCompletedN1() + Cloud.getCompletedN2();
-        double completed = cloudCompletion + cloudletCompletion;
-
-        // Update statistics
-        bm.getSystemThroughput().update(completed/clock.getCurrent());
-        bm.getSystemThroughput_ClassI().update((double)(completedN1 + Cloud.getCompletedN1())/clock.getCurrent());
-        bm.getSystemThroughput_ClassII().update((completedN2 + Cloud.getCompletedN2())/clock.getCurrent());
-
-        double systemRTime = event.getJob().getService_time();
-        bm.getSystemRTime().update(systemRTime);
-
-
-        double thr = (double) (completedN2 + completedN1)/ clock.getCurrent();
-        bm.getCloudletThroughput().update(thr);
+        updateCompletionStatistics(event.getJob());
 
     }
 
@@ -278,6 +218,54 @@ public class Cloudlet {
         Event e = new CloudArrivalEvent(job, clock.getCurrent());
 
         eventList.pushEvent(e);
+
+    }
+
+    public void updateCompletionStatistics(Job job)
+    {
+        //Update population statistics
+        BatchMeansStatistics bm = BatchMeansStatistics.getMe();
+        bm.getCloudletPopulation().update(n1 + n2);
+        bm.getCloudletPopulation_ClassI().update(n1);
+        bm.getCloudletPopulation_ClassII().update(n2);
+        bm.getSentToTheCloudJobs().update((double)(blockedJobsN1 + blockedJobsN2 + interruptedJobs)/(totalN1 + totalN2));
+        bm.getSentToTheCloudJobs_Class1().update((double)(blockedJobsN1)/(totalN1));
+
+        if(totalN2 != 0) {
+            bm.getSentToTheCloudJobs_Class2().update((double)(blockedJobsN2)/(totalN2));
+            bm.getInterruptedTasksPercentage_ClassII().update((double) interruptedJobs / (totalN2));
+
+        }
+        //Update Response Time Statitistics
+        if(job!= null) {
+            if (job.getJobClass() == 1) {
+                bm.getCloudletRTime_ClassI().update(job.getService_time());
+                bm.getSystemRTime_ClassI().update(job.getService_time());
+            } else {
+                bm.getCloudletRTime_ClassII().update(job.getService_time());
+                bm.getSystemRTime_ClassII().update(job.getService_time());
+            }
+
+            bm.getCloudletRTime().update(job.getService_time());
+            bm.getSystemRTime().update(job.getService_time());
+        }
+        bm.getCloudletThroughput_ClassII().update(completedN2/clock.getCurrent());
+        bm.getCloudletThroughput_ClassI().update(completedN1 / clock.getCurrent());
+
+
+        //Update Throughtput statistics
+        double cloudletCompletion = completedN1 + completedN2;
+        double cloudCompletion = Cloud.getCompletedN1() + Cloud.getCompletedN2();
+        double completed = cloudCompletion + cloudletCompletion;
+
+        // Update statistics
+        bm.getSystemThroughput().update(completed/clock.getCurrent());
+        bm.getSystemThroughput_ClassI().update((double)(completedN1 + Cloud.getCompletedN1())/clock.getCurrent());
+        bm.getSystemThroughput_ClassII().update((completedN2 + Cloud.getCompletedN2())/clock.getCurrent());
+        double thr = (double) (completedN2 + completedN1)/ clock.getCurrent();
+        bm.getCloudletThroughput().update(thr);
+
+
 
     }
 

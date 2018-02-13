@@ -129,16 +129,6 @@ public class Simulation {
         }
 
         BatchMeansStatistics.getMe().printAll();
-
-//        N1JobChart.getN1JobChart().printJSON("n1");
-//        N2JobChart.getN2JobChart().printJSON("n2");
-//        ThroughputChart.getThroughputChart().printJSON("thr");
-//        RTCharts.getRTCharts().printJSON("rt");
-//        N1RTCharts.getN1JobChart().printJSON("n1RT");
-//        N2RTCharts.getN2JobChart().printJSON("n2RT");
-
-        BatchMeansStatistics.getMe().printPop();
-
     }
 
     /**

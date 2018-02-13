@@ -49,6 +49,8 @@ public class BatchMeansStatistics {
     private  BatchMeans cloudletRTime;
 
     private BatchMeans sentToTheCloudJobs;
+    private BatchMeans sentToTheCloudJobs_Class1;
+    private BatchMeans sentToTheCloudJobs_Class2;
 
     private  ArrayList<BatchMeans> batchMeans = new ArrayList<BatchMeans>();
 
@@ -185,6 +187,14 @@ public class BatchMeansStatistics {
         sentToTheCloudJobs.setAttributeName("Number of jobs sent to the cloud is = ");
         batchMeans.add(sentToTheCloudJobs);
 
+        sentToTheCloudJobs_Class1 = new BatchMeans();
+        sentToTheCloudJobs_Class1.setAttributeName("Number of class 1 jobs sent to the cloud is = ");
+        batchMeans.add(sentToTheCloudJobs_Class1);
+
+        sentToTheCloudJobs_Class2 = new BatchMeans();
+        sentToTheCloudJobs_Class2.setAttributeName("Number of class 2 jobs sent to the cloud is = ");
+        batchMeans.add(sentToTheCloudJobs_Class2);
+
 
     }
 
@@ -282,6 +292,14 @@ public class BatchMeansStatistics {
 
     public  BatchMeans getSystemThroughput_ClassII() {
         return systemThroughput_ClassII;
+    }
+
+    public BatchMeans getSentToTheCloudJobs_Class1() {
+        return sentToTheCloudJobs_Class1;
+    }
+
+    public BatchMeans getSentToTheCloudJobs_Class2() {
+        return sentToTheCloudJobs_Class2;
     }
 
     /**

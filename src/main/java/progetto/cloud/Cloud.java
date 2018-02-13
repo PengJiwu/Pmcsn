@@ -15,18 +15,20 @@ import rng.Rvgs;
 
 public class Cloud {
 
-    int n1,n2;
+    private int n1,n2;
 
-    EventList eventList;
-    static int completedN1;
-    static int completedN2;
+    private EventList eventList;
+    private static int completedN1;
+    private static int completedN2;
 
-    Clock clock;
+    private Clock clock;
 
     private Rvgs r;
 
-    static double MU1cloud = 0.25;
-    static double MU2cloud = 0.22;
+    private double MU1cloud = 0.25;
+    private double MU2cloud = 0.22;
+
+    private static Cloud me ;
 
     public Cloud(Rvgs rvgs){
 
@@ -54,25 +56,61 @@ public class Cloud {
 
         Job nextArrivalJob = event.getJob();
         if (nextArrivalJob.getJobClass() ==1) {     // Arrives a class 1 job
-
             n1++;
-
-            bm.getCloudPopulation_ClassI().update(n1);
-            bm.getCloudPopulation().update(n1 + n2);
-
         }
 
         else {                                      // Arrives a class 2 job
-
             n2++;
-
-            bm.getCloudPopulation_ClassII().update(n2);
-            bm.getCloudPopulation().update(n1 + n2);
-
         }
 
         calculateServiceTime(nextArrivalJob);
         createNewCompletionEvent(nextArrivalJob, nextArrivalJob.getCompletion());
+
+        updateStatistics(null);
+    }
+
+
+
+    private void updateStatistics(Job job)
+    {
+        BatchMeansStatistics bm = BatchMeansStatistics.getMe();
+        bm.getCloudPopulation_ClassI().update(n1);
+        bm.getCloudPopulation_ClassII().update(n2);
+        bm.getCloudPopulation().update(n1 + n2);
+
+        if(job!= null)
+        {
+            if(job.getJobClass()==1)
+            {
+                double cloudClassIRTime = job.getCompletion() - job.getFirstarrival();
+                bm.getCloudRTime_ClassI().update(job.getService_time());
+                bm.getSystemRTime_ClassI().update(cloudClassIRTime);
+
+            }
+            else
+            {
+                double cloudClassIIRTime = job.getCompletion() - job.getFirstarrival();
+                bm.getCloudRTime_ClassII().update(job.getService_time());
+                bm.getSystemRTime_ClassII().update(cloudClassIIRTime);
+
+                if (job.isPrelated()) {// class 2 job with prelation completed
+                    bm.getInterruptedTasksRTime_ClassII().update(job.getCompletion() - job.getFirstarrival());
+                }
+            }
+            bm.getCloudRTime().update(job.getService_time());
+            double systemRTime = job.getCompletion() - job.getFirstarrival();
+            bm.getSystemRTime().update(systemRTime);
+        }
+
+        double cloudCompletion = completedN1 + completedN2;
+        double cloudletCompletion = Cloudlet.getCompletedN1() + Cloudlet.getCompletedN2();
+        double completed = cloudCompletion + cloudletCompletion;
+
+        // Update statistics
+        bm.getSystemThroughput().update((double) completed/clock.getCurrent());
+        bm.getSystemThroughput_ClassI().update(((double) (completedN1 + Cloudlet.getCompletedN1())/clock.getCurrent()));
+        bm.getSystemThroughput_ClassII().update(((double)(completedN2 + Cloudlet.getCompletedN2())/clock.getCurrent()));
+
 
     }
 
@@ -80,7 +118,6 @@ public class Cloud {
      * This method calculates job's new service time
      * @param job
      */
-
     private void calculateServiceTime(Job job) {
 
         if (job.getJobClass() ==1 )                                      // calculate service time for class 1 jobs
@@ -119,65 +156,20 @@ public class Cloud {
      */
 
     public void processCompletion(CloudCompletionEvent e) {
-
-        BatchMeansStatistics bm;
-        bm = BatchMeansStatistics.getMe();
-
         Job completedJob = e.getJob();
 
         if (completedJob.getJobClass() ==1) {           // class 1 job completed
 
             n1--;
             completedN1++;
-
-            double cloudClassIRTime = completedJob.getCompletion() - completedJob.getFirstarrival();
-
-            // Update statistics
-            bm.getCloudPopulation_ClassI().update(n1);
-            bm.getCloudPopulation().update(n1 + n2);
-            bm.getCloudRTime_ClassI().update(completedJob.getService_time());
-            bm.getSystemRTime_ClassI().update(cloudClassIRTime);
-            bm.getCloudRTime().update(completedJob.getService_time());
-
-            N1RTCharts.getN1JobChart().addCoordinates(clock.getCurrent(),cloudClassIRTime);
-
         }
 
         else {                                          // class 2 job completed
 
             n2--;
             completedN2++;
-
-            double cloudClassIIRTime = completedJob.getCompletion() - completedJob.getFirstarrival();
-
-            // Update statistics
-            bm.getCloudPopulation_ClassII().update(n2);
-            bm.getCloudPopulation().update(n1 + n2);
-            bm.getCloudRTime_ClassII().update(completedJob.getService_time());
-            bm.getSystemRTime_ClassII().update(cloudClassIIRTime);
-
-            N2RTCharts.getN2JobChart().addCoordinates(clock.getCurrent(),cloudClassIIRTime);
-            bm.getCloudRTime().update(completedJob.getService_time());
-
-
-            if (completedJob.isPrelated())              // class 2 job with prelation completed
-                bm.getInterruptedTasksRTime_ClassII().update(completedJob.getCompletion() - completedJob.getFirstarrival());
-
         }
-
-        double systemRTime = completedJob.getCompletion() - completedJob.getFirstarrival();
-        bm.getSystemRTime().update(systemRTime);
-        RTCharts.getRTCharts().addCoordinates(clock.getCurrent(),systemRTime);
-
-        double cloudCompletion = completedN1 + completedN2;
-        double cloudletCompletion = Cloudlet.getCompletedN1() + Cloudlet.getCompletedN2();
-        double completed = cloudCompletion + cloudletCompletion;
-
-        // Update statistics
-        bm.getSystemThroughput().update((double) completed/clock.getCurrent());
-        bm.getSystemThroughput_ClassI().update(((double) (completedN1 + Cloudlet.getCompletedN1())/clock.getCurrent()));
-        bm.getSystemThroughput_ClassII().update(((double)(completedN2 + Cloudlet.getCompletedN2())/clock.getCurrent()));
-
+        updateStatistics(completedJob);
     }
 
     public static int getCompletedN1() {
