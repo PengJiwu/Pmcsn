@@ -12,7 +12,7 @@ import rng.Rvgs;
 
 public class Cloudlet {
 
-    private int  n1, n2;
+    private static int  n1, n2;
     private int N, S;
     private int totalN1, totalN2;
     private int arrivalN2;
@@ -131,7 +131,7 @@ public class Cloudlet {
         }
 
 
-        updateCompletionStatistics(null);
+        updateStatistics(null);
 
 
     }
@@ -200,7 +200,7 @@ public class Cloudlet {
             n2--;
             completedN2++;
         }
-        updateCompletionStatistics(event.getJob());
+        updateStatistics(event.getJob());
 
     }
 
@@ -221,13 +221,19 @@ public class Cloudlet {
 
     }
 
-    public void updateCompletionStatistics(Job job)
+    public void updateStatistics(Job job)
     {
         //Update population statistics
         BatchMeansStatistics bm = BatchMeansStatistics.getMe();
         bm.getCloudletPopulation().update(n1 + n2);
         bm.getCloudletPopulation_ClassI().update(n1);
         bm.getCloudletPopulation_ClassII().update(n2);
+
+
+        bm.getSystemPopulation().update(n1 + n2 + Cloud.getN1() + Cloud.getN2());
+        bm.getSystemPopulation_ClassI().update(n1 +Cloud.getN1());
+        bm.getSystemPopulation_ClassII().update(n2 +Cloud.getN2());
+
         bm.getSentToTheCloudJobs().update((double)(blockedJobsN1 + blockedJobsN2 + interruptedJobs)/(totalN1 + totalN2));
         bm.getSentToTheCloudJobs_Class1().update((double)(blockedJobsN1)/(totalN1));
 
@@ -236,7 +242,7 @@ public class Cloudlet {
             bm.getInterruptedTasksPercentage_ClassII().update((double) interruptedJobs / (totalN2));
 
         }
-        //Update Response Time Statitistics
+        //Update Response Time Statistics
         if(job!= null) {
             if (job.getJobClass() == 1) {
                 bm.getCloudletRTime_ClassI().update(job.getService_time());
@@ -258,7 +264,6 @@ public class Cloudlet {
         double cloudCompletion = Cloud.getCompletedN1() + Cloud.getCompletedN2();
         double completed = cloudCompletion + cloudletCompletion;
 
-        // Update statistics
         bm.getSystemThroughput().update(completed/clock.getCurrent());
         bm.getSystemThroughput_ClassI().update((double)(completedN1 + Cloud.getCompletedN1())/clock.getCurrent());
         bm.getSystemThroughput_ClassII().update((completedN2 + Cloud.getCompletedN2())/clock.getCurrent());
@@ -275,6 +280,14 @@ public class Cloudlet {
 
     public static int getCompletedN2() {
         return completedN2;
+    }
+
+    public static int getN1() {
+        return n1;
+    }
+
+    public static int getN2() {
+        return n2;
     }
 }
 

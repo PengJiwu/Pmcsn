@@ -27,6 +27,13 @@ public class BatchMeansStatistics {
 
     private  BatchMeans interruptedTasksPercentage_ClassII;
     private  BatchMeans interruptedTasksRTime_ClassII;
+    private  BatchMeans interruptedTasksCloudletRTime_ClassII;
+    private  BatchMeans interruptedTasksCloudRTime_ClassII;
+
+    private  BatchMeans systemPopulation;
+    private  BatchMeans systemPopulation_ClassI;
+    private  BatchMeans systemPopulation_ClassII;
+
 
     private  BatchMeans cloudletPopulation;
     private  BatchMeans cloudletPopulation_ClassI;
@@ -85,7 +92,6 @@ public class BatchMeansStatistics {
         systemRTime.setAttributeName("System Response Time = ");
         batchMeans.add(systemRTime);
 
-
         systemRTime_ClassI = new BatchMeans();
         systemRTime_ClassI.setAttributeName("System Response Time for class 1 jobs = ");
         batchMeans.add(systemRTime_ClassI);
@@ -94,9 +100,36 @@ public class BatchMeansStatistics {
         systemRTime_ClassII.setAttributeName("System Response Time for class 2 jobs = ");
         batchMeans.add(systemRTime_ClassII);
 
+        cloudletRTime = new BatchMeans();
+        cloudletRTime.setAttributeName("\nCloudlet Response Time = ");
+        batchMeans.add(cloudletRTime);
+
+        cloudletRTime_ClassI = new BatchMeans();
+        cloudletRTime_ClassI.setAttributeName("Cloudlet Response Time for class 1 jobs = ");
+        batchMeans.add(cloudletRTime_ClassI);
+
+        cloudletRTime_ClassII = new BatchMeans();
+        cloudletRTime_ClassII.setAttributeName("Cloudlet Response Time for class 2 jobs = ");
+        batchMeans.add(cloudletRTime_ClassII);
+
+
+
+        cloudRTime = new BatchMeans();
+        cloudRTime.setAttributeName("\nCloud Response Time = ");
+        batchMeans.add(cloudRTime);
+
+        cloudRTime_ClassI = new BatchMeans();
+        cloudRTime_ClassI.setAttributeName("Cloud Response Time for class 1 jobs = ");
+        batchMeans.add(cloudRTime_ClassI);
+
+        cloudRTime_ClassII = new BatchMeans();
+        cloudRTime_ClassII.setAttributeName("Cloud Response Time for class 2 jobs = ");
+        batchMeans.add(cloudRTime_ClassII);
+
+
 
         systemThroughput = new BatchMeans();
-        systemThroughput.setAttributeName("\nSystem Throughput = ");
+        systemThroughput.setAttributeName("System Throughput = ");
         batchMeans.add(systemThroughput);
 
         systemThroughput_ClassI = new BatchMeans();
@@ -121,13 +154,18 @@ public class BatchMeansStatistics {
         batchMeans.add(cloudletThroughput_ClassII);
 
 
-        interruptedTasksPercentage_ClassII = new BatchMeans();
-        interruptedTasksPercentage_ClassII.setAttributeName("\nInterrupted class 2 jobs percentage = ");
-        batchMeans.add(interruptedTasksPercentage_ClassII);
 
-        interruptedTasksRTime_ClassII = new BatchMeans();
-        interruptedTasksRTime_ClassII.setAttributeName("Interrupted class 2 jobs response time = ");
-        batchMeans.add(interruptedTasksRTime_ClassII);
+        systemPopulation = new BatchMeans();
+        systemPopulation.setAttributeName("System Population = ");
+        batchMeans.add(systemPopulation);
+
+        systemPopulation_ClassI = new BatchMeans();
+        systemPopulation_ClassI.setAttributeName("System Population of class 1 jobs = ");
+        batchMeans.add(systemPopulation_ClassI);
+
+        systemPopulation_ClassII = new BatchMeans();
+        systemPopulation_ClassII.setAttributeName("System Population of class 2 jobs = ");
+        batchMeans.add(systemPopulation_ClassII);
 
 
         cloudletPopulation = new BatchMeans();
@@ -155,34 +193,6 @@ public class BatchMeansStatistics {
         cloudPopulation_ClassII.setAttributeName("Cloud population for class 2 jobs = ");
         batchMeans.add(cloudPopulation_ClassII);
 
-
-        cloudletRTime_ClassI = new BatchMeans();
-        cloudletRTime_ClassI.setAttributeName("\nCloudlet Response Time for class 1 jobs = ");
-        batchMeans.add(cloudletRTime_ClassI);
-
-        cloudletRTime_ClassII = new BatchMeans();
-        cloudletRTime_ClassII.setAttributeName("Cloudlet Response Time for class 2 jobs = ");
-        batchMeans.add(cloudletRTime_ClassII);
-
-        cloudletRTime = new BatchMeans();
-        cloudletRTime.setAttributeName("Cloudlet Response Time = ");
-        batchMeans.add(cloudletRTime);
-
-
-        cloudRTime_ClassI = new BatchMeans();
-        cloudRTime_ClassI.setAttributeName("\nCloud Response Time for class 1 jobs = ");
-        batchMeans.add(cloudRTime_ClassI);
-
-        cloudRTime_ClassII = new BatchMeans();
-        cloudRTime_ClassII.setAttributeName("Cloud Response Time for class 2 jobs = ");
-        batchMeans.add(cloudRTime_ClassII);
-
-        cloudRTime = new BatchMeans();
-        cloudRTime.setAttributeName("Cloud Response Time = ");
-        batchMeans.add(cloudRTime);
-
-
-
         sentToTheCloudJobs = new BatchMeans();
         sentToTheCloudJobs.setAttributeName("Number of jobs sent to the cloud is = ");
         batchMeans.add(sentToTheCloudJobs);
@@ -195,7 +205,21 @@ public class BatchMeansStatistics {
         sentToTheCloudJobs_Class2.setAttributeName("Number of class 2 jobs sent to the cloud is = ");
         batchMeans.add(sentToTheCloudJobs_Class2);
 
+        interruptedTasksPercentage_ClassII = new BatchMeans();
+        interruptedTasksPercentage_ClassII.setAttributeName("\nInterrupted class 2 jobs percentage = ");
+        batchMeans.add(interruptedTasksPercentage_ClassII);
 
+        interruptedTasksRTime_ClassII = new BatchMeans();
+        interruptedTasksRTime_ClassII.setAttributeName("Interrupted class 2 jobs response time = ");
+        batchMeans.add(interruptedTasksRTime_ClassII);
+
+        interruptedTasksCloudletRTime_ClassII = new BatchMeans();
+        interruptedTasksCloudletRTime_ClassII.setAttributeName("Interrupted class 2 jobs CLOUDLET elapsed time = ");
+        batchMeans.add(interruptedTasksCloudletRTime_ClassII);
+
+        interruptedTasksCloudRTime_ClassII = new BatchMeans();
+        interruptedTasksCloudRTime_ClassII.setAttributeName("Interrupted class 2 jobs CLOUD elapsed time = ");
+        batchMeans.add(interruptedTasksCloudRTime_ClassII);
     }
 
     public BatchMeans getSentToTheCloudJobs() {
@@ -302,6 +326,26 @@ public class BatchMeansStatistics {
         return sentToTheCloudJobs_Class2;
     }
 
+    public BatchMeans getSystemPopulation() {
+        return systemPopulation;
+    }
+
+    public BatchMeans getSystemPopulation_ClassI() {
+        return systemPopulation_ClassI;
+    }
+
+    public BatchMeans getSystemPopulation_ClassII() {
+        return systemPopulation_ClassII;
+    }
+
+    public BatchMeans getInterruptedTasksCloudletRTime_ClassII() {
+        return interruptedTasksCloudletRTime_ClassII;
+    }
+
+    public BatchMeans getInterruptedTasksCloudRTime_ClassII() {
+        return interruptedTasksCloudRTime_ClassII;
+    }
+
     /**
      * This method print all statistics
      */
@@ -311,21 +355,30 @@ public class BatchMeansStatistics {
         DecimalFormat f = new DecimalFormat("###0.000000");
         for (BatchMeans b: batchMeans){
 
-            double total_mean = b.getTotalMean();
+//            double total_mean = b.getTotalMean();
+
+            switch (b.getAttributeName())
+            {
+                case "System Response Time = ":
+                    System.out.println("\n********************************************RESPONSE TIME STAT ***************************************************");
+                    break;
+                case "System Throughput = ":
+                    System.out.println("\n********************************************THR STAT *************************************************************");
+                    break;
+                case "System Population = ":
+                    System.out.println("\n********************************************POPULATION STAT*******************************************************");
+                    break;
+                case "Number of jobs sent to the cloud is = ":
+                    System.out.println("\n********************************************INTERRUPTED JOB STAT**************************************************");
+                    break;
+            }
+
             String finalMean  = f.format(b.calculateFinalMean());
             String endPoints  = f.format(b.calculateEndPoints());
             System.out.println(b.getAttributeName() + finalMean + "+-" + endPoints);
-            System.out.println("Total mean is: " + total_mean);
+//            System.out.println("Total mean is: " + total_mean);
 
         }
-
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            mapper.writeValue(new File("src/main/java/progetto/Results/prova.json"),batchMeans);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
     }
 
 

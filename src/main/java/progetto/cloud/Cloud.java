@@ -15,7 +15,7 @@ import rng.Rvgs;
 
 public class Cloud {
 
-    private int n1,n2;
+    private static int n1,n2;
 
     private EventList eventList;
     private static int completedN1;
@@ -71,48 +71,6 @@ public class Cloud {
 
 
 
-    private void updateStatistics(Job job)
-    {
-        BatchMeansStatistics bm = BatchMeansStatistics.getMe();
-        bm.getCloudPopulation_ClassI().update(n1);
-        bm.getCloudPopulation_ClassII().update(n2);
-        bm.getCloudPopulation().update(n1 + n2);
-
-        if(job!= null)
-        {
-            if(job.getJobClass()==1)
-            {
-                double cloudClassIRTime = job.getCompletion() - job.getFirstarrival();
-                bm.getCloudRTime_ClassI().update(job.getService_time());
-                bm.getSystemRTime_ClassI().update(cloudClassIRTime);
-
-            }
-            else
-            {
-                double cloudClassIIRTime = job.getCompletion() - job.getFirstarrival();
-                bm.getCloudRTime_ClassII().update(job.getService_time());
-                bm.getSystemRTime_ClassII().update(cloudClassIIRTime);
-
-                if (job.isPrelated()) {// class 2 job with prelation completed
-                    bm.getInterruptedTasksRTime_ClassII().update(job.getCompletion() - job.getFirstarrival());
-                }
-            }
-            bm.getCloudRTime().update(job.getService_time());
-            double systemRTime = job.getCompletion() - job.getFirstarrival();
-            bm.getSystemRTime().update(systemRTime);
-        }
-
-        double cloudCompletion = completedN1 + completedN2;
-        double cloudletCompletion = Cloudlet.getCompletedN1() + Cloudlet.getCompletedN2();
-        double completed = cloudCompletion + cloudletCompletion;
-
-        // Update statistics
-        bm.getSystemThroughput().update((double) completed/clock.getCurrent());
-        bm.getSystemThroughput_ClassI().update(((double) (completedN1 + Cloudlet.getCompletedN1())/clock.getCurrent()));
-        bm.getSystemThroughput_ClassII().update(((double)(completedN2 + Cloudlet.getCompletedN2())/clock.getCurrent()));
-
-
-    }
 
     /**
      * This method calculates job's new service time
@@ -179,5 +137,70 @@ public class Cloud {
     public static int getCompletedN2() {
         return completedN2;
     }
+
+    public static int getN1() {
+        return n1;
+    }
+
+    public static int getN2() {
+        return n2;
+    }
+
+    private void updateStatistics(Job job)
+    {
+        BatchMeansStatistics bm = BatchMeansStatistics.getMe();
+
+
+        //Update Population Statistics
+        bm.getCloudPopulation_ClassI().update(n1);
+        bm.getCloudPopulation_ClassII().update(n2);
+        bm.getCloudPopulation().update(n1 + n2);
+
+        bm.getSystemPopulation().update(n1 + n2 + Cloudlet.getN1() + Cloudlet.getN2());
+        bm.getSystemPopulation_ClassI().update(n1 +Cloudlet.getN1());
+        bm.getSystemPopulation_ClassII().update(n2 +Cloudlet.getN2());
+
+
+
+        //Update Response Time Statistics
+        if(job!= null)
+        {
+            if(job.getJobClass()==1)
+            {
+                double cloudClassIRTime = job.getCompletion() - job.getFirstarrival();
+                bm.getCloudRTime_ClassI().update(job.getService_time());
+                bm.getSystemRTime_ClassI().update(cloudClassIRTime);
+
+            }
+            else
+            {
+                double cloudClassIIRTime = job.getCompletion() - job.getFirstarrival();
+                bm.getCloudRTime_ClassII().update(job.getService_time());
+                bm.getSystemRTime_ClassII().update(cloudClassIIRTime);
+
+                if (job.isPrelated()) {// class 2 job with prelation completed
+                    bm.getInterruptedTasksRTime_ClassII().update(job.getCompletion() - job.getFirstarrival());
+                    bm.getInterruptedTasksCloudRTime_ClassII().update(job.getCompletion() - job.getArrival());
+                    bm.getInterruptedTasksCloudletRTime_ClassII().update(job.getArrival() - job.getFirstarrival());
+                }
+            }
+            bm.getCloudRTime().update(job.getService_time());
+            double systemRTime = job.getCompletion() - job.getFirstarrival();
+            bm.getSystemRTime().update(systemRTime);
+        }
+
+        //Update Throughput Statistics
+        double cloudCompletion = completedN1 + completedN2;
+        double cloudletCompletion = Cloudlet.getCompletedN1() + Cloudlet.getCompletedN2();
+        double completed = cloudCompletion + cloudletCompletion;
+
+        // Update statistics
+        bm.getSystemThroughput().update((double) completed/clock.getCurrent());
+        bm.getSystemThroughput_ClassI().update(((double) (completedN1 + Cloudlet.getCompletedN1())/clock.getCurrent()));
+        bm.getSystemThroughput_ClassII().update(((double)(completedN2 + Cloudlet.getCompletedN2())/clock.getCurrent()));
+
+
+    }
+
 
 }
