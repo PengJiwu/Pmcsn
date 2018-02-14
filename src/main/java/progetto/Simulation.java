@@ -1,7 +1,6 @@
 package progetto;
 
 import configuration.Configuration;
-import progetto.Charts.*;
 import progetto.Statistics.BatchMeansStatistics;
 import progetto.cloud.Cloud;
 import progetto.cloudlet.Cloudlet;
@@ -25,22 +24,33 @@ public class Simulation {
 
     static double LAMBDA1 = 6;
     static double LAMBDA2 = 6.25;
-
+    static Configuration conf;
     Rngs r;
     Rvgs rvgs;
-
     Clock clock;
-
     EventList eventList;
-    int totalN1,totalN2;
-
+    int totalN1, totalN2;
     Cloudlet cloudlet;
     Cloud cloud;
-    static Configuration conf;
 
+
+    public Simulation() {
+
+        r = new Rngs();
+        r.plantSeeds(seed);
+        rvgs = new Rvgs(r);
+        clock = Clock.getClock();
+        eventList = EventList.getEventList();
+        totalN1 = 0;
+        totalN2 = 0;
+        cloudlet = new Cloudlet(N, S, rvgs);
+        cloud = new Cloud(rvgs);
+
+    }
 
     /**
      * This method starts simulation
+     *
      * @param args
      * @throws Exception
      */
@@ -52,41 +62,20 @@ public class Simulation {
         N = conf.N;
         S = conf.S;
         seed = conf.seed;
-
         SimulationTimer st = new SimulationTimer();
         st.startTimer();
-
         Simulation simulation = new Simulation();
         simulation.run();
-
         st.stopTimer();
         st.showTimer();
-        double secStop = STOP/1000;
+        double secStop = STOP / 1000;
         System.out.println("For a " + secStop + " seconds long simulation");
-
-    }
-
-
-    public Simulation () {
-
-        r = new Rngs();
-        r.plantSeeds(seed);
-        rvgs = new Rvgs(r);
-
-        clock = Clock.getClock();
-
-        eventList = EventList.getEventList();
-
-        totalN1 = 0;
-        totalN2 = 0;
-
-        cloudlet = new Cloudlet(N,S,rvgs);
-        cloud = new Cloud(rvgs);
 
     }
 
     /**
      * This method runs the simulation
+     *
      * @throws FileNotFoundException
      * @throws UnsupportedEncodingException
      */
@@ -94,10 +83,8 @@ public class Simulation {
     public void run() throws FileNotFoundException, UnsupportedEncodingException {
 
         boolean stopArrivals = false;
-
         createNewArrivalEvent();
-
-        while (clock.getCurrent()<STOP || !eventList.isEmpty(eventList.getCloudEventList()) ||
+        while (clock.getCurrent() < STOP || !eventList.isEmpty(eventList.getCloudEventList()) ||
                 !eventList.isEmpty(eventList.getCloudletEventList())) {
 
             if (clock.getCurrent() > STOP) {
@@ -110,24 +97,21 @@ public class Simulation {
             clock.setCurrent(e.getTimeOfEvent());
 
             if (e instanceof CloudletArrivalEvent) {                        // Next event is a Cloudlet arrival
-
-                cloudlet.dispatchArrival((CloudletArrivalEvent)e);
-
-                if(!stopArrivals)
+                cloudlet.dispatchArrival((CloudletArrivalEvent) e);
+                if (!stopArrivals)
                     createNewArrivalEvent();
 
             }
-            else if(e instanceof CloudletCompletionEvent)                   // Next event is a Cloudlet completion
-                cloudlet.processCompletion((CloudletCompletionEvent)e);
+            else if (e instanceof CloudletCompletionEvent)                   // Next event is a Cloudlet completion
+                cloudlet.processCompletion((CloudletCompletionEvent) e);
 
-            else if(e instanceof CloudArrivalEvent)                         // Next event is a Cloud arrival
-                cloud.processArrival((CloudArrivalEvent)e);
+            else if (e instanceof CloudArrivalEvent)                         // Next event is a Cloud arrival
+                cloud.processArrival((CloudArrivalEvent) e);
 
-            else if(e instanceof CloudCompletionEvent)                      // Next event is a Cloud completion
-                cloud.processCompletion((CloudCompletionEvent)e);
+            else if (e instanceof CloudCompletionEvent)                      // Next event is a Cloud completion
+                cloud.processCompletion((CloudCompletionEvent) e);
 
         }
-
         BatchMeansStatistics.getMe().printAll();
     }
 
@@ -141,16 +125,12 @@ public class Simulation {
 
         r.selectStream(1);
         if (rvgs.uniform(0, 1) > LAMBDA1 / (LAMBDA1 + LAMBDA2)) {    // Next event is a class 2 job arrival
-
             newJob = new Job(clock.getCurrent(), rvgs, (LAMBDA1 + LAMBDA2), 2);
             totalN2++;
-
         } else {                                                            // Next event is a class 1 job arrival
-
             newJob = new Job(clock.getCurrent(), rvgs, (LAMBDA1 + LAMBDA2), 1);
             totalN1++;
         }
-
         Event newEvent = new CloudletArrivalEvent(newJob, newJob.getArrival());
         eventList.pushEvent(newEvent);
     }

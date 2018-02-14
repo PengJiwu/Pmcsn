@@ -15,9 +15,8 @@ public abstract class AbstractCharts {
         coordinates = new ArrayList<XYCord>();
     }
 
-    public void addCoordinates(double x, double y)
-    {
-        coordinates.add(new XYCord(x,y));
+    public void addCoordinates(double x, double y) {
+        coordinates.add(new XYCord(x, y));
     }
 
 
@@ -26,14 +25,12 @@ public abstract class AbstractCharts {
     }
 
 
-    public void printJSON(String name)
-    {
-
+    public void printJSON(String name) {
 
 
         ObjectMapper mapper = new ObjectMapper();
         try {
-            mapper.writeValue(new File("src/main/java/progetto/Results/"+name+".json"),this);
+            mapper.writeValue(new File("src/main/java/progetto/Results/" + name + ".json"), this);
         } catch (IOException e) {
             e.printStackTrace();
         }

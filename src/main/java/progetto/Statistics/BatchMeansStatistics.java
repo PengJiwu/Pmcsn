@@ -1,89 +1,54 @@
 package progetto.Statistics;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import progetto.Charts.Coordinates;
 import progetto.Charts.Populations;
 
-import java.io.File;
-import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.List;
 
 public class BatchMeansStatistics {
 
-    private  BatchMeans systemRTime;
-    private  BatchMeans systemRTime_ClassI;
-    private  BatchMeans systemRTime_ClassII;
-
-
-    private  BatchMeans systemThroughput;
-    private  BatchMeans systemThroughput_ClassI;
-    private  BatchMeans systemThroughput_ClassII;
-
-    private  BatchMeans cloudletThroughput;
-    private  BatchMeans cloudletThroughput_ClassI;
-    private  BatchMeans cloudletThroughput_ClassII;
-
-    private  BatchMeans interruptedTasksPercentage_ClassII;
-    private  BatchMeans interruptedTasksRTime_ClassII;
-    private  BatchMeans interruptedTasksCloudletRTime_ClassII;
-    private  BatchMeans interruptedTasksCloudRTime_ClassII;
-
-    private  BatchMeans systemPopulation;
-    private  BatchMeans systemPopulation_ClassI;
-    private  BatchMeans systemPopulation_ClassII;
-
-
-    private  BatchMeans cloudletPopulation;
-    private  BatchMeans cloudletPopulation_ClassI;
-    private  BatchMeans cloudletPopulation_ClassII;
-
-    private  BatchMeans cloudPopulation;
-    private  BatchMeans cloudPopulation_ClassI;
-    private  BatchMeans cloudPopulation_ClassII;
-
-    private  BatchMeans cloudletRTime_ClassI;
-    private  BatchMeans cloudletRTime_ClassII;
-
-    private  BatchMeans cloudRTime_ClassI;
-    private  BatchMeans cloudRTime_ClassII;
-
-    private  BatchMeans cloudThroughput_ClassI;
-    private  BatchMeans cloudThroughput_ClassII;
-
-    private  BatchMeans cloudRTime;
-    private  BatchMeans cloudletRTime;
-
+    static BatchMeansStatistics me = null;
+    private BatchMeans systemRTime;
+    private BatchMeans systemRTime_ClassI;
+    private BatchMeans systemRTime_ClassII;
+    private BatchMeans systemThroughput;
+    private BatchMeans systemThroughput_ClassI;
+    private BatchMeans systemThroughput_ClassII;
+    private BatchMeans cloudletThroughput;
+    private BatchMeans cloudletThroughput_ClassI;
+    private BatchMeans cloudletThroughput_ClassII;
+    private BatchMeans interruptedTasksPercentage_ClassII;
+    private BatchMeans interruptedTasksRTime_ClassII;
+    private BatchMeans interruptedTasksCloudletRTime_ClassII;
+    private BatchMeans interruptedTasksCloudRTime_ClassII;
+    private BatchMeans systemPopulation;
+    private BatchMeans systemPopulation_ClassI;
+    private BatchMeans systemPopulation_ClassII;
+    private BatchMeans cloudletPopulation;
+    private BatchMeans cloudletPopulation_ClassI;
+    private BatchMeans cloudletPopulation_ClassII;
+    private BatchMeans cloudPopulation;
+    private BatchMeans cloudPopulation_ClassI;
+    private BatchMeans cloudPopulation_ClassII;
+    private BatchMeans cloudletRTime_ClassI;
+    private BatchMeans cloudletRTime_ClassII;
+    private BatchMeans cloudRTime_ClassI;
+    private BatchMeans cloudRTime_ClassII;
+    private BatchMeans cloudThroughput_ClassI;
+    private BatchMeans cloudThroughput_ClassII;
+    private BatchMeans cloudRTime;
+    private BatchMeans cloudletRTime;
     private BatchMeans sentToTheCloudJobs;
     private BatchMeans sentToTheCloudJobs_Class1;
     private BatchMeans sentToTheCloudJobs_Class2;
-
-    private  ArrayList<BatchMeans> batchMeans = new ArrayList<BatchMeans>();
-
-    static BatchMeansStatistics me = null;
-
-    /**
-     * This method implements the singleton pattern for BatchMean Statistics
-     * @return
-     */
-
-    public static BatchMeansStatistics getMe () {
-
-        if (me == null) {
-
-            me = new BatchMeansStatistics();
-            return me;
-
-        }
-        return me;
-    }
+    private ArrayList<BatchMeans> batchMeans = new ArrayList<BatchMeans>();
 
     /**
      * This class is a repository for all needed Batch Mean
      */
 
-    private BatchMeansStatistics () {
+    private BatchMeansStatistics() {
 
         cloudThroughput_ClassI = new BatchMeans();
         cloudThroughput_ClassII = new BatchMeans();
@@ -113,7 +78,6 @@ public class BatchMeansStatistics {
         batchMeans.add(cloudletRTime_ClassII);
 
 
-
         cloudRTime = new BatchMeans();
         cloudRTime.setAttributeName("\nCloud Response Time = ");
         batchMeans.add(cloudRTime);
@@ -125,7 +89,6 @@ public class BatchMeansStatistics {
         cloudRTime_ClassII = new BatchMeans();
         cloudRTime_ClassII.setAttributeName("Cloud Response Time for class 2 jobs = ");
         batchMeans.add(cloudRTime_ClassII);
-
 
 
         systemThroughput = new BatchMeans();
@@ -152,7 +115,6 @@ public class BatchMeansStatistics {
         cloudletThroughput_ClassII = new BatchMeans();
         cloudletThroughput_ClassII.setAttributeName("Cloudlet Throughput of class 2 jobs = ");
         batchMeans.add(cloudletThroughput_ClassII);
-
 
 
         systemPopulation = new BatchMeans();
@@ -220,6 +182,23 @@ public class BatchMeansStatistics {
         interruptedTasksCloudRTime_ClassII = new BatchMeans();
         interruptedTasksCloudRTime_ClassII.setAttributeName("Interrupted class 2 jobs CLOUD elapsed time = ");
         batchMeans.add(interruptedTasksCloudRTime_ClassII);
+    }
+
+    /**
+     * This method implements the singleton pattern for BatchMean Statistics
+     *
+     * @return
+     */
+
+    public static BatchMeansStatistics getMe() {
+
+        if (me == null) {
+
+            me = new BatchMeansStatistics();
+            return me;
+
+        }
+        return me;
     }
 
     public BatchMeans getSentToTheCloudJobs() {
@@ -302,19 +281,19 @@ public class BatchMeansStatistics {
         return cloudRTime_ClassII;
     }
 
-    public  BatchMeans getCloudRTime() {
+    public BatchMeans getCloudRTime() {
         return cloudRTime;
     }
 
-    public  BatchMeans getCloudletRTime() {
+    public BatchMeans getCloudletRTime() {
         return cloudletRTime;
     }
 
-    public  BatchMeans getSystemThroughput_ClassI() {
+    public BatchMeans getSystemThroughput_ClassI() {
         return systemThroughput_ClassI;
     }
 
-    public  BatchMeans getSystemThroughput_ClassII() {
+    public BatchMeans getSystemThroughput_ClassII() {
         return systemThroughput_ClassII;
     }
 
@@ -350,15 +329,11 @@ public class BatchMeansStatistics {
      * This method print all statistics
      */
 
-    public  void printAll (){
+    public void printAll() {
 
         DecimalFormat f = new DecimalFormat("###0.000000");
-        for (BatchMeans b: batchMeans){
-
-//            double total_mean = b.getTotalMean();
-
-            switch (b.getAttributeName())
-            {
+        for (BatchMeans b : batchMeans) {
+            switch (b.getAttributeName()) {
                 case "System Response Time = ":
                     System.out.println("\n********************************************RESPONSE TIME STAT ***************************************************");
                     break;
@@ -373,37 +348,10 @@ public class BatchMeansStatistics {
                     break;
             }
 
-            String finalMean  = f.format(b.calculateFinalMean());
-            String endPoints  = f.format(b.calculateEndPoints());
+            String finalMean = f.format(b.calculateFinalMean());
+            String endPoints = f.format(b.calculateEndPoints());
             System.out.println(b.getAttributeName() + finalMean + "+-" + endPoints);
-//            System.out.println("Total mean is: " + total_mean);
-
         }
-    }
-
-
-    public void printPop (){
-
-        int i = 0;
-
-        while(i<64){
-
-            Coordinates coordinates = new Coordinates();
-            coordinates.setTime(i);
-            for (BatchMeans b: batchMeans) {
-                if (b.getAttributeName().equals("Cloudlet population for class 1 jobs = "))
-                    coordinates.setCloudletPopulation_n1(b.meanlist.get(i));
-                if (b.getAttributeName().equals("Cloudlet population for class 2 jobs = "))
-                    coordinates.setCloudletPopulation_n2(b.meanlist.get(i));
-                if (b.getAttributeName().equals("Cloud population for class 1 jobs = "))
-                    coordinates.setCloudPopulation_n1(b.meanlist.get(i));
-                if (b.getAttributeName().equals("Cloud population for class 2 jobs = "))
-                    coordinates.setCloudPopulation_n2(b.meanlist.get(i));
-            }
-            Populations.getPopulations().updateCord(coordinates);
-        i++;
-        }
-
     }
 
 }

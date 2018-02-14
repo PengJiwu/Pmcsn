@@ -29,18 +29,20 @@ package rng;/* -----------------------------------------------------------------
  * -------------------------------------------------------------------------
  */
 
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Date;
 
 
 public class Rng {
 
-    long MODULUS      = 2147483647; /* DON'T CHANGE THIS VALUE                   */
-    long MULTIPLIER   = 48271;      /* use 16807 for the "minimal standard"      */
     static long CHECK = 399268537L; /* use 1043616065 for the "minimal standard" */
-    long DEFAULT      = 123456789L; /* initial seed, use 0 < DEFAULT < MODULUS   */
+    long MODULUS = 2147483647; /* DON'T CHANGE THIS VALUE                   */
+    long MULTIPLIER = 48271;      /* use 16807 for the "minimal standard"      */
+    long DEFAULT = 123456789L; /* initial seed, use 0 < DEFAULT < MODULUS   */
 
-    long seed         = DEFAULT;    /* seed is the state of the generator        */
+    long seed = DEFAULT;    /* seed is the state of the generator        */
 
     public static void main(String[] args) {
 
@@ -123,12 +125,12 @@ public class Rng {
      * -------------------------------------------------------------------
      */
     public void testRandom() {
-        long   i;
-        long   x;
+        long i;
+        long x;
         double u;
 
         putSeed(1);                                 /* set initial state to 1 */
-        for(i = 0; i < 10000; i++)
+        for (i = 0; i < 10000; i++)
             u = random();
         x = getSeed();                              /* get the new state      */
         if (x == CHECK)

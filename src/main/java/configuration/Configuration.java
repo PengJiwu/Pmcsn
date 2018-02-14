@@ -1,7 +1,6 @@
 package configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import progetto.events.Clock;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,6 +16,7 @@ import java.io.IOException;
  */
 
 public class Configuration {
+    static Configuration me = null;
     public int N = 0;
     public int S = 0;
     public int seed = 0;
@@ -24,11 +24,11 @@ public class Configuration {
     public int batchNumber = 0;
     public double alfa = 0;
 
-    static Configuration me = null;
+    private Configuration() {
+    }
 
-    public static Configuration getConfiguration(){
-        if(me == null)
-        {
+    public static Configuration getConfiguration() {
+        if (me == null) {
             me = new Configuration();
             ObjectMapper mapper = new ObjectMapper();
 
@@ -38,13 +38,9 @@ public class Configuration {
                 e.printStackTrace();
             }
             return me;
-        }
-        else
+        } else
             return me;
     }
-
-    private Configuration() {}
-
 
     @Override
     public String toString() {

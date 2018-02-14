@@ -17,22 +17,18 @@ public class BatchMeans {
     int b;                      // Number of batches
     double alfa;                // Confidence parameter
     int i = 1;                  // Batch index
-
+    ArrayList<Double> meanlist = new ArrayList<>();
+    Clock clock;
     private String attributeName;
-
     private WelfordMean welford;
 
-    ArrayList<Double> meanlist = new ArrayList<>();
-
-    Clock clock;
-
-    public BatchMeans () {
+    public BatchMeans() {
 
         welford = new WelfordMean();
         n = Configuration.getConfiguration().duration;
         alfa = Configuration.getConfiguration().alfa;
         k = Configuration.getConfiguration().batchNumber;
-        b = (int) (n/k);
+        b = (int) (n / k);
 
         clock = Clock.getClock();
 
@@ -40,10 +36,11 @@ public class BatchMeans {
 
     /**
      * This method takes in input a double and updates current mean using Welford Algorithm
+     *
      * @param e
      */
 
-    public void update (double e) {
+    public void update(double e) {
 
         if (clock.getCurrent() >= i * getBatchSize()) {       // check if begins a new Batch
             addMeanInList();
@@ -56,10 +53,11 @@ public class BatchMeans {
 
     /**
      * This method takes in input a double element and adds it into the Batch
+     *
      * @param e
      */
 
-    public void calculateMean (double e) {
+    public void calculateMean(double e) {
 
         welford.addBatchElement(e);
         welford.addElement(e);
@@ -70,7 +68,7 @@ public class BatchMeans {
      * This method adds mean in the list
      */
 
-    public void addMeanInList () {
+    public void addMeanInList() {
 
         double e = getMeanvalue();
         meanlist.add(e);
@@ -80,7 +78,7 @@ public class BatchMeans {
      * This method increments Batch index and reset Welford values
      */
 
-    public void incrementIndex (){
+    public void incrementIndex() {
 
         i++;
         welford.resetIndexes();
@@ -89,13 +87,14 @@ public class BatchMeans {
 
     /**
      * This method calculates final mean using Welford Method
+     *
      * @return
      */
 
-    public double calculateFinalMean () {
+    public double calculateFinalMean() {
 
         welford.resetIndexes();
-        for (Double d: meanlist) {
+        for (Double d : meanlist) {
 
             welford.addBatchElement(d);
         }
@@ -106,37 +105,39 @@ public class BatchMeans {
 
     /**
      * This method calculate critical value for confidence interval
+     *
      * @return
      */
 
-    public double calculateCriticalValue () {
+    public double calculateCriticalValue() {
 
         double t;
         Rvms rvms = new Rvms();
-        t = rvms.idfStudent((k-1), 1 - (alfa/2));
+        t = rvms.idfStudent((k - 1), 1 - (alfa / 2));
         return t;
 
     }
 
     /**
      * This method calculates end points for confidence interval
+     *
      * @return
      */
 
-    public double calculateEndPoints () {
+    public double calculateEndPoints() {
 
         double t = calculateCriticalValue();
         double stdDev = Math.sqrt(welford.getTotalVariance());
-        double endPoint = (t * stdDev)/ Math.sqrt(k-1);
+        double endPoint = (t * stdDev) / Math.sqrt(k - 1);
 
-        return  endPoint;
+        return endPoint;
     }
 
-    public double getMeanvalue () {
+    public double getMeanvalue() {
         return welford.getMean();
     }
 
-    public double getBatchSize (){
+    public double getBatchSize() {
         return k;
     }
 

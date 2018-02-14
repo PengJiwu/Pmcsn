@@ -2,24 +2,21 @@ package progetto.Charts;
 
 import java.util.ArrayList;
 
-public class RTCharts extends AbstractCharts{
+public class RTCharts extends AbstractCharts {
+    protected static RTCharts me;
     private ArrayList<XYCord> coordinates;
 
-    protected static RTCharts me;
+    private RTCharts() {
+        super();
+    }
 
-    public static RTCharts getRTCharts(){
-        if(me == null) {
+    public static RTCharts getRTCharts() {
+        if (me == null) {
 
             me = new RTCharts();
             return me;
-        }
-        else
+        } else
             return me;
-    }
-
-    private RTCharts()
-    {
-        super();
     }
 
 }

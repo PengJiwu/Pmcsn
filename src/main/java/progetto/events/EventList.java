@@ -1,7 +1,6 @@
 package progetto.events;
 
 import progetto.Job;
-import rng.Rvgs;
 
 import java.util.*;
 
@@ -11,13 +10,22 @@ import java.util.*;
 
 public class EventList {
 
+    private static EventList me = null;             //Application of singleton pattern
+    Clock clock;
     private List<Event> cloudletEventList;
-
     private List<Event> cloudEventList;
 
-    Clock clock;
+    /**
+     * This constructor creates list of Cloud and Cloudlet events
+     */
 
-    private static EventList me = null;             //Application of singleton pattern
+    private EventList() {
+
+        cloudletEventList = new ArrayList<>();
+        cloudEventList = new ArrayList<>();
+        clock = Clock.getClock();
+
+    }
 
     public static EventList getEventList() {
 
@@ -25,25 +33,13 @@ public class EventList {
 
             me = new EventList();
             return me;
-        }
-        else
+        } else
             return me;
     }
 
     /**
-     * This constructor creates list of Cloud and Cloudlet events
-     */
-
-    private EventList () {
-
-        cloudletEventList = new ArrayList<>();
-        cloudEventList =  new ArrayList<>();
-        clock = Clock.getClock();
-
-    }
-
-    /**
      * This method takes in input an event and pushes it into the list
+     *
      * @param e
      */
 
@@ -57,8 +53,7 @@ public class EventList {
                     return (e2.getTimeOfEvent() < e1.getTimeOfEvent()) ? 1 : -1;
                 }
             });
-        }
-        else if (e instanceof CloudArrivalEvent || e instanceof CloudCompletionEvent) {     // Cloud event
+        } else if (e instanceof CloudArrivalEvent || e instanceof CloudCompletionEvent) {     // Cloud event
 
             cloudEventList.add(e);
             Collections.sort(cloudEventList, new Comparator<Event>() {
@@ -73,18 +68,18 @@ public class EventList {
 
     /**
      * This method removes first event of the list
+     *
      * @return
      */
 
     public Event popEvent() {
 
-        if (cloudletEventList.size() == 0 ){                 //No events in Cloudlet
+        if (cloudletEventList.size() == 0) {                 //No events in Cloudlet
 
             Event e2 = cloudEventList.get(0);
             cloudEventList.remove(0);
             return e2;
-        }
-        else if (cloudEventList.size() == 0 ) {             //No events in Cloud
+        } else if (cloudEventList.size() == 0) {             //No events in Cloud
 
             Event e1 = cloudletEventList.get(0);
             cloudletEventList.remove(0);
@@ -97,9 +92,7 @@ public class EventList {
         if (e1.getTimeOfEvent() <= e2.getTimeOfEvent()) {   // Gets minimum
             cloudletEventList.remove(0);
             return e1;
-        }
-
-        else {
+        } else {
             cloudEventList.remove(0);
             return e2;
         }
@@ -108,6 +101,7 @@ public class EventList {
     /**
      * This method removes a completion event of class 2 job from the Cloudlet list
      * Called whenever a prelation happens
+     *
      * @return
      */
 
@@ -121,7 +115,7 @@ public class EventList {
             Event e = (Event) li.previous();
 
             if (e instanceof CloudletCompletionEvent)
-                if(e.getJob().getJobClass() == 2) {
+                if (e.getJob().getJobClass() == 2) {
 
                     event = e;
                     break;

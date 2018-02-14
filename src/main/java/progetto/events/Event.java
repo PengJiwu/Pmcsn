@@ -30,7 +30,4 @@ public abstract class Event {
         return timeOfEvent;
     }
 
-    public void setTimeOfEvent(double timeOfEvent) {
-        this.timeOfEvent = timeOfEvent;
-    }
 }
